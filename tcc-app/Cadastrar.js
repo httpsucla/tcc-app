@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text'
+import DatePicker from 'react-native-datepicker';
+
 
 export default function Cadastrar( {navigation} ) {
      
@@ -9,7 +11,7 @@ export default function Cadastrar( {navigation} ) {
     const [qtde, setQtde] = useState('');
     const [date, setDate] = useState('');
     const [days, setDays] = useState('');
-
+    
     async function handleButtonPress(){ 
         navigation.navigate("Gaveta");
     };
@@ -45,18 +47,42 @@ export default function Cadastrar( {navigation} ) {
                         value={hour}
                         onChangeText={ value => setHour(value) }
                     />
-                    <TextInputMask
-                        style={styles.input}  
-                        placeholder="Data de início" 
-                        keyboardType={'numbers-and-punctuation'}
+                    <DatePicker
+                        style={styles.calendario}
+                        date={date}
+                        mode="date"
+                        placeholder="Data de início"
+                        format="DD/MM/YYYY"                     
                         clearButtonMode="always"
-                        type={'datetime'}
-                        options={{
-                            format: 'dd/MM/YYYY'
-                        }}
-                        value={date}
-                        onChangeText={ value => setDate(value) }
-                    />           
+                        confirmBtnText="Confirmar"
+                        minDate="01-01-2022"
+                        maxDate="31-12-2050"
+                        cancelBtnText="Cancelar" 
+                        customStyles={{
+                            dateIcon: {
+                              position: 'absolute',
+                              right: -5,
+                              top: 4,
+                              marginLeft: 0,
+                            },
+                            dateInput: {
+                              alignItems: "flex-start",
+                              borderWidth: 0
+                            },
+                            placeholderText: {
+                              fontSize: 16                   
+                            },
+                            dateText: {
+                              fontSize: 16
+                            },
+                            datePickerCon: {
+                                backgroundColor: "#292929f3"
+                            }            
+                          }}
+                          onDateChange={(date) => {
+                            setDate(date);
+                          }}
+                    />       
                     <TextInputMask
                         style={styles.input}  
                         placeholder="Quantidade de dias" 
@@ -122,5 +148,16 @@ const styles = StyleSheet.create({
     buttonText: {
       color: '#fff',
       fontWeight: 'bold',
-    }
+    },
+    calendario: {
+        width: 230,
+        marginTop: 10,
+        height: 60,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        paddingHorizontal: 24,
+        fontSize: 16,
+        alignItems: 'stretch',
+        color: '#000'
+      },
   });
