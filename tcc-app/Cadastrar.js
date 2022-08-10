@@ -3,17 +3,33 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text'
 import DatePicker from 'react-native-datepicker';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Cadastrar( {navigation} ) {
-     
+    
+    const [nome, setNome] = useState('');
     const [hour, setHour] = useState('');
     const [qtde, setQtde] = useState('');
     const [date, setDate] = useState('');
     const [days, setDays] = useState('');
     
+    function handleNomeChange(nome) { setNome(nome) };
+    function handleHourChange(hour) { setHour(hour) };
+    function handleQtdeChange(qtde) { setQtde(qtde) };
+    function handleDateChange(date) { setDate(date) };
+    function handleDaysChange(days) { setDays(days) };
+
     async function handleButtonPress(){ 
-        navigation.navigate("Gaveta");
+        const newMedicamento = { id: new Date().getTime(), nome, hour, qtde: parseInt(qtde), date, days: parseInt(days)};
+        let savedMedicamento = [];
+        const res = await AsyncStorage.getItem('medicamentos');
+
+        if(res)
+          savedMedicamento.push(newMedicamento);
+        
+        await AsyncStorage.setItem('medicamentos', JSON.stringify(savedMedicamento));
+        console.log(res); 
+        navigation.navigate("Gaveta", newMedicamento);
     };
     
         return (
@@ -24,7 +40,8 @@ export default function Cadastrar( {navigation} ) {
                     <TextInput 
                         style={styles.input} 
                         placeholder="Nome"
-                        clearButtonMode="always" 
+                        clearButtonMode="always"
+                        onChangeText={handleNomeChange} 
                     /> 
                     <TextInputMask 
                         style={styles.input} 
@@ -33,7 +50,7 @@ export default function Cadastrar( {navigation} ) {
                         clearButtonMode="always"
                         type={'only-numbers'}
                         value={qtde}
-                        onChangeText={ value => setQtde(value) }
+                        onChangeText={handleQtdeChange}
                     /> 
                     <TextInputMask
                         style={styles.input}  
@@ -45,7 +62,7 @@ export default function Cadastrar( {navigation} ) {
                             format: 'HH:mm'
                         }}
                         value={hour}
-                        onChangeText={ value => setHour(value) }
+                        onChangeText={handleHourChange}
                     />
                     <DatePicker
                         style={styles.calendario}
@@ -79,9 +96,7 @@ export default function Cadastrar( {navigation} ) {
                                 backgroundColor: "#292929f3"
                             }            
                           }}
-                          onDateChange={(date) => {
-                            setDate(date);
-                          }}
+                          onDateChange={handleDateChange}
                     />       
                     <TextInputMask
                         style={styles.input}  
@@ -90,7 +105,7 @@ export default function Cadastrar( {navigation} ) {
                         clearButtonMode="always"
                         type={'only-numbers'}
                         value={days}
-                        onChangeText={ value => setDays(value) }
+                        onChangeText={handleDaysChange}
                     />
                     <TouchableOpacity style={styles.button} onPress={handleButtonPress}> 
                         <Text style={styles.buttonText}>Salvar</Text> 
