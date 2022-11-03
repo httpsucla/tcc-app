@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
-
-
-export default function Home() {
+export default function Configuracao () {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>oh</Text>
+            <Text style={styles.title}>Configurações</Text>
 
         </View>
     );
