@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, FlatList, useEffect } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function Gaveta({ navigation, route }) {
 
@@ -15,10 +16,34 @@ export default function Gaveta({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.gaveta} onPress={handleButtonPress}>
-                <Text>⚪</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>Gaveta 1</Text>
+            <View style={styles.flex}>
+                <View style={styles.gaveta}>
+                    <Text style={styles.title}>Gaveta 1</Text>
+                    <TouchableOpacity onPress={handleButtonPress}>
+                        <Icon name="archive" size={60} color={'#b2633a'} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.gaveta}>
+                    <Text style={styles.title}>Gaveta 2</Text>
+                    <TouchableOpacity onPress={handleButtonPress}>
+                        <Icon name="plus-circle" size={60} color={'#4CAF50'} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={styles.flex}>
+                <View style={styles.gaveta}>
+                    <Text style={styles.title}>Gaveta 3</Text>
+                    <TouchableOpacity onPress={handleButtonPress}>
+                        <Icon name="archive" size={60} color={'#b2633a'} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.gaveta}>
+                    <Text style={styles.title}>Gaveta 4</Text>
+                    <TouchableOpacity onPress={handleButtonPress}>
+                        <Icon name="archive" size={60} color={'#b2633a'} />
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     );
 }
@@ -30,17 +55,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    flex: {
+        flexDirection: 'row'  
+    },
     gaveta: {
-        margin: 10,
-        width: '30%',
-        height: '7.55%',
-        backgroundColor: '#b2633a',
-        borderTopColor: "#ecc5a6",
-        borderTopWidth: 3,
-        borderRightColor: "#ecc5a6",
-        borderRightWidth: 3,
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        padding: 15
     },
     title: {
         color: '#292929f3',

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text'
-import DatePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Cadastrar({ navigation }) {
@@ -9,8 +9,11 @@ export default function Cadastrar({ navigation }) {
   const [nome, setNome] = useState('');
   const [hour, setHour] = useState('');
   const [qtde, setQtde] = useState('');
-  const [date, setDate] = useState(Date);
+  const [date, setDate] = useState('');
   const [days, setDays] = useState('');
+
+  const [modeDate, setModeDate] = useState('date');
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const [ledLigado, setLedLigado] = useState(false);
   const [medicamento, setMedicamento] = useState('');
@@ -20,6 +23,7 @@ export default function Cadastrar({ navigation }) {
   function handleQtdeChange(qtde) { setQtde(qtde) };
   function handleDateChange(date) { setDate(date) };
   function handleDaysChange(days) { setDays(days) };
+
 
   async function handleButtonPress() {
     const newMedicamento = { id: new Date().getTime(), nome, hour, qtde: parseInt(qtde), date, days: parseInt(days) };
@@ -41,7 +45,7 @@ export default function Cadastrar({ navigation }) {
   const requestToArduinoServer = async () => {
     try {
       const response = await fetch('http://192.168.100.177')
-      
+
       let json = await response.json();
       setMedicamento(json["medicamento"]);
     } catch (error) {
@@ -99,20 +103,17 @@ export default function Cadastrar({ navigation }) {
             value={hour}
             onChangeText={handleHourChange}
           />
-          <DatePicker
-            style={styles.calendario}
-            mode='date'
-            display='calendar'
-            placeholder='Data de início'
+         <TextInputMask
+            style={styles.input}
+            placeholder="Data de início"
+            keyboardType={'numeric'}
             clearButtonMode="always"
-            confirmBtnText="Confirmar"
-            cancelBtnText="Cancelar"
-            minDate="01-01-2022"
-            maxDate="31-12-2050"
-            locale={"pt"}         
-            value={new Date()}
-            
-            onDateChange={handleDateChange}
+            type={'datetime'}
+            options={{
+              format: '0d/MM/YYYY'
+            }}
+            value={hour}
+            onChangeText={handleHourChange}
           />
           <TextInputMask
             style={styles.input}
