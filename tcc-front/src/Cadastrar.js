@@ -111,7 +111,7 @@ export default function Cadastrar({ navigation }) {
             options={{
               format: 'DD/MM/YYYY'
             }}
-            value={hour}
+            value={date}
             onChangeText={handleDateChange}
           />
           <TextInputMask
