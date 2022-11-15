@@ -106,14 +106,13 @@ export default function Cadastrar({ navigation }) {
          <TextInputMask
             style={styles.input}
             placeholder="Data de início"
-            keyboardType={'numeric'}
             clearButtonMode="always"
             type={'datetime'}
             options={{
-              format: '0d/MM/YYYY'
+              format: 'DD/MM/YYYY'
             }}
             value={hour}
-            onChangeText={handleHourChange}
+            onChangeText={handleDateChange}
           />
           <TextInputMask
             style={styles.input}
