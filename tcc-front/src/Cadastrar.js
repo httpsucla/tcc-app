@@ -26,16 +26,20 @@ export default function Cadastrar({ navigation }) {
 
 
   async function handleButtonPress() {
-    const newMedicamento = { id: new Date().getTime(), nome, hour, qtde: parseInt(qtde), date, days: parseInt(days) };
+    const drug = { id: new Date().getTime(), nome, hour, qtde: parseInt(qtde), date, days: parseInt(days) };
+    const DB = {
+      gavetas : [
+        drug
+      ]
+    }
     let savedMedicamento = [];
     const res = await AsyncStorage.getItem('medicamentos');
 
     if (res)
-      savedMedicamento.push(newMedicamento);
+      savedMedicamento.push(drug);
 
     await AsyncStorage.setItem('medicamentos', JSON.stringify(savedMedicamento));
-    console.log(res);
-    navigation.navigate("Gaveta", newMedicamento);
+    navigation.navigate("Gaveta", drug);
   };
 
   useEffect(() => {

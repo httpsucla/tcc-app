@@ -5,12 +5,26 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function Gaveta({ navigation, route }) {
 
-    const [items, setItems] = useState([
+    const [gavetas, setItems] = useState([
         { id: 1, drug: { nome: "Dorflex", hour: "17:00", qtde: 10, date: "08/08/2022", days: 3} },
         { id: 2, drug: { nome: "Dorflex", hour: "17:00", qtde: 10, date: "08/08/2022", days: 3} },
         { id: 3, drug: { nome: "Buscopan", hour: "08:30", qtde: 12, date: "08/08/2022", days: 4} },
         { id: 4, drug: { nome: "Buscopan", hour: "08:30", qtde: 12, date: "08/08/2022", days: 4} }
     ]);
+    async function save(){
+        const drug = { nome: "Dorflex", hour: "17:00", qtde: 10, date: "08/08/2022", days: 3}
+        const DB = {
+            gavetas : [
+            { id : 1, drug }
+            ]
+          }
+
+
+    }
+    async function getGavetas(){
+        
+    }
+
     async function handleButtonPress() {
         setModalVisible(!modalVisible);
         navigation.navigate("Cadastrar");
@@ -45,7 +59,7 @@ export default function Gaveta({ navigation, route }) {
                 <View style={styles.gaveta}>
                     <Text style={styles.title}>Gaveta 1</Text>
                     <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                    { Object.keys(items[0].drug).length === 0  ? 
+                    { Object.keys(gavetas[0].drug).length === 0  ? 
                     <Icon name="plus-circle" size={60} color={'#4CAF50'} /> 
                       : 
                     <Icon name="archive" size={60} color={'#b2633a'} /> 
