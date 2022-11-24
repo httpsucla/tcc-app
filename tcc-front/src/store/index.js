@@ -1,0 +1,1 @@
+// arquivos globais, style global, estado de componentes

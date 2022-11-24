@@ -1,0 +1,1 @@
+// qualquer arquivo de imagem
