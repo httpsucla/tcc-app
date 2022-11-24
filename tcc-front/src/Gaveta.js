@@ -11,20 +11,7 @@ export default function Gaveta({ navigation, route }) {
         { id: 3, drug: { nome: "Buscopan", hour: "08:30", qtde: 12, date: "08/08/2022", days: 4} },
         { id: 4, drug: { nome: "Buscopan", hour: "08:30", qtde: 12, date: "08/08/2022", days: 4} }
     ]);
-    async function save(){
-        const drug = { nome: "Dorflex", hour: "17:00", qtde: 10, date: "08/08/2022", days: 3}
-        const DB = {
-            gavetas : [
-            { id : 1, drug }
-            ]
-          }
-
-
-    }
-    async function getGavetas(){
-        
-    }
-
+  
     async function handleButtonPress() {
         setModalVisible(!modalVisible);
         navigation.navigate("Cadastrar");
