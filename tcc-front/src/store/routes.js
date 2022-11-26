@@ -3,13 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import Home from "./pages/Home";
-import Gaveta from "./pages/Gaveta";
-import Calendario from "./pages/Calendario";
-import Medicamento from "./pages/Medicamento";
-import Cadastrar from "./Cadastrar";
-import Configuracao from "./pages/Configuracao";
-import CreateUpdateMedicamento from "./pages/Medicamento/create-update-Medicamento";
+import Home from "../pages/Home";
+import Gaveta from "../pages/Gaveta";
+import Calendario from "../pages/Calendario";
+import Medicamento from "../pages/Medicamento";
+import Cadastrar from "../Cadastrar";
+import Configuracao from "../pages/Configuracao";
+import CreateUpdateMedicamento from "../pages/Medicamento/create-update-Medicamento";
 
 const Tab = createBottomTabNavigator();
 
