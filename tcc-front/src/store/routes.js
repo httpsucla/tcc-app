@@ -3,13 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+
 import Home from "../pages/Home";
-import Gaveta from "../pages/Gaveta";
-import Calendario from "../pages/Calendario";
-import Medicamento from "../pages/Medicamento";
-import Cadastrar from "../Cadastrar";
-import Configuracao from "../pages/Configuracao";
-import CreateUpdateMedicamento from "../pages/Medicamento/create-update-Medicamento";
+import Gaveta from "../pages/Gaveta/";
+import Calendario from "../pages/Calendario/";
+import ListagemMedicamento from "../pages/Medicamento/listagem";
+import Configuracao from "../pages/Configuracao/";
+import CadastroTela from "../pages/Medicamento/cadastro";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,15 +41,14 @@ export default function Routes() {
                     )
                 }}
             />
-            <Tab.Screen name="CreateUpdateMedicamento" component={CreateUpdateMedicamento}
+            <Tab.Screen name="Cadastro" component={CadastroTela}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="clock" size={size} color={color} />
                     ),
-                    title: "Cadastrar"
                 }}
             />
-            <Tab.Screen name="Medicamento" component={Medicamento}
+            <Tab.Screen name="Medicamento" component={ListagemMedicamento}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="pills" size={size} color={color} />

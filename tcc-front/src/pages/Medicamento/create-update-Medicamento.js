@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 
 import { TextInputMask } from 'react-native-masked-text'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Medicamento from '../../models/medicamento';
 
 export default function CreateUpdateMedicamento({ navigation }) {
 
