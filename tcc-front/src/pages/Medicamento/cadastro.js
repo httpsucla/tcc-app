@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Button } from 'react-native';
+import { Text, View, ScrollView, Button, TextInput, TouchableOpacity } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text'
+import { Input } from 'react-native-elements'
 import Medicamento from '../../models/medicamento';
 import Database from '../../services/database';
 import styles from './style';
-import {Input} from 'react-native-elements'
 
-class CadastroTela extends Component{
-    constructor(props){
+class CadastroTela extends Component {
+    constructor(props) {
         super(props);
         this.db = new Database();
         this.navigation = props.navigation;
@@ -20,39 +21,73 @@ class CadastroTela extends Component{
         }
     }
 
-render(){
-    return (
-        <View> 
+    render() {
+        return (
             <ScrollView>
-                <Text> Cadastrar Medicamento</Text>
-                <Input placeholder="Nome" onChangeText={text => this.setState({ medNome: text})} maxLenght={30}/>
-                <Input placeholder="Horário" onChangeText={text => this.setState({ medHora: text})} maxLenght={30}/>
-                <Input placeholder="Data de Inicio" onChangeText={text => this.setState({ medDataIni: text})} maxLenght={30} />
-                <Input placeholder="Quantidade" onChangeText={text => this.setState({ medQtde: text})} maxLenght={30} keyboardType='numeric'/>
-                <Input placeholder="Quantidade de dias" onChangeText={text => this.setState({ medQtdeDias: text})} maxLenght={30} keyboardType='numeric'/>
-                <Button title='Cadastrar' onPress={this.cadastrar}/>
+                <View style={styles.container}>
+                    <Text style={styles.title}> Cadastrar Medicamento</Text>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nome"
+                            onChangeText={text => this.setState({ medNome: text })}
+                            maxLenght={30}
+                            clearButtonMode="always"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Horário"
+                            onChangeText={text => this.setState({ medHora: text })}
+                            maxLenght={30}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Data de Inicio"
+                            onChangeText={text => this.setState({ medDataIni: text })}
+                            maxLenght={30}
+                            type={'datetime'}
+                            options={{
+                                format: 'DD/MM/YYYY'
+                            }}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Quantidade"
+                            onChangeText={text => this.setState({ medQtde: text })}
+                            maxLenght={30}
+                            keyboardType='numeric' />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Quantidade de dias"
+                            onChangeText={text => this.setState({ medQtdeDias: text })}
+                            maxLenght={30}
+                            keyboardType='numeric' />
+                        <TouchableOpacity style={styles.button} onPress={this.cadastrar} >
+                            <Text style={styles.buttonText}>Cadastrar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </ScrollView>
-        </View>
-    )
-}
-cadastrar = (()=>{
-    let medicamento = new Medicamento({
-        nome:    this.state.medNome,
-        horario:   this.state.medHora,
-        data_inicial:   this.state.medDataIni,
-        qtde: this.state.medQtde,
-        qtde_dias:   this.state.medQtdeDias,
-        ativo:    this.state.medAtivo,
-    })
-    console.log(medicamento)
-    this.db.insertNewMedicine(medicamento).then(result => {
-        console.log(result) 
-        if(result){
-            this.props.navigation.navigate("Medicamento")
-            alert("Inseriu com sucesso!")
-        }else alert("Erro")
-    })
-}).bind(this)
+        )
+    }
+    cadastrar = (() => {
+        let medicamento = new Medicamento({
+            nome: this.state.medNome,
+            horario: this.state.medHora,
+            data_inicial: this.state.medDataIni,
+            qtde: this.state.medQtde,
+            qtde_dias: this.state.medQtdeDias,
+            ativo: this.state.medAtivo,
+        })
+        console.log(medicamento)
+        this.db.insertNewMedicine(medicamento).then(result => {
+            console.log(result)
+            if (result) {
+                this.props.navigation.navigate("Medicamento")
+                alert("Inseriu com sucesso!")
+            } else alert("Erro")
+        })
+    }).bind(this)
 
 }
-export default  CadastroTela;
+export default CadastroTela;
