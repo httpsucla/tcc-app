@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Button, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Database from '../../services/database';
@@ -31,7 +31,7 @@ export default class ListagemMedicamentos extends React.Component {
                     <Icon name="undo" size={20} color={'#292929f3'} />
                 </TouchableOpacity>
                 <Text style={styles.title}>Todos os medicamentos</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={this.props.navigation.navigate('Cadastro')}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
                 {

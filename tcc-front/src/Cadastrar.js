@@ -48,7 +48,7 @@ export default function Cadastrar({ navigation }) {
 
   const requestToArduinoServer = async () => {
     try {
-      const response = await fetch('http://192.168.100.177')
+      const response = await fetch('http://192.168.25.100')
 
       let json = await response.json();
       setMedicamento(json["medicamento"]);
@@ -60,7 +60,7 @@ export default function Cadastrar({ navigation }) {
   const requestToTurnOnLight = async () => {
     setLedLigado(true);
     try {
-      await fetch('http://192.168.100.177/turnOn')
+      await fetch('http://192.168.25.100/turnOn?tempo=20')
     } catch (error) {
       console.error(error);
     }
@@ -69,7 +69,7 @@ export default function Cadastrar({ navigation }) {
   const requestToTurnOffLight = async () => {
     setLedLigado(false);
     try {
-      await fetch('http://192.168.100.177/turnOff')
+      await fetch('http://192.168.25.100/turnOff')
     } catch (error) {
       console.error(error);
     }

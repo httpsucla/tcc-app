@@ -10,6 +10,7 @@ import Calendario from "../pages/Calendario/";
 import ListagemMedicamento from "../pages/Medicamento/listagem";
 import Configuracao from "../pages/Configuracao/";
 import CadastroTela from "../pages/Medicamento/cadastro";
+import Cadastrar from "../Cadastrar";
 
 const Tab = createBottomTabNavigator();
 
@@ -75,6 +76,12 @@ export default function Routes() {
                         <Icon name="cog" size={size} color={color} />
                     ),
                     title: "Configuração"
+                }}
+            />
+            <Tab.Screen name="Cadastrar" component={Cadastrar}
+                options={{
+                    
+                    title: "Cadastrarr"
                 }}
             />
         </Tab.Navigator>
