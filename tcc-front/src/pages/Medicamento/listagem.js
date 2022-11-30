@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useState } from 'react';
 import { Button, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Database from '../../services/database';
@@ -23,6 +23,37 @@ export default class ListagemMedicamentos extends React.Component {
         console.log(this.state.medicamentos)
     }
 
+    cadastrar = () => {
+        console.log("redirecionando...");
+        this.props.navigation.navigate("Cadastro")
+    }
+
+    deletarMedicamento = (item) => {
+        Alert.alert(
+            "Atenção",
+            'Você tem certeza que deseja excluir o medicamento: ' + item.nome + ' ?',
+            [{
+                text: "Não",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            {
+                text: "Sim",
+                onPress: () => {
+                    this.db.deleteMedicineById(item.id).then(({ result, message }) => {
+                    Alert.alert(
+                        "Sucesso",
+                        'O medicamento: ' + item.nome + ' foi removido!',
+                    
+                    );
+                    this.refresh();
+                });
+                }
+            }],
+            { cancelable: false }
+        );
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -31,7 +62,7 @@ export default class ListagemMedicamentos extends React.Component {
                     <Icon name="undo" size={20} color={'#292929f3'} />
                 </TouchableOpacity>
                 <Text style={styles.title}>Todos os medicamentos</Text>
-                <TouchableOpacity style={styles.button} onPress={this.props.navigation.navigate('Cadastro')}>
+                <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
                 {
@@ -54,12 +85,16 @@ export default class ListagemMedicamentos extends React.Component {
                                             <Text style={{ fontSize: 15 }}>{item.horario}</Text>
                                         </View>
                                     </View>
-
+                                    <View style={styles.campoconteudo}>
+                                        <TouchableOpacity onPress={() => this.deletarMedicamento(item)}>
+                                            <Icon name="trash" size={15} color={'#292929f3'} />
+                                        </TouchableOpacity>
+                                    </View >
                                 </View>
                             )}
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false} /> :
-                        <Text>Não há medicamentos cadastrados no momento :(</Text>
+                        <Text>Não há medicamentos cadastrados no momento :</Text>
                 }
             </View>
         )
