@@ -3,7 +3,7 @@ import { Text, View, ScrollView, Button, TextInput, TouchableOpacity } from 'rea
 import { TextInputMask } from 'react-native-masked-text'
 import { Input } from 'react-native-elements'
 import Medicamento from '../../models/medicamento';
-import Database from '../../services/database';
+import Database from '../../services/databaseMedicamento';
 import styles from './style';
 
 class CadastroTela extends Component {
@@ -19,9 +19,15 @@ class CadastroTela extends Component {
             medQtdeDias: 0,
             medAtivo: false
         }
+        //this.teste = {
+        //    nome: props.route.params.nome
+       // }
     }
 
     render() {
+        //const { navigation } = this.props;
+        //let teste = JSON.stringify(this.teste.nome)
+        //console.log("item: " + teste);
         return (
             <ScrollView>
                 <View style={styles.container}>

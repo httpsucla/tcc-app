@@ -10,13 +10,40 @@ import Calendario from "../pages/Calendario/";
 import ListagemMedicamento from "../pages/Medicamento/listagem";
 import Configuracao from "../pages/Configuracao/";
 import CadastroTela from "../pages/Medicamento/cadastro";
+import Cadastrar from "../Cadastrar";
+import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicamento";
+import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function Routes() {
     return (
+      <Stack.Navigator>
+        <Stack.Screen 
+            name="Home2" 
+            component={HomeTabs} 
+            options={{ headerShown: false }}/>
+        <Stack.Screen
+            name="Cadastro"
+            component={CadastroTela}/>
+        <Stack.Screen
+            name="Visualizacao"
+            component={VisualizarMedicamentoTela}/>
+        <Stack.Screen
+            name="Editar"
+            component={EditarMedicamento}/>
+      </Stack.Navigator>
+        
+    )
+
+}
+
+function HomeTabs() {
+    return (
         <Tab.Navigator
             screenOptions={{
+                headerShown: false,
                 tabBarActiveTintColor: "#414BB2",
                 tabBarInactiveTintColor: "#808080",
                 tabBarActiveBackgroundColor: 'transparent',
@@ -41,13 +68,7 @@ export default function Routes() {
                     )
                 }}
             />
-            <Tab.Screen name="Cadastro" component={CadastroTela}
-                options={{
-                    tabBarIcon: ({ size, color }) => (
-                        <Icon name="clock" size={size} color={color} />
-                    ),
-                }}
-            />
+            
             <Tab.Screen name="Medicamento" component={ListagemMedicamento}
                 options={{
                     tabBarIcon: ({ size, color }) => (
@@ -79,5 +100,5 @@ export default function Routes() {
             />
         </Tab.Navigator>
     )
-
 }
+

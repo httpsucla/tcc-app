@@ -1,31 +1,27 @@
 import React, { Component, useState } from 'react';
 import { Button, Text, View, FlatList, TouchableOpacity,  Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Database from '../../services/database';
+import Database from '../../services/databaseMedicamento';
 import styles from './style';
 
 export default class ListagemMedicamentos extends React.Component {
     constructor(props) {
         super(props);
-        this.db = new Database();
+        this.db = new Database;
         this.navigation = props.navigation;
         this.state = {
             medicamentos: [],
             carregando: true,
             navigatedAway: false
         }
+        
         this.refresh();
     }
 
     refresh = () => {
-        this.setState({ medicamentos: [], carregando: true })
+        //this.setState({ medicamentos: [], carregando: true })
         this.db.getAllMedicine().then(medicamentos => this.setState({ medicamentos: medicamentos, carregando: false }))
         console.log(this.state.medicamentos)
-    }
-
-    cadastrar = () => {
-        console.log("redirecionando...");
-        this.props.navigation.navigate("Cadastro")
     }
 
     deletarMedicamento = (item) => {
@@ -62,7 +58,8 @@ export default class ListagemMedicamentos extends React.Component {
                     <Icon name="undo" size={20} color={'#292929f3'} />
                 </TouchableOpacity>
                 <Text style={styles.title}>Todos os medicamentos</Text>
-                <TouchableOpacity style={styles.button} onPress={() => this.cadastrar()}>
+                <TouchableOpacity style={styles.button} onPress={() => 
+                    this.props.navigation.navigate("Cadastro")}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
                 {
@@ -77,15 +74,19 @@ export default class ListagemMedicamentos extends React.Component {
                                     <View style={styles.campoconteudo}>
                                         <Text style={{ fontSize: 18, fontWeight: '600' }}>{item.nome}</Text>
                                     </View >
-                                    <View style={styles.componentenumero}>
-                                        <View style={styles.campoconteudo}>
-                                            <Text style={{ fontSize: 15 }}>{item.qtde} unidades</Text>
-                                        </View>
-                                        <View style={styles.campoconteudo}>
-                                            <Text style={{ fontSize: 15 }}>{item.horario}</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.campoconteudo}>
+                                    <View style={styles.campoicone}>
+                                        <TouchableOpacity onPress={() => 
+                                            this.props.navigation.navigate("Visualizacao", {medicamento: item})}>
+                                            <Icon name="eye" size={15} color={'#292929f3'} />
+                                        </TouchableOpacity>
+                                    </View >
+                                    <View style={styles.campoicone}>
+                                        <TouchableOpacity  onPress={() => 
+                                            this.props.navigation.navigate("Editar", {medicamento: item})}>
+                                            <Icon name="edit" size={15} color={'#292929f3'} />
+                                        </TouchableOpacity>
+                                    </View >
+                                    <View style={styles.campoicone}>
                                         <TouchableOpacity onPress={() => this.deletarMedicamento(item)}>
                                             <Icon name="trash" size={15} color={'#292929f3'} />
                                         </TouchableOpacity>
