@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { Button, Text, View, FlatList, TouchableOpacity,  Alert } from 'react-native';
+import { Button, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Database from '../../services/databaseMedicamento';
 import styles from './style';

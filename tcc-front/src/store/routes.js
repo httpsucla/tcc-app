@@ -98,6 +98,12 @@ function HomeTabs() {
                     title: "Configuração"
                 }}
             />
+            <Tab.Screen name="Cadastrar" component={Cadastrar}
+                options={{
+                    
+                    title: "Cadastrarr"
+                }}
+            />
         </Tab.Navigator>
     )
 }
