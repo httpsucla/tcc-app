@@ -11,6 +11,8 @@ import ListagemMedicamento from "../pages/Medicamento/listagem";
 import Configuracao from "../pages/Configuracao/";
 import CadastroTela from "../pages/Medicamento/cadastro";
 import Cadastrar from "../Cadastrar";
+import { DrawerActions } from "@react-navigation/native";
+import TelaContatos from "../pages/Configuracao/telaContatos";
 
 const Tab = createBottomTabNavigator();
 
@@ -84,6 +86,9 @@ export default function Routes() {
                     title: "Cadastrarr"
                 }}
             />
+            <Tab.Screen name="Contatos" component={TelaContatos}
+            />
+
         </Tab.Navigator>
     )
 

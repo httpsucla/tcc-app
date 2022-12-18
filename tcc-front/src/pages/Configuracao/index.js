@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import styles from './style';
 
-export default function Configuracao () {
-    return (
+class Configuracao extends Component {
+    constructor(props) {
+        super(props);
+        this.navigation = props.navigation;
+    }
+
+    render() {
+        return (
         <View style={styles.container}>
             <Text style={styles.title}>Configurações</Text>
-
+            <TouchableOpacity style={styles.button} onPress={this.telaContato} >
+                <Text style={styles.buttonText}>Contatos</Text>
+            </TouchableOpacity>
         </View>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f7f7f7',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        color: '#292929f3',
-        fontSize: 20,
-        marginTop: 5
+        );
     }
-});
+
+    telaContato = (() => {
+        this.props.navigation.navigate("Contatos")
+    }).bind(this)
+
+}
+export default Configuracao;

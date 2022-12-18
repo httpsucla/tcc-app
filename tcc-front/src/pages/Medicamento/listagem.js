@@ -29,7 +29,7 @@ export default class ListagemMedicamentos extends React.Component {
     }
 
     deletarMedicamento = (item) => {
-        Alert.alert(
+        alert(
             "Atenção",
             'Você tem certeza que deseja excluir o medicamento: ' + item.nome + ' ?',
             [{
@@ -41,7 +41,7 @@ export default class ListagemMedicamentos extends React.Component {
                 text: "Sim",
                 onPress: () => {
                     this.db.deleteMedicineById(item.id).then(({ result, message }) => {
-                    Alert.alert(
+                    alert(
                         "Sucesso",
                         'O medicamento: ' + item.nome + ' foi removido!',
                     
