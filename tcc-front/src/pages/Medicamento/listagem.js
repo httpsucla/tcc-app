@@ -3,6 +3,7 @@ import { Button, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Database from '../../services/database';
 import styles from './style';
+import style from './style';
 
 export default class ListagemMedicamentos extends React.Component {
     constructor(props) {
@@ -94,7 +95,7 @@ export default class ListagemMedicamentos extends React.Component {
                             )}
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false} /> :
-                        <Text>Não há medicamentos cadastrados no momento :</Text>
+                        <Text style={style.emptyList}>Não há medicamentos cadastrados no momento!</Text>
                 }
             </View>
         )

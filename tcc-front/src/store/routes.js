@@ -80,12 +80,6 @@ export default function Routes() {
                     title: "Configuração"
                 }}
             />
-            <Tab.Screen name="Cadastrar" component={Cadastrar}
-                options={{
-                    
-                    title: "Cadastrarr"
-                }}
-            />
             <Tab.Screen name="Contatos" component={TelaContatos}
             />
 

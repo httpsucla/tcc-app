@@ -73,5 +73,13 @@ export default styles = StyleSheet.create({
     componentenumero: {
         flexDirection: 'column',
         paddingVertical: 10
+    },
+    emptyList : {
+        fontStyle: 'italic',
+        color: '#292929f3',
+        fontSize: 20,
+        paddingHorizontal: 20,
+        textAlign: 'center',
+        marginVertical: 30
     }
 });
