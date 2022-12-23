@@ -13,6 +13,8 @@ import CadastroTela from "../pages/Medicamento/cadastro";
 import Cadastrar from "../Cadastrar";
 import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicamento";
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
+import { DrawerActions } from "@react-navigation/native";
+import TelaContatos from "../pages/Configuracao/telaContatos";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -98,12 +100,9 @@ function HomeTabs() {
                     title: "Configuração"
                 }}
             />
-            <Tab.Screen name="Cadastrar" component={Cadastrar}
-                options={{
-                    
-                    title: "Cadastrarr"
-                }}
+            <Tab.Screen name="Contatos" component={TelaContatos}
             />
+
         </Tab.Navigator>
     )
 }
