@@ -1,31 +1,20 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Button, TextInput, TouchableOpacity } from 'react-native';
-import { TextInputMask } from 'react-native-masked-text'
-import { Input } from 'react-native-elements'
-import Medicamento from '../../models/medicamento';
-import Database from '../../services/databaseMedicamento';
+import { Text, View, ScrollView } from 'react-native';
 import styles from './style';
+import Database from '../../services/database2';
 
 class VisualizarMedicamentoTela extends Component {
     constructor(props) {
         super(props);
         this.db = new Database();
         this.navigation = props.navigation;
-        //this.state = props.route.params.nome;
         this.state = {
-            /*medNome: '',
-            medHora: '',
-            medDataIni: '',
-            medQtde: 0,
-            medQtdeDias: 0,
-            medAtivo: false*/
             medicamento: props.route.params.medicamento
         }
     }
 
     render() {
-        let medicamento = this.state.medicamento;
-        console.log("nome: " + medicamento.nome);
+        const { medicamento } = this.state;
         return (
             <ScrollView>
                 <View style={styles.container}>

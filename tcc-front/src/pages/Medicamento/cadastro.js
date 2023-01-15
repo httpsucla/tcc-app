@@ -3,8 +3,8 @@ import { Text, View, ScrollView, Button, TextInput, TouchableOpacity } from 'rea
 import { TextInputMask } from 'react-native-masked-text'
 import { Input } from 'react-native-elements'
 import Medicamento from '../../models/medicamento';
-import Database from '../../services/databaseMedicamento';
 import styles from './style';
+import Database from '../../services/database2';
 
 class CadastroTela extends Component {
     constructor(props) {
@@ -19,15 +19,9 @@ class CadastroTela extends Component {
             medQtdeDias: 0,
             medAtivo: false
         }
-        //this.teste = {
-        //    nome: props.route.params.nome
-       // }
     }
 
     render() {
-        //const { navigation } = this.props;
-        //let teste = JSON.stringify(this.teste.nome)
-        //console.log("item: " + teste);
         return (
             <ScrollView>
                 <View style={styles.container}>
@@ -76,7 +70,7 @@ class CadastroTela extends Component {
             </ScrollView>
         )
     }
-    cadastrar = (() => {
+    cadastrar = () => {
         let medicamento = new Medicamento({
             nome: this.state.medNome,
             horario: this.state.medHora,
@@ -85,15 +79,17 @@ class CadastroTela extends Component {
             qtde_dias: this.state.medQtdeDias,
             ativo: this.state.medAtivo,
         })
-        console.log(medicamento)
-        this.db.insertNewMedicine(medicamento).then(result => {
-            console.log(result)
-            if (result) {
-                this.props.navigation.navigate("Medicamento")
-                alert("Inseriu com sucesso!")
-            } else alert("Erro")
-        })
-    }).bind(this)
 
+        this.db.executar(`
+            INSERT INTO tb_medicamentos
+            (nome, horario, data_inicial, qtde, qtde_dias, ativo)
+            VALUES ('${medicamento.nome}', '${medicamento.horario}', '${medicamento.data_inicial}', ${medicamento.qtde}, ${medicamento.qtde_dias}, ${medicamento.ativo});`
+        ,[]).then(res => {
+            alert("Inseriu com sucesso!");
+            this.props.navigation.navigate("Medicamento");
+        }).catch( error => {
+            alert("Erro ao inserir o medicamento");
+        });
+    }
 }
 export default CadastroTela;

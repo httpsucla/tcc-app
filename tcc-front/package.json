@@ -36,7 +36,7 @@
     "react-native-date-picker": "^4.2.5",
     "react-native-datepicker": "^1.7.2",
     "react-native-dropdown-select-list": "^2.0.2",
-    "react-native-elements": "^3.4.2",
+    "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-masked-text": "^1.12.5",
     "react-native-pager-view": "5.4.24",

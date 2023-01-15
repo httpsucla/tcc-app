@@ -3,6 +3,7 @@ import Gaveta from '../models/gaveta'
 import LDatabase from './ldatabase'
 import React, {Component} from 'react';
 import Contato from '../models/contato';
+const SQLite = require('expo-sqlite')
 
 export default class Database{
     constructor(){
@@ -11,11 +12,11 @@ export default class Database{
         this.table_name3 = 'tb_contato'
         this.db = new LDatabase('tcc2.db', (db) => {
             db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name}( id integer PRIMARY KEY AUTOINCREMENT, nome text, horario TEXT, data_inicial TEXT, qtde integer, qtde_dias integer, ativo boolean);`, () => {}, (error) => {console.log(error)});
-            db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name2}( id integer PRIMARY KEY AUTOINCREMENT, id_medicamentos integer, horario TEXT, datahora_abertura TEXT, is_ocupado boolean, is_atrasado boolean,
-                             FOREIGN KEY(id_medicamentos) REFERENCES tb_medicamentos(id));`, () => {}, (error) => {console.log(error)});
+            //db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name2}( id integer PRIMARY KEY AUTOINCREMENT, id_medicamentos integer, horario TEXT, datahora_abertura TEXT, is_ocupado boolean, is_atrasado boolean,
+            //                 FOREIGN KEY(id_medicamentos) REFERENCES tb_medicamentos(id));`, () => {}, (error) => {console.log(error)});
             db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name3}( id integer PRIMARY KEY, nome text, fone TEXT);`, () => {}, (error) => {console.log(error)});
 
-            for (var i = 1; i <= 4; i++){
+         /*   for (var i = 1; i <= 4; i++){
                 console.log('entrou aq')
                 let gaveta = new Gaveta();
                 gaveta.id = i;
@@ -25,9 +26,18 @@ export default class Database{
                 gaveta.is_atrasado = false;
                 console.log(gaveta);
                 this.insertNewGaveta(gaveta);
-            }
+            }*/
         console.log("Banco de dados iniciado")
         })
+        this.db2 = SQLite.openDatabase('teste.db')
+        this.sql = `CREATE TABLE IF NOT EXISTS tb_gavetas( 
+            id integer PRIMARY KEY AUTOINCREMENT,
+            id_medicamentos integer,
+            datahora_abertura TEXT,
+            is_ocupado boolean,
+            is_atrasado boolean);`;
+            
+        const res = this.executar(this.sql, [])
     }
     getAllMedicine(){
         return new Promise(resolve => {
@@ -96,7 +106,7 @@ export default class Database{
         return new Promise(resolve => {
             console.log(gaveta);
             if(gaveta){
-                const query = `INSERT INTO tb_gaveta(id_medicamento, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
+                const query = `INSERT INTO tb_gaveta(id_medicamentos, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
                 console.log(query)
                 this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
             }else resolve(false)
@@ -152,6 +162,65 @@ export default class Database{
                     resolve(res.rows._array)
             }, (e)=>console.log('e ' + e))
         })
+    }
+
+    novaGaveta(gaveta=new Gaveta(), params = []){
+        return new Promise((resolve, reject) => {
+            console.log("json: " + gaveta);
+            if(gaveta){
+                const query = `INSERT INTO tb_gavetas(id_medicamentos, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
+                console.log(query)
+                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
+                /*this.db.transaction((tx) => {
+                    tx.executeSql(query, params, 
+                        (_, result) => resolve(result),
+                        (_, err) => reject(err));
+
+                });*/
+            }
+        });
+    }
+
+    getAllGaveta(){
+        return new Promise(resolve => {
+            console.log('teste')
+            var query = `SELECT * FROM ${this.table_name}`;
+            console.log(query)
+            this.db.executeQuery(query, (_, res) => {
+                console.log(res.rows._array);
+                resolve(res.rows._array)
+            }, (e)=>console.log(e))
+        })
+    }
+
+    //insert, delete, update
+    executar(sql, params = []){
+        return new Promise((resolve, reject) => {
+        //    const query = `INSERT INTO tb_gaveta(id_medicamentos, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
+            console.log(sql)
+          //  this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
+            this.db2.transaction((tx) => {
+                tx.executeSql(sql, params, 
+                    (_, result) => resolve(result.rows._array),
+                    (_, err) => reject(err));
+            });
+        });
+    }
+
+    //select
+    executarSelect(sql, params = []){
+        return new Promise((resolve, reject) => {
+        //    const query = `INSERT INTO tb_gaveta(id_medicamentos, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
+            console.log(sql)
+          //  this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
+            this.db2.transaction((tx) => {
+                tx.executeSql(sql, params, 
+                    (_, result) => {
+                        console.log(result.rows._array)
+                        resolve(result.rows._array)},
+                    (_, err) => reject(err));
+            });
+        });
     }
 
 }

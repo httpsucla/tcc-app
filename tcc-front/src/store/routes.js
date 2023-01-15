@@ -15,6 +15,7 @@ import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicament
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import { DrawerActions } from "@react-navigation/native";
 import TelaContatos from "../pages/Configuracao/telaContatos";
+import Gavetas from "../pages/Gaveta/gavetas";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,9 @@ export default function Routes() {
         <Stack.Screen
             name="Editar"
             component={EditarMedicamento}/>
+        <Stack.Screen
+            name="Contatos"
+            component={TelaContatos}/>
       </Stack.Navigator>
         
     )
@@ -77,7 +81,7 @@ function HomeTabs() {
                         <Icon name="pills" size={size} color={color} />
                     )
                 }} />
-            <Tab.Screen name="Gaveta" component={Gaveta}
+            <Tab.Screen name="Gaveta" component={Gavetas}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="inbox" size={size} color={color} />
@@ -100,9 +104,6 @@ function HomeTabs() {
                     title: "Configuração"
                 }}
             />
-            <Tab.Screen name="Contatos" component={TelaContatos}
-            />
-
         </Tab.Navigator>
     )
 }
