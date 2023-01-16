@@ -1,35 +1,68 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Button, TextInput, TouchableOpacity } from 'react-native';
-import { TextInputMask } from 'react-native-masked-text'
-import { Input } from 'react-native-elements'
+import { Text, View, ScrollView, Button, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Medicamento from '../../models/medicamento';
 import styles from './style';
 import Database from '../../services/database2';
 
-class CadastroTela extends Component {
+class EditarMedicamento extends Component {
+
     constructor(props) {
         super(props);
+
+        let medicamento, event;
         this.db = new Database();
-        this.navigation = props.navigation;
         this.state = {
-            medNome: '',
-            medHora: '',
-            medDataIni: '',
-            medQtde: 0,
-            medQtdeDias: 0,
-            medAtivo: false
+            medId: props.route.params.medicamento.id,
+            medNome: props.route.params.medicamento.nome,
+            medHora: props.route.params.medicamento.horario,
+            medDataIni: props.route.params.medicamento.data_inicial,
+            medQtde: props.route.params.medicamento.qtde,
+            medQtdeDias: props.route.params.medicamento.qtde_dias,
+            medAtivo: props.route.params.medicamento.ativo,
+            medicamento: props.route.params.medicamento
         }
+    }
+
+    editar = () => {
+        let medicamento = new Medicamento({
+            id: this.state.medId,
+            nome: this.state.medNome,
+            horario: this.state.medHora,
+            data_inicial: this.state.medDataIni,
+            qtde: this.state.medQtde,
+            qtde_dias: this.state.medQtdeDias,
+            ativo: this.state.medAtivo,
+        })
+        this.db.executar(
+            `UPDATE tb_medicamentos 
+                SET nome='${medicamento.nome}',
+                    horario='${medicamento.horario}',
+                    data_inicial='${medicamento.data_inicial}',
+                    qtde=${medicamento.qtde},
+                    qtde_dias=${medicamento.qtde_dias},
+                    ativo=${medicamento.ativo}
+            WHERE id=${medicamento.id} ;`        
+        , []).then(res => {
+            this.props.navigation.navigate("Medicamento")
+            Alert.alert(
+                "Sucesso!",
+                'O medicamento ' + medicamento.nome + ' foi alterado.',
+            );
+        }).catch( error => {
+            alert("Erro")
+        })
     }
 
     render() {
         return (
             <ScrollView>
                 <View style={styles.container}>
-                    <Text style={styles.title}> Cadastrar Medicamento</Text>
+                    <Text style={styles.title}> Editar Medicamento</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
                             placeholder="Nome"
+                            value={this.state.medNome}
                             onChangeText={text => this.setState({ medNome: text })}
                             maxLenght={30}
                             clearButtonMode="always"
@@ -37,12 +70,14 @@ class CadastroTela extends Component {
                         <TextInput
                             style={styles.input}
                             placeholder="Horário"
+                            value={this.state.medHora}
                             onChangeText={text => this.setState({ medHora: text })}
                             maxLenght={30}
                         />
                         <TextInput
                             style={styles.input}
                             placeholder="Data de Inicio"
+                            value={this.state.medDataIni}
                             onChangeText={text => this.setState({ medDataIni: text })}
                             maxLenght={30}
                             type={'datetime'}
@@ -53,43 +88,25 @@ class CadastroTela extends Component {
                         <TextInput
                             style={styles.input}
                             placeholder="Quantidade"
+                            value={JSON.stringify(this.state.medQtde)}
                             onChangeText={text => this.setState({ medQtde: text })}
                             maxLenght={30}
                             keyboardType='numeric' />
                         <TextInput
                             style={styles.input}
                             placeholder="Quantidade de dias"
+                            value={JSON.stringify(this.state.medQtdeDias)}
                             onChangeText={text => this.setState({ medQtdeDias: text })}
                             maxLenght={30}
                             keyboardType='numeric' />
-                        <TouchableOpacity style={styles.button} onPress={this.cadastrar} >
-                            <Text style={styles.buttonText}>Cadastrar</Text>
+                        <TouchableOpacity style={styles.button} onPress={this.editar} >
+                            <Text style={styles.buttonText}>Salvar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
         )
     }
-    cadastrar = () => {
-        let medicamento = new Medicamento({
-            nome: this.state.medNome,
-            horario: this.state.medHora,
-            data_inicial: this.state.medDataIni,
-            qtde: this.state.medQtde,
-            qtde_dias: this.state.medQtdeDias,
-            ativo: this.state.medAtivo,
-        })
-
-        this.db.executar(`
-            INSERT INTO tb_medicamentos
-            (nome, horario, data_inicial, qtde, qtde_dias, ativo)
-            VALUES ('${medicamento.nome}', '${medicamento.horario}', '${medicamento.data_inicial}', ${medicamento.qtde}, ${medicamento.qtde_dias}, ${medicamento.ativo});`
-        ,[]).then(res => {
-            alert("Inseriu com sucesso!");
-            this.props.navigation.navigate("Medicamento");
-        }).catch( error => {
-            alert("Erro ao inserir o medicamento");
-        });
-    }
 }
-export default CadastroTela;
+export default EditarMedicamento;
+

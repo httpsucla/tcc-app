@@ -70,6 +70,11 @@ export default styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 12
     },
+    campoicone: {  
+        justifyContent: 'center',
+        paddingHorizontal: 2,
+        
+    },
     componentenumero: {
         flexDirection: 'column',
         paddingVertical: 10

@@ -1,7 +1,6 @@
 import Medicamento from '../models/medicamento'
 import Gaveta from '../models/gaveta'
 import LDatabase from './ldatabase'
-import React, {Component} from 'react';
 import Contato from '../models/contato';
 
 export default class Database{
@@ -10,12 +9,12 @@ export default class Database{
         this.table_name2 = 'tb_gavetas'
         this.table_name3 = 'tb_contato'
         this.db = new LDatabase('tcc2.db', (db) => {
-            db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name}( id integer PRIMARY KEY AUTOINCREMENT, nome text, horario TEXT, data_inicial TEXT, qtde integer, qtde_dias integer, ativo boolean);`, () => {}, (error) => {console.log(error)});
-            db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name2}( id integer PRIMARY KEY AUTOINCREMENT, id_medicamentos integer, horario TEXT, datahora_abertura TEXT, is_ocupado boolean, is_atrasado boolean,
-                             FOREIGN KEY(id_medicamentos) REFERENCES tb_medicamentos(id));`, () => {}, (error) => {console.log(error)});
+        //    db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name}( id integer PRIMARY KEY AUTOINCREMENT, nome text, horario TEXT, data_inicial TEXT, qtde integer, qtde_dias integer, ativo boolean);`, () => {}, (error) => {console.log(error)});
+        //    db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name2}( id integer PRIMARY KEY AUTOINCREMENT, id_medicamentos integer, horario TEXT, datahora_abertura TEXT, is_ocupado boolean, is_atrasado boolean,
+        //                     FOREIGN KEY(id_medicamentos) REFERENCES tb_medicamentos(id));`, () => {}, (error) => {console.log(error)});
             db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name3}( id integer PRIMARY KEY, nome text, fone TEXT);`, () => {}, (error) => {console.log(error)});
 
-            for (var i = 1; i <= 4; i++){
+         /*   for (var i = 1; i <= 4; i++){
                 console.log('entrou aq')
                 let gaveta = new Gaveta();
                 gaveta.id = i;
@@ -25,7 +24,7 @@ export default class Database{
                 gaveta.is_atrasado = false;
                 console.log(gaveta);
                 this.insertNewGaveta(gaveta);
-            }
+            }*/
         console.log("Banco de dados iniciado")
         })
     }
@@ -96,7 +95,26 @@ export default class Database{
         return new Promise(resolve => {
             console.log(gaveta);
             if(gaveta){
-                const query = `INSERT INTO tb_gaveta(id_medicamento, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
+                const query = `INSERT INTO tb_gaveta(id_medicamentos, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
+                console.log(query)
+                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
+            }else resolve(false)
+        })
+    }
+    
+    editMedicineById(medicamento=new Medicamento()){
+        return new Promise(resolve => {
+            console.log(medicamento);
+            if(medicamento){
+                const query = `
+                    UPDATE ${this.table_name} 
+                    SET nome='${medicamento.nome}',
+                        horario='${medicamento.horario}',
+                        data_inicial='${medicamento.data_inicial}',
+                        qtde=${medicamento.qtde},
+                        qtde_dias=${medicamento.qtde_dias},
+                        ativo=${medicamento.ativo}
+                    WHERE id=${medicamento.id} ;`
                 console.log(query)
                 this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
             }else resolve(false)
