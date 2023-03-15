@@ -1,39 +1,73 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import Box from './components/Box';
+import Database from '../../services/database2';
 
-export default function Gaveta({ navigation, route }) {
+export default class Gavetas extends React.Component {
+    constructor(props) {
+        super(props);
+        this.db = new Database();
+        this.navigation = props.navigation;
+        this.state = {
+            gavetas: [],
+            medicamentos: [],
+            carregando: true,
+            navigatedAway: false
+        }
+    }
 
-    const [items, setItems] = useState([
-        { id: 1, drug: { nome: "Dorflex", hour: "17:00", qtde: 10, date: "08/08/2022", days: 3 } },
-        { id: 2, drug: { nome: "Dorflex", hour: "17:00", qtde: 10, date: "08/08/2022", days: 3 } },
-        { id: 3, drug: { nome: "Buscopan", hour: "08:30", qtde: 12, date: "08/08/2022", days: 4 } },
-        { id: 4, drug: { nome: "Buscopan", hour: "08:30", qtde: 12, date: "08/08/2022", days: 4 } }
-    ]);
+    componentDidMount() {
+        this.db.executarSelect('SELECT * FROM tb_gavetas', [])
+            .then(res =>{
+                this.setState({ gavetas: res })
+            });
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.flex}>
-                <View style={styles.gaveta}>
-                    <Text style={styles.title}>Gaveta 1</Text>
-                    <Box name = "Gaveta 1" medicamento = {items[0]} />
+        this.db.executarSelect('SELECT * FROM tb_medicamentos', [])
+            .then(res =>{
+                this.setState({ medicamentos: res })
+            });
+    }
+
+    refresh = () => {
+        this.db.executarSelect('SELECT * FROM tb_gavetas', [])
+            .then(res =>{
+                this.setState({ gavetas: res })
+            });
+    }
+
+    render() {
+      if (this.state.gavetas.length>0) {
+        const { gavetas } = this.state;
+        const { medicamentos } = this.state;
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity style={{marginTop: 30}} onPress={() => this.refresh()}>
+                    <Icon name="undo" size={20} color={'#292929f3'} />
+                </TouchableOpacity>
+                <View style={styles.flex}>
+                    <View style={styles.gaveta}>
+                        <Text style={styles.title}>Gaveta 1</Text>
+                        <Box gaveta = {gavetas[0]} navigation = {this.props.navigation} db = {this.db} meds = {medicamentos} />
+                    </View>
+                    <View style={styles.gaveta}>
+                        <Text style={styles.title}>Gaveta 2</Text>
+                        <Box gaveta = {gavetas[1]} navigation = {this.props.navigation} db = {this.db} meds = {medicamentos}/>
+                    </View>
                 </View>
-                <View style={styles.gaveta}>
-                    <Text style={styles.title}>Gaveta 2</Text>
-                    <Box name = "Gaveta 2" medicamento = {items[1]} />
+                <View style={styles.flex}>
+                    <View style={styles.gaveta}>
+                        <Text style={styles.title}>Gaveta 3</Text>
+                        <Box gaveta = {gavetas[2]} navigation = {this.props.navigation} db = {this.db} meds = {medicamentos}/>
+                    </View>
+                    <View style={styles.gaveta}>
+                        <Text style={styles.title}>Gaveta 4</Text>
+                        <Box gaveta = {gavetas[3]} navigation = {this.props.navigation} db = {this.db} meds = {medicamentos}/>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.flex}>
-                <View style={styles.gaveta}>
-                    <Text style={styles.title}>Gaveta 3</Text>
-                    <Box name = "Gaveta 3" medicamento = {items[2]}/>
-                </View>
-                <View style={styles.gaveta}>
-                    <Text style={styles.title}>Gaveta 4</Text>
-                    <Box name = "Gaveta 4" medicamento = {items[3]}/>
-                </View>
-            </View>
-        </View>
-    );
+            </View>            
+        )
+      }
+    }
 }

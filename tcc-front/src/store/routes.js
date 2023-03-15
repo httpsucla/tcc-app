@@ -5,16 +5,15 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { DrawerActions } from "@react-navigation/native";
 
 import Home from "../pages/Home";
-import Gaveta from "../pages/Gaveta/";
 import Calendario from "../pages/Calendario/";
 import ListagemMedicamento from "../pages/Medicamento/listagem";
 import Configuracao from "../pages/Configuracao/";
 import CadastroTela from "../pages/Medicamento/cadastro";
-import Cadastrar from "../Cadastrar";
 import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicamento";
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
-import Gavetas from "../pages/Gaveta/gavetas";
+import Gavetas from "../pages/Gaveta";
+import Historico from "../pages/Historico";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,7 +47,7 @@ function HomeTabs() {
     return (
         <Tab.Navigator
             screenOptions={{
-                headerShown: false,
+                headerShown: true,
                 tabBarActiveTintColor: "#414BB2",
                 tabBarInactiveTintColor: "#808080",
                 tabBarActiveBackgroundColor: 'transparent',
@@ -72,8 +71,16 @@ function HomeTabs() {
                         <Icon name="home" size={size} color={color} />
                     )
                 }}
+                
             />
-            
+            <Tab.Screen name="Historico" component={Historico}
+                options={{
+                    tabBarIcon: ({size, color}) => (
+                        <Icon name="clock" size={size} color={color}/>
+                    ),
+                    title: "Histórico"
+                }}
+            />
             <Tab.Screen name="Medicamento" component={ListagemMedicamento}
                 options={{
                     tabBarIcon: ({ size, color }) => (
