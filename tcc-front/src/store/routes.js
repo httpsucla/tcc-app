@@ -12,8 +12,11 @@ import CadastroTela from "../pages/Medicamento/cadastro";
 import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicamento";
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
-import Gavetas from "../pages/Gaveta";
+import Gavetas from "../pages/Gaveta/";
 import Historico from "../pages/Historico";
+import CalendarioListado from "../pages/Calendario/calendarioListado";
+import TelaCadastroMedicamento from "../pages/CadastroMedTeste/medCadastroTeste";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -94,7 +97,7 @@ function HomeTabs() {
                     )
                 }}
             />
-            <Tab.Screen name="Calendario" component={Calendario}
+            <Tab.Screen name="Calendario" component={CalendarioListado}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="calendar-day" size={size} color={color} />
@@ -110,6 +113,14 @@ function HomeTabs() {
                     title: "Configuração"
                 }}
             />
+            <Tab.Screen name= "medTeste" component={TelaCadastroMedicamento}
+            options={{
+                tabBarIcon: ({ size, color }) => (
+                    <Icon name="cog" size={size} color={color} />
+                ),
+                title: "TelaCadastroMedicamento"
+            }}
+        />
         </Tab.Navigator>
     )
 }
