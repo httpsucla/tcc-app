@@ -13,7 +13,8 @@ import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicament
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
 import Gavetas from "../pages/Gaveta";
-import Historico from "../pages/Historico";
+import Historico from "../pages/Historico/index";
+import Filtro from "../pages/Historico/filtro";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -37,6 +38,13 @@ export default function Routes() {
         <Stack.Screen
             name="Contatos"
             component={TelaContatos}/>
+        <Stack.Screen
+            name="Filtro"
+            component={Filtro}/>
+        <Stack.Screen
+            name="Historico"
+            component={Historico}
+            options={{ headerLeft: null }}/>
       </Stack.Navigator>
         
     )

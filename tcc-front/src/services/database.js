@@ -8,12 +8,26 @@ export default class Database{
         this.table_name = 'tb_medicamentos'
         this.table_name2 = 'tb_gavetas'
         this.table_name3 = 'tb_contato'
+        this.table_name4 = 'tb_historico'
         this.db = new LDatabase('tcc2.db', (db) => {
         //    db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name}( id integer PRIMARY KEY AUTOINCREMENT, nome text, horario TEXT, data_inicial TEXT, qtde integer, qtde_dias integer, ativo boolean);`, () => {}, (error) => {console.log(error)});
         //    db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name2}( id integer PRIMARY KEY AUTOINCREMENT, id_medicamentos integer, horario TEXT, datahora_abertura TEXT, is_ocupado boolean, is_atrasado boolean,
         //                     FOREIGN KEY(id_medicamentos) REFERENCES tb_medicamentos(id));`, () => {}, (error) => {console.log(error)});
             db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name3}( id integer PRIMARY KEY, nome text, fone TEXT);`, () => {}, (error) => {console.log(error)});
+            db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name4}( 
+                            id integer PRIMARY KEY, 
+                            id_gaveta integer,
+                            id_medicamento integer,
+                            dthora_abertura TEXT,
+                            dthora_prevista TEXT,
+                            situacao TEXT);`, () => {}, (error) => {console.log(error)});
 
+            db.executeQuery(`INSERT INTO ${this.table_name4}  
+                (id integer, id_gaveta, id_medicamento, dthora_abertura, dthora_prevista, situacao)
+                VALUES (1, 1, 2, '10/12/2022 12:00', '10/12/2022 12:03', 'Ok')
+                VALUES (2, 2, 1, '11/12/2022 14:00', '11/12/2022 14:07', 'Ok')
+                VALUES (3, 2, 1, '11/12/2022 06:00', '11/12/2022 07:30', 'Atraso')
+                VALUES (4, 3, 4, '14/12/2022 00:00', '14/12/2022 00:10', 'Ok');`, () => {}, (error) => {console.log(error)});
          /*   for (var i = 1; i <= 4; i++){
                 console.log('entrou aq')
                 let gaveta = new Gaveta();
