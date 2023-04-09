@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { DrawerActions } from "@react-navigation/native";
 
 import Home from "../pages/Home";
-import Calendario from "../pages/Calendario/";
 import ListagemMedicamento from "../pages/Medicamento/listagem";
 import Configuracao from "../pages/Configuracao/";
 import CadastroTela from "../pages/Medicamento/cadastro";
@@ -14,36 +13,34 @@ import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
 import Gavetas from "../pages/Gaveta/";
 import Historico from "../pages/Historico";
-import CalendarioListado from "../pages/Calendario/calendarioListado";
+import Calendario from "../pages/Calendario";
 import TelaCadastroMedicamento from "../pages/CadastroMedTeste/medCadastroTeste";
-
+import CadastroMedTeste from "../pages/CadastroMedTeste";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
     return (
-      <Stack.Navigator>
-        <Stack.Screen 
-            name="Home2" 
-            component={HomeTabs} 
-            options={{ headerShown: false }}/>
-        <Stack.Screen
-            name="Cadastro"
-            component={CadastroTela}/>
-        <Stack.Screen
-            name="Visualizacao"
-            component={VisualizarMedicamentoTela}/>
-        <Stack.Screen
-            name="Editar"
-            component={EditarMedicamento}/>
-        <Stack.Screen
-            name="Contatos"
-            component={TelaContatos}/>
-      </Stack.Navigator>
-        
+        <Stack.Navigator>
+            <Stack.Screen
+                name="Home2"
+                component={HomeTabs}
+                options={{ headerShown: false }} />
+            <Stack.Screen
+                name="Visualizacao"
+                component={VisualizarMedicamentoTela} />
+            <Stack.Screen
+                name="Editar"
+                component={EditarMedicamento} />
+            <Stack.Screen
+                name="Contatos"
+                component={TelaContatos} />
+            <Stack.Screen
+                name="Cadastro Medicamento"
+                component={TelaCadastroMedicamento} />
+        </Stack.Navigator>
     )
-
 }
 
 function HomeTabs() {
@@ -74,21 +71,22 @@ function HomeTabs() {
                         <Icon name="home" size={size} color={color} />
                     )
                 }}
-                
+
             />
             <Tab.Screen name="Historico" component={Historico}
                 options={{
-                    tabBarIcon: ({size, color}) => (
-                        <Icon name="clock" size={size} color={color}/>
+                    tabBarIcon: ({ size, color }) => (
+                        <Icon name="clock" size={size} color={color} />
                     ),
                     title: "Histórico"
                 }}
             />
-            <Tab.Screen name="Medicamento" component={ListagemMedicamento}
+            <Tab.Screen name="CadastroMedTeste" component={CadastroMedTeste}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="pills" size={size} color={color} />
-                    )
+                    ),
+                    title: "Medicamento"
                 }} />
             <Tab.Screen name="Gaveta" component={Gavetas}
                 options={{
@@ -97,7 +95,7 @@ function HomeTabs() {
                     )
                 }}
             />
-            <Tab.Screen name="Calendario" component={CalendarioListado}
+            <Tab.Screen name="Calendario" component={Calendario}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="calendar-day" size={size} color={color} />
@@ -113,14 +111,6 @@ function HomeTabs() {
                     title: "Configuração"
                 }}
             />
-            <Tab.Screen name= "medTeste" component={TelaCadastroMedicamento}
-            options={{
-                tabBarIcon: ({ size, color }) => (
-                    <Icon name="cog" size={size} color={color} />
-                ),
-                title: "TelaCadastroMedicamento"
-            }}
-        />
         </Tab.Navigator>
     )
 }

@@ -4,21 +4,24 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Alert
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  ScrollView
 } from 'react-native';
 import DatabaseManager from '../../services/testDb';
+import styles from './style';
 import moment from 'moment';
 
-export default function TelaCadastroMedicamento() {
+export default function TelaCadastroMedicamento({navigation}) {
+  
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');
   const [horario, setHorario] = useState('');
   const [qtde, setQtde] = useState('');
   const [qtdeDias, setQtdeDias] = useState('');
   const [ativo, setAtivo] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-
 
   function handleInsert() {
     const item = {
@@ -44,134 +47,87 @@ export default function TelaCadastroMedicamento() {
     });
 
     Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
+    navigation.navigate("CadastroMedTeste");
     DatabaseManager.getMedicamentos((medicamentos) => {
-        console.log(medicamentos);
-      });
+      console.log(medicamentos);
+    });
 
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Nome:</Text>
-      <TextInput
-        style={styles.input}
-        value={nome}
-        onChangeText={setNome}
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={styles.container}
+        >
+          <Text style={styles.title}> Cadastrar Medicamento</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Nome"
+              value={nome}
+              onChangeText={setNome}
+              returnKeyType='done'
+              clearButtonMode="always"
+            />
+            <TextInput
+              style={styles.input}
+              value={dataInicial}
+              placeholder='Data de início'
+              maxLength={10}
+              keyboardType='numeric'
+              returnKeyType='done'
+              clearButtonMode="always"
+              onChangeText={(text) => {
+                if (text.length === 2 || text.length === 5) {
+                  setDataInicial(text + '/');
+                } else {
+                  setDataInicial(text);
+                }
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              value={horario}
+              placeholder='Horário de início'
+              maxLength={5}
+              keyboardType='numeric'
+              returnKeyType='done'
+              clearButtonMode="always"
+              onChangeText={(text) => {
+                if (text.length === 2) {
+                  setHorario(text + ':');
+                } else {
+                  setHorario(text);
+                }
+              }}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Quantidade"
+              value={qtde}
+              onChangeText={setQtde}
+              keyboardType='numeric'
+              returnKeyType='done'
+              clearButtonMode="always"
+            />
+            <TextInput
+              placeholder="Quantidade de dias"
+              style={styles.input}
+              value={qtdeDias}
+              onChangeText={setQtdeDias}
+              keyboardType='numeric'
+              returnKeyType='done'
+              clearButtonMode="always"
+            />
 
-<Text style={styles.label}>Data Inicial:</Text>
-      <TextInput
-        style={styles.input}
-        value={dataInicial}
-        placeholder='DD/MM/AAAA'
-        maxLength={10}
-        keyboardType='numeric'
-        onChangeText={(text) => {
-          if (text.length === 2 || text.length === 5) {
-            setDataInicial(text + '/');
-          } else {
-            setDataInicial(text);
-          }
-        }}
-      />
-
-
-<Text style={styles.label}>Horário:</Text>
-      <TextInput
-        style={styles.input}
-        value={horario}
-        placeholder='HH:MM'
-        maxLength={5}
-        keyboardType='numeric'
-        onChangeText={(text) => {
-          if (text.length === 2) {
-            setHorario(text + ':');
-          } else {
-            setHorario(text);
-          }
-        }}
-      />
-
-
-      <Text style={styles.label}>Qtde:</Text>
-      <TextInput
-        style={styles.input}
-        value={qtde}
-        onChangeText={setQtde}
-        keyboardType='numeric'
-      />
-
-      <Text style={styles.label}>Qtde dias:</Text>
-      <TextInput
-        style={styles.input}
-        value={qtdeDias}
-        onChangeText={setQtdeDias}
-        keyboardType='numeric'
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleInsert}>
-        <Text style={styles.buttonText}>Cadastrar</Text>
-      </TouchableOpacity>
-    </View>
+            <TouchableOpacity style={styles.button} onPress={handleInsert}>
+              <Text style={styles.buttonText}>Cadastrar</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 }
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 10,
-    },
-    label: {
-      marginTop: 10,
-      fontWeight: 'bold',
-      fontSize: 16,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#ddd',
-      borderRadius: 5,
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      fontSize: 16,
-      marginBottom: 10,
-    },
-    button: {
-      backgroundColor: '#007aff',
-      borderRadius: 5,
-      paddingVertical: 10,
-      alignItems: 'center',
-      marginTop: 10,
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    checkboxContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 10,
-    },  checkbox: {
-        width: 24,
-        height: 24,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        marginRight: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      buttonText: {
-        fontSize: 16,
-        color: '#fff',
-        fontWeight: 'bold',
-      },
-      button: {
-        height: 48,
-        backgroundColor: '#555',
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-    });
-
-
