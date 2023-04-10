@@ -39,21 +39,8 @@ export default function Routes() {
                 name="Cadastrar Medicamento"
                 component={CadastrarMedicamento} />
             <Stack.Screen
-                name="Home2"
-                component={HomeTabs}
-                options={{ headerShown: false }} />
-            <Stack.Screen
-                name="Cadastro"
-                component={CadastroTela} />
-            <Stack.Screen
-                name="Visualizacao"
-                component={VisualizarMedicamentoTela} />
-            <Stack.Screen
                 name="Editar"
                 component={EditarMedicamento} />
-            <Stack.Screen
-                name="Contatos"
-                component={TelaContatos} />
             <Stack.Screen
                 name="Filtro"
                 component={Filtro} />
