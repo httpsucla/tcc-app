@@ -39,8 +39,9 @@ export default function CadastroMedTeste({ navigation }) {
             {
                 text: "Sim",
                 onPress: () => {
-                    DatabaseManager.deleteMedicamento(item, []);
+                    DatabaseManager.deleteMedicamento(item.id);
                     Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' removido com sucesso.');
+
                 }
             }],
             { cancelable: false }
@@ -51,7 +52,7 @@ export default function CadastroMedTeste({ navigation }) {
         <View style={styles.container}>
             <Text style={styles.title}>Todos os medicamentos</Text>
             <TouchableOpacity style={styles.buttonLista} onPress={() =>
-                navigation.navigate("Cadastro Medicamento")}>
+                navigation.navigate("Cadastrar Medicamento")}>
                 <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
             {
@@ -72,14 +73,14 @@ export default function CadastroMedTeste({ navigation }) {
                                 <View style={styles.campoconteudo}>
                                     <TouchableOpacity
                                         onPress={() =>
-                                            navigation.navigate("Visualizacao", {})}>
+                                            navigation.navigate("Visualizar Medicamento", { item: item })}>
                                         <Text style={{ fontSize: 18, fontWeight: '600' }}>{item.nome}</Text>
                                     </TouchableOpacity>
                                 </View >
                                 <View style={styles.campoicone}>
                                     <View style={styles.componentenumero}>
                                         <TouchableOpacity onPress={() =>
-                                            navigation.navigate("Editar", {})}>
+                                            navigation.navigate("Editar Medicamento", {med: item})}>
                                             <Icon name="edit" size={18} color={'#292929f3'} />
                                         </TouchableOpacity>
                                     </View >

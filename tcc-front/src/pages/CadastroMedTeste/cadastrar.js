@@ -14,7 +14,7 @@ import DatabaseManager from '../../services/testDb';
 import styles from './style';
 import moment from 'moment';
 
-export default function TelaCadastroMedicamento({navigation}) {
+export default function CadastrarMedicamento({navigation}) {
   
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');

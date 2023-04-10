@@ -5,16 +5,14 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { DrawerActions } from "@react-navigation/native";
 
 import Home from "../pages/Home";
-import ListagemMedicamento from "../pages/Medicamento/listagem";
 import Configuracao from "../pages/Configuracao/";
-import CadastroTela from "../pages/Medicamento/cadastro";
-import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicamento";
+import VisualizarMedicamento from "../pages/CadastroMedTeste/visualizar";
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
 import Gavetas from "../pages/Gaveta/";
 import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
-import TelaCadastroMedicamento from "../pages/CadastroMedTeste/medCadastroTeste";
+import CadastrarMedicamento from "../pages/CadastroMedTeste/cadastrar";
 import CadastroMedTeste from "../pages/CadastroMedTeste";
 
 const Tab = createBottomTabNavigator();
@@ -28,17 +26,17 @@ export default function Routes() {
                 component={HomeTabs}
                 options={{ headerShown: false }} />
             <Stack.Screen
-                name="Visualizacao"
-                component={VisualizarMedicamentoTela} />
+                name="Visualizar Medicamento"
+                component={VisualizarMedicamento} />
             <Stack.Screen
-                name="Editar"
+                name="Editar Medicamento"
                 component={EditarMedicamento} />
             <Stack.Screen
                 name="Contatos"
                 component={TelaContatos} />
             <Stack.Screen
-                name="Cadastro Medicamento"
-                component={TelaCadastroMedicamento} />
+                name="Cadastrar Medicamento"
+                component={CadastrarMedicamento} />
         </Stack.Navigator>
     )
 }

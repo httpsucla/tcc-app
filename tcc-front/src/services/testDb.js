@@ -74,11 +74,13 @@ export default class DatabaseManager {
   }
 
   static deleteMedicamento(id, callback) {
+    console.log(`esse é o ID ${id}:`)
     db.transaction(tx => {
       tx.executeSql(
         'DELETE FROM tbMedicamentos WHERE id = ?',
         [id],
-        () => callback()
+        () => callback(),
+        (_, error) => console.log(`Erro ao deletar o medicamento com ID ${id}:`, error)
       );
     });
   }
@@ -89,6 +91,16 @@ export default class DatabaseManager {
         'SELECT * FROM tbMedicamentos',
         [],
         (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static getMedicamentoById(id, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tbMedicamentos WHERE id = ?',
+        [id],
+        () => callback()
       );
     });
   }

@@ -1,40 +1,30 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, ScrollView } from 'react-native';
 import styles from './style';
-import Database from '../../services/database2';
+import { useRoute } from '@react-navigation/native';
 
-class VisualizarMedicamento extends Component {
-    constructor(props) {
-        super(props);
-        this.db = new Database();
-        this.navigation = props.navigation;
-        this.state = {
-            medicamento: props.route.params.medicamento
-        }
-    }
+export default function VisualizarMedicamento() {
+    
+    const route = useRoute();
+    const { item } = route.params;
 
-    render() {
-        const { medicamento } = this.state;
-        return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <Text style={styles.title}> Visualizar Medicamento</Text>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.input}>Nome: {JSON.stringify(medicamento.nome)}
-                        </Text>
-                        <Text style={styles.input}>Horário: {JSON.stringify(medicamento.horario)}
-                        </Text>
-                        <Text style={styles.input}>Data de inicio: {JSON.stringify(medicamento.data_inicial)}
-                        </Text>
-                        <Text style={styles.input}>Quantidade: {JSON.stringify(medicamento.qtde)}
-                        </Text>
-                        <Text style={styles.input}>Quantidade de dias: {JSON.stringify(medicamento.qtde_dias)}
-                        </Text>
-                    </View>
+    return (
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.title}> Visualizar Medicamento</Text>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.input}>Nome: {item.nome}
+                    </Text>
+                    <Text style={styles.input}>Horário: {item.horario}
+                    </Text>
+                    <Text style={styles.input}>Data de inicio: {new Date(item.data_inicial).toLocaleDateString('pt-br')}
+                    </Text>
+                    <Text style={styles.input}>Quantidade: {item.qtde} comprimidos
+                    </Text>
+                    <Text style={styles.input}>Quantidade de dias: {item.qtde_dias}
+                    </Text>
                 </View>
-            </ScrollView>
-        )
-    }
-
+            </View>
+        </ScrollView>
+    )
 }
-export default VisualizarMedicamento;
