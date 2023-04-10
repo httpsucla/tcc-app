@@ -12,17 +12,12 @@ import CadastroTela from "../pages/Medicamento/cadastro";
 import VisualizarMedicamentoTela from "../pages/Medicamento/visualizarMedicamento";
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
-<<<<<<< HEAD
-import Gavetas from "../pages/Gaveta";
-import Historico from "../pages/Historico/index";
+import Gavetas from "../pages/Gaveta";;
 import Filtro from "../pages/Historico/filtro";
-=======
-import Gavetas from "../pages/Gaveta/";
 import Historico from "../pages/Historico";
 import CalendarioListado from "../pages/Calendario/calendarioListado";
 import TelaCadastroMedicamento from "../pages/CadastroMedTeste/medCadastroTeste";
 
->>>>>>> 49152242bfb4274e9a406abe00b13f15f95a1463
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,8 +46,7 @@ export default function Routes() {
             component={Filtro}/>
         <Stack.Screen
             name="Historico"
-            component={Historico}
-            options={{ headerLeft: null }}/>
+            component={Historico}/>
       </Stack.Navigator>
         
     )
