@@ -9,7 +9,8 @@ import Configuracao from "../pages/Configuracao/";
 import VisualizarMedicamento from "../pages/CadastroMedTeste/visualizar";
 import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
 import TelaContatos from "../pages/Configuracao/telaContatos";
-import Gavetas from "../pages/Gaveta/";
+import Gavetas from "../pages/Gaveta";;
+import Filtro from "../pages/Historico/filtro";
 import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
 import CadastrarMedicamento from "../pages/CadastroMedTeste/cadastrar";
@@ -37,7 +38,30 @@ export default function Routes() {
             <Stack.Screen
                 name="Cadastrar Medicamento"
                 component={CadastrarMedicamento} />
+            <Stack.Screen
+                name="Home2"
+                component={HomeTabs}
+                options={{ headerShown: false }} />
+            <Stack.Screen
+                name="Cadastro"
+                component={CadastroTela} />
+            <Stack.Screen
+                name="Visualizacao"
+                component={VisualizarMedicamentoTela} />
+            <Stack.Screen
+                name="Editar"
+                component={EditarMedicamento} />
+            <Stack.Screen
+                name="Contatos"
+                component={TelaContatos} />
+            <Stack.Screen
+                name="Filtro"
+                component={Filtro} />
+            <Stack.Screen
+                name="Historico"
+                component={Historico} />
         </Stack.Navigator>
+
     )
 }
 
