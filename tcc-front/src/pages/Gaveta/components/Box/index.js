@@ -1,151 +1,159 @@
-import React, { Component } from 'react';
-import { Alert, Modal, TouchableOpacity, Text, Pressable, View } from "react-native";
+import React, { useState } from 'react';
+import { Alert, Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback, Pressable } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import { SelectList } from 'react-native-dropdown-select-list';
+import DatabaseManager from '../../../../services/testDb';
 
-export default class Box extends React.Component {
-    constructor(props) {
-        super(props);
-        this.db = props.db;
-        this.navigation = props.navigation;
-        this.state = {
-            gaveta: null,
-            medicamentos: [],
-            carregando: true,
-            navigatedAway: false,
-            modalVisible: false,
-            selected: "",
+export default function Box({ gaveta, navigation, meds }) {
+
+    const [gavetas, setGavetas] = useState([]);
+    const [medicamentos, setMedicamentos] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selected, setSelected] = useState("");
+    const nomeMed = '';
+
+    const showMedicamentos = () => {
+
+        if (gaveta) {
+            setGavetas(gaveta);
         }
+
+        DatabaseManager.getMedicamentos((medicamentos) => {
+
+            for (let i = 0; i < medicamentos.length; i++) {
+
+                if (medicamentos[i].id == meds) {
+                    this.nomeMed = medicamentos[i].nome;
+                    console.log(this.nomeMed)
+                }
+                this.data = medicamentos.map(m => ({
+                    key: m.id,
+                    value: m.nome
+                }));
+            }
+            setMedicamentos(this.data);
+        });
+
     };
 
-    data = [
-        { keys: '1', value: 'Remedio teste 1' },
-        { keys: '2', value: 'Remedio teste 2' },
-        { keys: '3', value: 'Remedio teste 3' },
-        { keys: '4', value: 'Remedio teste 4' }
-    ];
-
-    componentDidMount() {
-        if (this.props.gaveta)
-            this.setState({ gaveta: this.props.gaveta })
-    }
-
-    refresh = () => {
-        if (this.props.gaveta) {
-            this.setState({ gaveta: this.props.gaveta })
-            //    console.log("gaveta selecionada: " + JSON.stringify(this.state.gaveta))
-        }
-    }
-
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
-    }
-
-    salvar = async () => {
-        //ativa a gaveta e salva o id do medicamento
-        this.setModalVisible(!this.state);
-
-        this.db.executar(
-            `UPDATE tb_gavetas 
-             SET id_medicamento=${this.state.selected},
-                 is_ocupado=1
-             WHERE id=${this.state.gaveta.id} ;`
-            , []).then(res => {
-                Alert.alert(
-                    "Sucesso!",
-                    'A Gaveta ' + this.state.gaveta.id + ' foi salva.',
-                );
-            });
-
-        /*this.db.executarSelect(`SELECT * FROM tb_gavetas 
-                                WHERE id = ${this.state.gaveta.id}`
-        , []).then(res =>{
-                this.setState({ gaveta: res })
-                console.log("gaveta atualizada: " + JSON.stringify(res));
-        });*/
-    }
-
-    listaDeMedicamento = () => {
-        if (this.props.meds.length > 0) {
-            this.data = this.props.meds.map(m => ({
-                key: m.id, value: m.nome
-            }));
-        }
+    const hideModal = () => {
+        setModalVisible(false);
     };
 
-    render() {
-        const { modalVisible } = this.state;
+    function salvar(item) {
+        const teste = {
+            id_medicamento: selected,
+            datahora_abertura: '',
+            is_ocupado: true,
+            is_atrasado: '',
+            id: item,
+        };
 
-        return (
-            <View>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        //  Alert.alert("Modal has been closed.");
-                        this.setModalVisible(!modalVisible);
-                    }}>
+        DatabaseManager.updateGaveta(teste, () => {
+            Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
+        })
+        console.log(selected);
+        console.log(item);
+        console.log(teste);
+    };
 
+    function limparGaveta(item) {
+        const teste = {
+            id_medicamento: '',
+            datahora_abertura: '',
+            is_ocupado: false,
+            is_atrasado: '',
+            id: item,
+        };
+
+        DatabaseManager.updateGaveta(teste, () => {
+            Alert.alert('Sucesso', 'Gaveta está livre agora.');
+        })
+    };
+
+    return (
+        <View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal fechada.");
+                    setModalVisible(!modalVisible);
+                }} >
+                <TouchableWithoutFeedback onPress={hideModal}>
                     <View style={styles.container}>
-                        <TouchableOpacity style={styles.closeModalButton}
-                            onPress={() => {
-                                this.setModalVisible(!modalVisible);
-                            }}>
-                            <Icon name="times" size={25} color={'black'} />
-                        </TouchableOpacity>
                         <View style={styles.modalView}>
                             <View style={styles.indicator} />
-                            <Text style={styles.modalTitle}> Gaveta {this.props.gaveta.id}</Text>
-
+                            <Text style={styles.modalTitle}>Gaveta {gavetas.id + 1}</Text>
                             <SelectList
-                                setSelected={(val) => this.setState({ selected: val })}
-                                defaultOption={this.data.find((e) => {
-                                    return e.key === this.props.gaveta.id_medicamento
-                                }
-                                )}
                                 data={this.data}
-                                save="key"
-                                placeholder="Selecione medicamento"
+                                setSelected={setSelected}
+                                keyExtractor={(item) => item.id}
+                                labelExtractor={(item) => item.label}
+                                notFoundText="Nenhum medicamento encontrado"
+                                placeholder={meds ? this.nomeMed : "Selecione o medicamento"}
+                                searchInputStyle={{ backgroundColor: '#f2f2f2' }}
+                                listStyle={{ backgroundColor: '#fff' }}
                             />
-
-                            <Pressable
+                            <TouchableOpacity
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => {
-                                    this.setModalVisible(!modalVisible);
-                                    this.navigation.navigate('Cadastro');
+                                    hideModal();
+                                    navigation.navigate('Cadastrar Medicamento');
                                 }}
                             >
                                 <Text style={styles.textStyle}>Cadastrar novo medicamento</Text>
-                            </Pressable>
+                            </TouchableOpacity>
 
-                            <Pressable
-                                style={[styles.button, styles.buttonClose]}
-                                onPress={this.salvar}
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonOpen]}
+                                onPress={() => {
+                                    hideModal();
+                                    salvar(gavetas.id)
+                                }}
                             >
-                                <Text style={styles.textStyle}>Salvar</Text>
-                            </Pressable>
-
+                                {
+                                    meds
+                                        ? <Text style={styles.textStyle}>Alterar</Text>
+                                        : <Text style={styles.textStyle}>Salvar</Text>
+                                }
+                            </TouchableOpacity>
+                            {
+                                meds
+                                    ?
+                                    <TouchableOpacity
+                                        style={[styles.button, styles.buttonDelete]}
+                                        onPress={() => {
+                                            hideModal();
+                                            limparGaveta(gavetas.id)
+                                        }}
+                                    >
+                                        <Text style={styles.textStyle}>Limpar gaveta</Text>
+                                    </TouchableOpacity>
+                                    :
+                                    null
+                            }
                         </View>
                     </View>
-                </Modal>
+                </TouchableWithoutFeedback>
+            </Modal>
 
-                <View style={styles.box}>
-                    <TouchableOpacity onPress={() => {
-                        this.setModalVisible(!modalVisible);
-                        this.refresh();
-                        this.listaDeMedicamento();
+            <View style={styles.box}>
+                <TouchableOpacity onPress={() => {
+                    setModalVisible(true)
+                    showMedicamentos();
+                }}
+                >
+                    {gaveta.is_ocupado ?
+                        <Icon name="archive" size={60} color={'#b2633a'} />
+                        :
+                        <Icon name="plus-circle" size={60} color={'#4CAF50'} />
                     }
-                    }>
-                        {!this.props.gaveta.is_ocupado ?
-                            <Icon name="plus-circle" size={60} color={'#4CAF50'} />
-                            :
-                            <Icon name="archive" size={60} color={'#b2633a'} />
-                        }
-                    </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
             </View>
-        )
-    }
+        </View>
+    )
 }
+

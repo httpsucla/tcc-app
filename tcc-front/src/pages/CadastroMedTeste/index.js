@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import DatabaseManager from '../../services/testDb';
 
-export default function CadastroMedTeste({ navigation }) {
+export default function CadastroMedTeste({ route, navigation }) {
 
     const [medicamentos, setMedicamentos] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
@@ -14,9 +14,9 @@ export default function CadastroMedTeste({ navigation }) {
         DatabaseManager.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos)
         });
-    }, []);
+    }, [route]);
 
-    const onRefresh = React.useCallback(async () => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
         setTimeout(() => {
             setRefreshing(false);
@@ -79,8 +79,9 @@ export default function CadastroMedTeste({ navigation }) {
                                 </View >
                                 <View style={styles.campoicone}>
                                     <View style={styles.componentenumero}>
-                                        <TouchableOpacity onPress={() =>
-                                            navigation.navigate("Editar Medicamento", {med: item})}>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                navigation.navigate("Editar Medicamento", { item: item })}>
                                             <Icon name="edit" size={18} color={'#292929f3'} />
                                         </TouchableOpacity>
                                     </View >

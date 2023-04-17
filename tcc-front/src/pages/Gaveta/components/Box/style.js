@@ -7,7 +7,6 @@ export default styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        marginBottom: 50
     },
     box: {
         flexDirection: 'column',
@@ -27,20 +26,23 @@ export default styles = StyleSheet.create({
         paddingRight: 25
     },
     button: {
-        borderRadius: 10,
+        borderRadius: 5,
         padding: 10,
         elevation: 2,
         width: '100%',
-        height: 50,
+        height: 55,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 15
+        marginTop: 10
     },
     buttonOpen: {
-        backgroundColor: "#F194FF",
+        backgroundColor: '#4CAF50',
     },
     buttonClose: {
-        backgroundColor: "#2196F3",
+        backgroundColor: "#414BB2",
+    },
+    buttonDelete: {
+        backgroundColor: "#f72a2a",
     },
     textStyle: {
         color: "white",

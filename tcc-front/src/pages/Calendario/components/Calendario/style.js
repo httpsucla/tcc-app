@@ -7,7 +7,6 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    marginBottom: 50
   },
   modalContent: {
     backgroundColor: '#fff',

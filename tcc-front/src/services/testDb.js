@@ -4,38 +4,38 @@ const db = SQLite.openDatabase('mydb.db');
 
 export default class DatabaseManager {
 
-  static createTables(){
+  static createTables() {
     db.transaction(tx => {
-        tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS tbMedicamentos (' +
-          'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
-          'nome TEXT,' +
-          'horario TEXT,' +
-          'data_inicial DATE,' +
-          'qtde INTEGER,' +
-          'qtde_dias INTEGER,' +
-          'ativo BOOLEAN);'
-        );
-        
-        tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS tb_gavetas (' +
-          'id INTEGER PRIMARY KEY,' +
-          'id_medicamento INTEGER,' +
-          'datahora_abertura DATETIME,' +
-          'is_ocupado BOOLEAN,' +
-          'is_atrasado BOOLEAN,' +
-          'FOREIGN KEY(id_medicamento) REFERENCES tbMedicamentos(id));'
-        );
-        
-        tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS tb_contato (' +
-          'id INTEGER PRIMARY KEY,' +
-          'nome TEXT,' +
-          'fone TEXT);'
-        );
-      });
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tbMedicamentos (' +
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+        'nome TEXT,' +
+        'horario TEXT,' +
+        'data_inicial DATE,' +
+        'qtde INTEGER,' +
+        'qtde_dias INTEGER,' +
+        'ativo BOOLEAN);'
+      );
+
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tb_gavetas (' +
+        'id INTEGER PRIMARY KEY,' +
+        'id_medicamento INTEGER,' +
+        'datahora_abertura DATETIME,' +
+        'is_ocupado BOOLEAN,' +
+        'is_atrasado BOOLEAN,' +
+        'FOREIGN KEY(id_medicamento) REFERENCES tbMedicamentos(id));'
+      );
+
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tb_contato (' +
+        'id INTEGER PRIMARY KEY,' +
+        'nome TEXT,' +
+        'fone TEXT);'
+      );
+    });
   }
-  static teste(){
+  static teste() {
     db.transaction(tx => {
       tx.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='tbMedicamentos';",
@@ -73,17 +73,20 @@ export default class DatabaseManager {
     });
   }
 
-  static deleteMedicamento(id, callback) {
-    console.log(`esse é o ID ${id}:`)
-    db.transaction(tx => {
+  static deleteMedicamento(id){
+    db.transaction((tx) => {
       tx.executeSql(
-        'DELETE FROM tbMedicamentos WHERE id = ?',
+        `DELETE FROM tbMedicamentos WHERE id = ?`,
         [id],
-        () => callback(),
-        (_, error) => console.log(`Erro ao deletar o medicamento com ID ${id}:`, error)
+        (_, result) => {
+          console.log('Item excluído com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao excluir o item:', error);
+        },
       );
     });
-  }
+  };
 
   static getMedicamentos(callback) {
     db.transaction(tx => {
@@ -126,12 +129,35 @@ export default class DatabaseManager {
     });
   }
 
+  static addGavetaTeste() {
+    db.transaction(tx => {
+      for (let i = 0; i < 4; i++) {
+        tx.executeSql(
+          'INSERT INTO tb_gavetas (id, id_medicamento, datahora_abertura, is_ocupado, is_atrasado) VALUES (?, ?, ?, ?, ?)',
+          [i, '', '', '', ''],
+          (_, error) => console.log('Erro ao executar a query:', error),
+        );
+      }
+
+    });
+  }
+
   static updateGaveta(gaveta, callback) {
     db.transaction(tx => {
       tx.executeSql(
         'UPDATE tb_gavetas SET id_medicamento = ?, datahora_abertura = ?, is_ocupado = ?, is_atrasado = ? WHERE id = ?',
         [gaveta.id_medicamento, gaveta.datahora_abertura, gaveta.is_ocupado, gaveta.is_atrasado, gaveta.id],
         () => callback()
+      );
+    });
+  }
+
+  static getGavetas(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_gavetas',
+        [],
+        (_, { rows }) => callback(rows._array)
       );
     });
   }
@@ -153,45 +179,55 @@ export default class DatabaseManager {
         error => console.log(`Erro ao deletar a gaveta com ID ${id}:`, error)
       );
     });
-}
+  }
 
-static dropTables(){
+  static joinGavetaMedicamento(callback) {
     db.transaction(tx => {
-        tx.executeSql(
-          'DROP TABLE IF EXISTS tbMedicamentos;',
-          [],
-          (_, result) => {
-            console.log('Tabela tbMedicamentos dropada com sucesso!');
-          },
-          (_, error) => {
-            console.log('Erro ao dropar a tabela tbMedicamentos', error);
-          }
-        );
-      });
-      db.transaction(tx => {
-        tx.executeSql(
-          'DROP TABLE IF EXISTS tb_gavetas;',
-          [],
-          (_, result) => {
-            console.log('Tabela tbMedicamentos dropada com sucesso!');
-          },
-          (_, error) => {
-            console.log('Erro ao dropar a tabela tbMedicamentos', error);
-          }
-        );
-      });
-      db.transaction(tx => {
-        tx.executeSql(
-          'DROP TABLE IF EXISTS tb_contato',
-          [],
-          (_, result) => {
-            console.log('Tabela tbMedicamentos dropada com sucesso!');
-          },
-          (_, error) => {
-            console.log('Erro ao dropar a tabela tbMedicamentos', error);
-          }
-        );
-      });
+      tx.executeSql(
+        'SELECT tb_gavetas.*, tbMedicamentos.nome as nome_medicamento, tbMedicamentos.qtde as qtde_medicamento FROM tb_gavetas JOIN tbMedicamentos ON tb_gavetas.id_medicamento = tbMedicamentos.id',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static dropTables() {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE IF EXISTS tbMedicamentos;',
+        [],
+        (_, result) => {
+          console.log('Tabela tbMedicamentos dropada com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao dropar a tabela tbMedicamentos', error);
+        }
+      );
+    });
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE IF EXISTS tb_gavetas;',
+        [],
+        (_, result) => {
+          console.log('Tabela tbMedicamentos dropada com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao dropar a tabela tbMedicamentos', error);
+        }
+      );
+    });
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE IF EXISTS tb_contato',
+        [],
+        (_, result) => {
+          console.log('Tabela tbMedicamentos dropada com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao dropar a tabela tbMedicamentos', error);
+        }
+      );
+    });
   }
 }
 

@@ -47,7 +47,7 @@ export default function CadastrarMedicamento({navigation}) {
     });
 
     Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
-    navigation.navigate("CadastroMedTeste");
+    navigation.navigate("CadastroMedTeste", item);
     DatabaseManager.getMedicamentos((medicamentos) => {
       console.log(medicamentos);
     });

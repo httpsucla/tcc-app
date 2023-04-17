@@ -7,7 +7,7 @@ import { DrawerActions } from "@react-navigation/native";
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao/";
 import VisualizarMedicamento from "../pages/CadastroMedTeste/visualizar";
-import EditarMedicamento from "../pages/Medicamento/editarMedicamento";
+import EditarMedicamento from "../pages/CadastroMedTeste/editar";
 import TelaContatos from "../pages/Configuracao/telaContatos";
 import Gavetas from "../pages/Gaveta";;
 import Filtro from "../pages/Historico/filtro";
@@ -38,9 +38,6 @@ export default function Routes() {
             <Stack.Screen
                 name="Cadastrar Medicamento"
                 component={CadastrarMedicamento} />
-            <Stack.Screen
-                name="Editar"
-                component={EditarMedicamento} />
             <Stack.Screen
                 name="Filtro"
                 component={Filtro} />
