@@ -73,7 +73,30 @@ export default class DatabaseManager {
     });
   }
 
-  static deleteMedicamento(id){
+  static updateMedicamentoTeste(medicamento, callback) {
+    console.log("entrou");
+    console.log(medicamento)
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tbMedicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, ativo = ? WHERE id = ?',
+        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.ativo, medicamento.id],
+        () => callback(),
+        (_, { rowsAffected }) => {
+          if (rowsAffected > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        (error) => {
+          console.log('Error on updateMedicamento: ', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  static deleteMedicamento(id) {
     db.transaction((tx) => {
       tx.executeSql(
         `DELETE FROM tbMedicamentos WHERE id = ?`,

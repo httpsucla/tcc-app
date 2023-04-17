@@ -1,60 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, View, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Alert, Input } from 'react-native';
 import styles from './style';
-import { useRoute } from '@react-navigation/native';
 import DatabaseManager from '../../services/testDb';
 
-export default function EditarMedicamento({ navigation }) {
+export default function EditarMedicamento({ route, navigation }) {
 
-  useEffect(() => {
-    console.log(item)
-    if(item) {
-      setMedicamento(item);
-    }
-    console.log(medicamento)
-  }, []);
-
-  const [medicamento, setMedicamento] = useState([]);
-  const [nome, setNome] = useState(this.medicamento.nome);
-  const [dataInicial, setDataInicial] = useState('teste');
-  const [horario, setHorario] = useState('');
-  const [qtde, setQtde] = useState('');
-  const [qtdeDias, setQtdeDias] = useState('');
-  const [ativo, setAtivo] = useState(false);
-
-  const route = useRoute();
-  const { item } = route.params;
-
-  const [data, setData] = useState({
-    name: '',
-    horario: '',
-    data_inicial: '',
-    qtde: '',
-    qtde_dias: '',
-  });
+  const { med } = route.params
+  const [medicamento, setMedicamento] = useState(med);
 
   editar = () => {
     const data = {
-      nome: nome,
-      horario: horario,
-      data_inicial: dataInicial,
-      qtde: qtde,
-      qtde_dias: qtdeDias,
-      ativo,
-      id: item.id
+      nome: medicamento.nome,
+      horario: medicamento.horario,
+      data_inicial: medicamento.data_inicial,
+      qtde: String(medicamento.qtde),
+      qtde_dias: String(medicamento.qtde_dias),
+      ativo: true,
+      id: medicamento.id
     };
     console.log(data);
-    //DatabaseManager.EditarMedicamento(data, () => {
-    //   console.log(`Medicamento atualizado com sucesso.`);
-    //   setNome('');
-    //   setDataInicial('');
-    //   setHorario('');
-    //   setQtde('');
-    //   setQtdeDias('');
-    //   setAtivo(false);
-    // });
-    Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.');
-    navigation.navigate("CadastroMedTeste");
+    DatabaseManager.EditarMedicamentoTeste(data, []);
+    //  Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.');
+    // navigation.navigate("CadastroMedTeste");
   }
 
   return (
@@ -69,48 +36,36 @@ export default function EditarMedicamento({ navigation }) {
             <TextInput
               style={styles.input}
               placeholder="Nome"
-              value={nome}
-              onChangeText={setNome}
+              value={medicamento.nome}
+              onChangeText={nome => setMedicamento({ ...medicamento, nome })}
               returnKeyType='done'
               clearButtonMode="always"
             />
             <TextInput
               style={styles.input}
-              value={String(item.data_inicial)}
+              value={medicamento.data_inicial}
               placeholder='Data de início'
               maxLength={10}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
-              onChangeText={(text) => {
-                if (text.length === 2 || text.length === 5) {
-                  setDataInicial(text + '/');
-                } else {
-                  setDataInicial(text);
-                }
-              }}
+              onChangeText={data_inicial => setMedicamento({ ...medicamento, data_inicial })}
             />
             <TextInput
               style={styles.input}
-              value={horario.toString()}
+              value={medicamento.horario}
               placeholder='Horário de início'
               maxLength={5}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
-              onChangeText={(text) => {
-                if (text.length === 2) {
-                  setHorario(text + ':');
-                } else {
-                  setHorario(text);
-                }
-              }}
+              onChangeText={horario => setMedicamento({ ...medicamento, horario })}
             />
             <TextInput
               style={styles.input}
               placeholder="Quantidade"
-              value={String(item.qtde)}
-              onChangeText={setQtde}
+              value={String(medicamento.qtde)}
+              onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
@@ -118,13 +73,12 @@ export default function EditarMedicamento({ navigation }) {
             <TextInput
               placeholder="Quantidade de dias"
               style={styles.input}
-              value={String(item.qtde_dias)}
-              onChangeText={setQtdeDias}
+              value={String(medicamento.qtde_dias)}
+              onChangeText={qtde_dias => setMedicamento({ ...medicamento, qtde_dias })}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
             />
-
             <TouchableOpacity style={styles.button} onPress={editar}>
               <Text style={styles.buttonText}>Atualizar</Text>
             </TouchableOpacity>

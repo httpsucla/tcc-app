@@ -81,7 +81,7 @@ export default function CadastroMedTeste({ route, navigation }) {
                                     <View style={styles.componentenumero}>
                                         <TouchableOpacity
                                             onPress={() =>
-                                                navigation.navigate("Editar Medicamento", { item: item })}>
+                                                navigation.navigate("Editar Medicamento", { med: item })}>
                                             <Icon name="edit" size={18} color={'#292929f3'} />
                                         </TouchableOpacity>
                                     </View >
