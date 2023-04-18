@@ -7,12 +7,16 @@ import DatabaseManager from '../../services/testDb';
 export default function CadastroMedTeste({ route, navigation }) {
 
     const [medicamentos, setMedicamentos] = useState([]);
+    const [gavetas, setGavetas] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        console.log("Teste");
         DatabaseManager.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos)
+        });
+
+        DatabaseManager.getGavetas((gavetas) => {
+            setGavetas(gavetas)
         });
     }, [route]);
 
@@ -39,8 +43,30 @@ export default function CadastroMedTeste({ route, navigation }) {
             {
                 text: "Sim",
                 onPress: () => {
-                    DatabaseManager.deleteMedicamento(item.id);
-                    Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' removido com sucesso.');
+                    for (let i = 0; i < gavetas.length; i++) {
+                        if (item.id == gavetas[i].id_medicamento) {
+                            const gaveta = {
+                                id_medicamento: '',
+                                datahora_abertura: '',
+                                is_ocupado: false,
+                                is_atrasado: '',
+                                id: gavetas[i].id,
+                            };
+                    
+                            DatabaseManager.updateGaveta(gaveta, () => {
+                                console.log("foi");
+                            })
+                            DatabaseManager.deleteMedicamento(item.id);
+                            Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' foi removido com sucesso. Gaveta ' + (gavetas[i].id+1) + ' está vazia agora!');
+                            break;
+                            
+                        } else if(item.id != gavetas[i].id_medicamento && i == 3) {
+                            DatabaseManager.deleteMedicamento(item.id);
+                            Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' removido com sucesso.');
+                            break;
+                        }
+                    }
+
 
                 }
             }],

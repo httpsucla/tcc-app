@@ -7,7 +7,7 @@ export default class DatabaseManager {
   static createTables() {
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS tbMedicamentos (' +
+        'CREATE TABLE IF NOT EXISTS tb_medicamentos (' +
         'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
         'nome TEXT,' +
         'horario TEXT,' +
@@ -24,21 +24,21 @@ export default class DatabaseManager {
         'datahora_abertura DATETIME,' +
         'is_ocupado BOOLEAN,' +
         'is_atrasado BOOLEAN,' +
-        'FOREIGN KEY(id_medicamento) REFERENCES tbMedicamentos(id));'
+        'FOREIGN KEY(id_medicamento) REFERENCES tb_medicamentos(id));'
       );
 
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS tb_contato (' +
         'id INTEGER PRIMARY KEY,' +
         'nome TEXT,' +
-        'fone TEXT);'
+        'telefone TEXT);'
       );
     });
   }
   static teste() {
     db.transaction(tx => {
       tx.executeSql(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='tbMedicamentos';",
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='tb_medicamentos';",
         [],
         (_, { rows }) => {
           if (rows.length > 0) {
@@ -55,7 +55,7 @@ export default class DatabaseManager {
     console.log('PORRA')
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tbMedicamentos (nome, horario, data_inicial, qtde, qtde_dias, ativo) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO tb_medicamentos (nome, horario, data_inicial, qtde, qtde_dias, ativo) VALUES (?, ?, ?, ?, ?, ?)',
         [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, 1],
         (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
         (_, error) => console.log('Erro ao executar a query:', error)
@@ -66,32 +66,9 @@ export default class DatabaseManager {
   static updateMedicamento(medicamento, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE tbMedicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, ativo = ? WHERE id = ?',
+        'UPDATE tb_medicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, ativo = ? WHERE id = ?',
         [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.ativo, medicamento.id],
         () => callback()
-      );
-    });
-  }
-
-  static updateMedicamentoTeste(medicamento, callback) {
-    console.log("entrou");
-    console.log(medicamento)
-    db.transaction(tx => {
-      tx.executeSql(
-        'UPDATE tbMedicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, ativo = ? WHERE id = ?',
-        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.ativo, medicamento.id],
-        () => callback(),
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error on updateMedicamento: ', error);
-          reject(error);
-        }
       );
     });
   }
@@ -99,7 +76,7 @@ export default class DatabaseManager {
   static deleteMedicamento(id) {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM tbMedicamentos WHERE id = ?`,
+        `DELETE FROM tb_medicamentos WHERE id = ?`,
         [id],
         (_, result) => {
           console.log('Item excluído com sucesso!');
@@ -114,7 +91,7 @@ export default class DatabaseManager {
   static getMedicamentos(callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tbMedicamentos',
+        'SELECT * FROM tb_medicamentos',
         [],
         (_, { rows }) => callback(rows._array)
       );
@@ -124,7 +101,7 @@ export default class DatabaseManager {
   static getMedicamentoById(id, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tbMedicamentos WHERE id = ?',
+        'SELECT * FROM tb_medicamentos WHERE id = ?',
         [id],
         () => callback()
       );
@@ -134,7 +111,7 @@ export default class DatabaseManager {
   static getMedicamentosByDay(day, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT * FROM tbMedicamentos WHERE date(data_inicial, '+' || qtde || ' days') >= date(?, '+0 day')`,
+        `SELECT * FROM tb_medicamentos WHERE date(data_inicial, '+' || qtde || ' days') >= date(?, '+0 day')`,
         [day.toISOString().substring(0, 10)],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log(error)
@@ -207,23 +184,71 @@ export default class DatabaseManager {
   static joinGavetaMedicamento(callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT tb_gavetas.*, tbMedicamentos.nome as nome_medicamento, tbMedicamentos.qtde as qtde_medicamento FROM tb_gavetas JOIN tbMedicamentos ON tb_gavetas.id_medicamento = tbMedicamentos.id',
+        'SELECT tb_gavetas.*, tb_medicamentos.nome as nome_medicamento, tb_medicamentos.qtde as qtde_medicamento ' +
+        'FROM tb_gavetas JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id',
         [],
         (_, { rows }) => callback(rows._array)
       );
     });
   }
 
+  static addContato(contato, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO tb_contato (nome, telefone) VALUES (?, ?)',
+        [contato.nome, contato.telefone],
+        (_, { insertId }) => callback({ id: insertId, ...rows._array[0] }),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  }
+
+  static getContatos(callback) {
+    console.log("entrou no getContatos");
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_contato',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static updateContato(contato, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tb_contato SET nome = ?, telefone = ? WHERE id = ?',
+        [contato.nome, contato.telefone, contato.id],
+        () => callback()
+      );
+    });
+  }
+
+  static deleteContato(id) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM tb_contato WHERE id = ?`,
+        [id],
+        (_, result) => {
+          console.log('Contato excluído com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao excluir contato:', error);
+        },
+      );
+    });
+  };
+
   static dropTables() {
     db.transaction(tx => {
       tx.executeSql(
-        'DROP TABLE IF EXISTS tbMedicamentos;',
+        'DROP TABLE IF EXISTS tb_medicamentos;',
         [],
         (_, result) => {
-          console.log('Tabela tbMedicamentos dropada com sucesso!');
+          console.log('Tabela tb_medicamentos dropada com sucesso!');
         },
         (_, error) => {
-          console.log('Erro ao dropar a tabela tbMedicamentos', error);
+          console.log('Erro ao dropar a tabela tb_medicamentos', error);
         }
       );
     });
@@ -232,10 +257,10 @@ export default class DatabaseManager {
         'DROP TABLE IF EXISTS tb_gavetas;',
         [],
         (_, result) => {
-          console.log('Tabela tbMedicamentos dropada com sucesso!');
+          console.log('Tabela tb_medicamentos dropada com sucesso!');
         },
         (_, error) => {
-          console.log('Erro ao dropar a tabela tbMedicamentos', error);
+          console.log('Erro ao dropar a tabela tb_medicamentos', error);
         }
       );
     });
@@ -244,10 +269,10 @@ export default class DatabaseManager {
         'DROP TABLE IF EXISTS tb_contato',
         [],
         (_, result) => {
-          console.log('Tabela tbMedicamentos dropada com sucesso!');
+          console.log('Tabela tb_medicamentos dropada com sucesso!');
         },
         (_, error) => {
-          console.log('Erro ao dropar a tabela tbMedicamentos', error);
+          console.log('Erro ao dropar a tabela tb_medicamentos', error);
         }
       );
     });

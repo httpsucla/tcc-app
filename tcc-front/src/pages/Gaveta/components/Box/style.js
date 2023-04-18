@@ -70,5 +70,13 @@ export default styles = StyleSheet.create({
         marginRight: 30,
         display: 'flex',
         alignItems: 'flex-end'
+    },
+    dataVazio: {
+        textAlign: 'center',
+        borderWidth:1,
+        borderRadius:10,
+        borderColor:'gray',
+        paddingHorizontal:20,
+        paddingVertical:12
     }
 })
