@@ -18,10 +18,11 @@ export default function EditarMedicamento({ route, navigation }) {
       ativo: true,
       id: medicamento.id
     };
-    console.log(data);
-    DatabaseManager.EditarMedicamentoTeste(data, []);
-    //  Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.');
-    // navigation.navigate("CadastroMedTeste");
+
+    DatabaseManager.updateMedicamento(data, () => {
+      Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.');
+      navigation.navigate("CadastroMedTeste", data);
+    });
   }
 
   return (
