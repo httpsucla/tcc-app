@@ -20,7 +20,7 @@ export default function CalendarioComponent() {
                 const dataInicialFormatada = dataInicial.toLocaleDateString('pt-br');
                 const dataFinal = new Date(dataInicial.getTime() + medicamento.qtde * 86400000); // Multiplica por 86400000 para converter de dias para milissegundos
                 const diaClicado = new Date(day.timestamp);
-                if (dataFinal >= diaClicado) {
+                if ((dataFinal >= diaClicado) && (dataInicial < diaClicado)) {
                     medicamentosFiltrados.push({
                         id: medicamento.id,
                         title: medicamento.nome,

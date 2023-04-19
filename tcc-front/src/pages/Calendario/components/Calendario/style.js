@@ -58,7 +58,7 @@ export default StyleSheet.create({
     fontWeight: 'bold'
   },
   flatlistContentContainer: {
-    alignItems: 'left',
+    alignItems: 'flex-start',
     marginHorizontal: 20,
   },
   flatlistItemText: {
