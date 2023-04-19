@@ -197,8 +197,20 @@ export default class DatabaseManager {
       tx.executeSql(
         'INSERT INTO tb_contato (nome, telefone) VALUES (?, ?)',
         [contato.nome, contato.telefone],
-        (_, { insertId }) => callback({ id: insertId, ...rows._array[0] }),
+        (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
         (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  }
+
+  static addContatoTeste(contato, callback) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'REPLACE INTO tb_contato (id, nome, telefone) VALUES (?, ?, ?);',
+        [1, contato.nome, contato.telefone],
+        (tx, results) => {
+          console.log('Contato inserido com sucesso!');
+        }
       );
     });
   }
@@ -224,11 +236,11 @@ export default class DatabaseManager {
     });
   }
 
-  static deleteContato(id) {
+  static deleteContato() {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM tb_contato WHERE id = ?`,
-        [id],
+        `DELETE FROM tb_contato`,
+       
         (_, result) => {
           console.log('Contato excluído com sucesso!');
         },
