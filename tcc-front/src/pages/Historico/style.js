@@ -4,7 +4,7 @@ export default styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f7f7f7',
-        
+
     },
     title: {
         color: '#292929f3',
@@ -13,10 +13,9 @@ export default styles = StyleSheet.create({
     },
     filters: {
         flexDirection: 'row',
-        margin: 25,
-        marginBottom: 0,
+        marginHorizontal: 25,
+        marginVertical: 20,
         justifyContent: 'space-between'
-
     },
     lupa: {
         display: 'flex',
@@ -29,14 +28,18 @@ export default styles = StyleSheet.create({
         alignContent: 'center'
     },
     fontFilter: {
-        fontSize: 16,
-        color:'black',
-        
+        flexDirection: 'row',
+        alignItems: 'center',
+        textAlignVertical: 'center'
+    },
+    textFilter: {
+        paddingHorizontal: 5,
+        fontSize: 18,
+        color: '#292929f3',
     },
     button: {
-        margin: 25,
-        marginTop: 10,
-        marginBottom: 15,
+        marginVertical: 10,
+        marginHorizontal: 25,
         height: 50,
         backgroundColor: '#414BB2',
         borderRadius: 2,
@@ -52,9 +55,7 @@ export default styles = StyleSheet.create({
     container1: {
         paddingTop: 100,
         paddingHorizontal: 30,
-      },
-    
-
+    },
     containerFiltro: {
         flex: 1,
         backgroundColor: '#f7f7f7',
@@ -90,17 +91,26 @@ export default styles = StyleSheet.create({
         flexDirection: 'row',
         alignContent: 'center'
     },
-    calendario:{
+    calendario: {
         marginBottom: 25,
         paddingLeft: 4,
         fontSize: 16,
         display: 'flex',
         flexDirection: 'row',
-        alignContent: 'center'
+        alignContent: 'center',
     },
-    textRemove:{
-        fontSize: 16,
-        color:'black',
+    textRemove: {
+        paddingHorizontal: 5,
+        fontSize: 18,
+        color: '#292929f3',
         fontStyle: 'italic'
+    },
+    emptyList : {
+        fontStyle: 'italic',
+        color: '#292929f3',
+        fontSize: 20,
+        paddingHorizontal: 20,
+        textAlign: 'center',
+        marginVertical: 30
     }
 });

@@ -1,136 +1,132 @@
-import React, { Component } from 'react';
-import { Text, View, ScrollView, Button, TextInput, TouchableOpacity, Title, DateInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import styles from './style';
-import Database from '../../services/database2';
+import DatabaseManager from '../../services/testDb';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+export default function Filtro({ navigation }) {
 
-class Filtro extends Component {
-    constructor(props) {
-        super(props);
-        this.db = new Database();
-        this.navigation = props.navigation;
-        this.state = {
-            medId: '',
-            DataIni: new Date(),
-            DataFim: new Date(),
-            showC1: false,
-            showC2: false,
-            DataIniView: 'Selecione',
-            DataFimView: 'Selecione'
-        }
-    }
+    const [medicamentos, setMedicamentos] = useState([]);
+    const [dataStart, setDataStart] = useState(new Date());
+    const [dataEnd, setDataEnd] = useState(new Date());
+    const [selected, setSelected] = useState("");
+    const [showC1, setShowC1] = useState(false);
+    const [showC2, setShowC2] = useState(false);
+    const [dataStartView, setDataStartView] = useState('');
+    const [dataEndView, setDataEndView] = useState('');
+    var data = [];
 
+    useEffect(() => {
+        DatabaseManager.getMedicamentos((medicamentos) => {
+            for (let i = 0; i < medicamentos.length; i++) {
+                data = medicamentos.map(m => ({
+                    key: m.id,
+                    value: m.nome
+                }));
+            }
+            setMedicamentos(data)
+        });
+    }, []);
 
-    render() {
+    const showDatepicker1 = () => {
+        setShowC1(true);
+    };
 
-        const data = [
-            {key:'1', value:'Dramin' },
-            {key:'2', value:'Ritalina'},
-            {key:'3', value:'Dipirona'},
-        ]
+    const showDatepicker2 = () => {
+        setShowC2(true);
+    };
 
-        const showDatepicker1 = () => {
-            this.setState({showC1: true});
-        };
+    const ChangeIni = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShowC1(Platform.OS === 'ios');
+        setDataStart(currentDate);
+        setDataStartView(dataStart.toLocaleDateString());
+    };
 
-        const showDatepicker2 = () => {
-            this.setState({showC2: true});
-        };
-
-        const ChangeIni = (event, selectedDate) => {
-            const currentDate = selectedDate;
-            this.setState({showC1: false});
-            this.setState({DataIni: currentDate});
-            this.setState({DataIniView: this.state.DataIni.toLocaleDateString()});
-        };
-
-        const ChangeFim = (event, selectedDate) => {
-            const currentDate = selectedDate;
-            this.setState({showC2: false});
-            this.setState({DataFim: currentDate});
-            this.setState({DataFimView: this.state.DataFim.toLocaleDateString()});
-        };
-
-        return (
-            <ScrollView>
-                <View style={styles.containerFiltro}>
-                    <Text style={styles.titleFiltro}> Filtrar</Text>
-                    <View style={styles.inputContainer}>
-
-                        <Text style={styles.textFiltro}>Medicamento</Text>
-                        <SelectList 
-                            style={styles.inputCampo}
-                            placeholder="Selecione"
-                            setSelected={(val) => this.setState({medId: val})} 
-                            data={data} 
-                            save="value"
-                        />
-
-                        <Text style={styles.textFiltro}>Data início</Text>
-                        <TouchableOpacity style={styles.calendario} onPress={showDatepicker1}>
-                            <Icon name="calendar" size={18} color={'black'} />
-                            <Text>   </Text>
-                            <Text style={styles.fontFilter}>  
-                                {this.state.DataIniView}
-                            </Text>   
-                        </TouchableOpacity>
-                        
-                        {this.state.showC1 && (
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={this.state.DataIni}
-                            mode={'date'}
-                            is24Hour={true}
-                            onChange={ChangeIni}
-                        />
-                        )}
-
-
-                        <Text style={styles.textFiltro}>Data final</Text>
-                        <TouchableOpacity style={styles.calendario} onPress={showDatepicker2}>
-                            <Icon name="calendar" size={18} color={'black'} />
-                            <Text>   </Text>
-                            <Text style={styles.fontFilter}>                    
-                                {this.state.DataFimView}
-                            </Text>
-                        </TouchableOpacity>
-                        
-                        {this.state.showC2 && (
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={this.state.DataFim}
-                            mode={'date'}
-                            is24Hour={true}
-                            onChange={ChangeFim}
-                        />
-                        )}
-
-
-                    <TouchableOpacity style={styles.button}  
-                            onPress={this.verifica}>
-                        <Text style={styles.buttonText}>Gerar relatório</Text>
-                    </TouchableOpacity>
-
-                    </View>
-                </View>
-            </ScrollView>
-        )
-    }
+    const ChangeFim = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShowC2(Platform.OS === 'ios')
+        setDataEnd(currentDate);
+        setDataEndView(dataEnd.toLocaleDateString());
+    };
 
     verifica = () => {
-        if (this.state.medId != '' && this.state.DataIniView != 'Selecione' && this.state.DataIniView != 'Selecione'){
-            this.navigation.replace('Historico', {
-                medId : this.state.medId,
-                DataIni: this.state.DataIniView,
-                DataFim: this.state.DataFimView
-                });
+        if (selected != '' || dataStartView != 'Selecione' || dataEndView != 'Selecione') {
+            navigation.replace('Historico', {
+                medId: selected,
+                DataIni: dataStartView,
+                DataFim: dataEndView
+            });
         } else {
-            alert("Preencha todos os campos!");
+            Alert.alert("Atenção", "Preencha todos os campos!");
         }
+        console.log(medicamentos)
     }
-    
+
+    return (
+        <ScrollView>
+            <View style={styles.containerFiltro}>
+                <Text style={styles.titleFiltro}>Filtrar</Text>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.textFiltro}>Medicamento</Text>
+                    <SelectList
+                        data={medicamentos}
+                        style={styles.inputCampo}
+                        placeholder={"Selecione o medicamento"}
+                        notFoundText="Nenhum medicamento encontrado"
+                        setSelected={setSelected}
+                        keyExtractor={(item) => item.id}
+                        labelExtractor={(item) => item.label}
+                        save="key"
+                    />
+                    <Text style={styles.textFiltro}>Data início</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <TouchableOpacity style={[styles.calendario, styles.fontFilter]} onPress={showDatepicker1}>
+                            <Icon name="calendar" size={18} color={'black'} />
+                            <Text style={styles.textFilter}>
+                                {dataStartView ? dataStartView : "Selecione"}
+                            </Text>
+                        </TouchableOpacity>
+                        {
+                            showC1 && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={dataStart}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    onChange={ChangeIni}
+                                    display="default"
+                                />
+                            )
+                        }
+                    </View>
+                    <Text style={styles.textFiltro}>Data final</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <TouchableOpacity style={[styles.calendario, styles.fontFilter]} onPress={showDatepicker2}>
+                            <Icon name="calendar" size={18} color={'black'} />
+                            <Text style={styles.textFilter}>
+                                {dataEndView ? dataEndView : "Selecione"}
+                            </Text>
+                        </TouchableOpacity>
+                        {
+                            showC2 && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={dataEnd}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    onChange={ChangeFim}
+                                />
+                            )}
+                    </View>
+                    <TouchableOpacity style={styles.button}
+                        onPress={verifica}>
+                        <Text style={styles.buttonText}>Gerar relatório</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </ScrollView>
+    )
 }
-export default Filtro;
