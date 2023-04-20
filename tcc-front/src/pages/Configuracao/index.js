@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, Alert } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DatabaseManager from '../../services/testDb';
 
-export default function Configuracao({ navigation }) {
+export default function Configuracao({ route, navigation }) {
 
     const [state, setState] = useState(false);
+    const { item } = route.params ? route.params : {};
+    const [contato, setContatos] = useState([]);
+
+    useEffect(() => {
+        DatabaseManager.addGavetaTeste();
+    }, []);
 
     telaContato = (() => {
-        navigation.navigate("Contatos");
+        navigation.navigate("Contatos", item);
     });
 
     resetarBanco = () => {
@@ -25,12 +31,16 @@ export default function Configuracao({ navigation }) {
                 onPress: () => {
                     DatabaseManager.dropTables();
                     Alert.alert('Sucesso', 'Banco resetado com sucesso.');
+            //        DatabaseManager.getContatos((contato) => {
+             //           setContatos(contato);
+              //      });
                 }
             }],
             { cancelable: false }
         );
+        console.log(contato);
     }
- 
+
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
@@ -43,11 +53,15 @@ export default function Configuracao({ navigation }) {
                         <Text style={styles.textItalic}>desconectado</Text>
                     }
                 </View>
-                <View>
-                    <TouchableOpacity style={styles.campo} onPress={telaContato}>
+                <View style={styles.campoContato}>
+                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={telaContato}>
                         <Text style={styles.text}>Contatos</Text>
                         <Icon name="angle-right" size={18} color={'#414BB2'} />
                     </TouchableOpacity>
+                    {
+                        item ? <Text style={styles.campoNome}>{item.nome}</Text>
+                            : null
+                    }
                 </View>
                 <View style={styles.campo}>
                     <Text style={styles.text}>Notificações</Text>

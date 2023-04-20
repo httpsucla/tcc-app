@@ -90,7 +90,24 @@ export default styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingBottom: 20
     },
-    emptyList : {
+    campoContato: {
+        marginTop: 5,
+        backgroundColor: '#fff',
+        borderColor: '#f7f7f7',
+        borderBottomWidth: 1,
+        marginBottom: 10,
+        paddingBottom: 20
+    },
+    campoNome: {
+        borderColor: '#BFBFBF',
+        borderWidth: 1.5,
+        color: '#808080',
+        borderRadius: 10,
+        width: 75,
+        textAlign: "center",
+        marginTop: 5
+    },
+    emptyList: {
         fontStyle: 'italic',
         color: '#292929f3',
         fontSize: 20,

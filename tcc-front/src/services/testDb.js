@@ -28,7 +28,7 @@ export default class DatabaseManager {
       );
 
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS tb_contato (' +
+        'CREATE TABLE IF NOT EXISTS tb_contatos (' +
         'id INTEGER PRIMARY KEY,' +
         'nome TEXT,' +
         'telefone TEXT);'
@@ -159,6 +159,7 @@ export default class DatabaseManager {
         [],
         (_, { rows }) => callback(rows._array)
       );
+
     });
   }
 
@@ -195,7 +196,7 @@ export default class DatabaseManager {
   static addContato(contato, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tb_contato (nome, telefone) VALUES (?, ?)',
+        'INSERT INTO tb_contatos (nome, telefone) VALUES (?, ?)',
         [contato.nome, contato.telefone],
         (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
         (_, error) => console.log('Erro ao executar a query:', error)
@@ -203,14 +204,12 @@ export default class DatabaseManager {
     });
   }
 
-  static addContatoTeste(contato, callback) {
+  static addContatoTeste(contato) {
     db.transaction((tx) => {
       tx.executeSql(
-        'REPLACE INTO tb_contato (id, nome, telefone) VALUES (?, ?, ?);',
+        `INSERT INTO tb_contatos (id, nome, telefone) VALUES (?, ?, ?)`,
         [1, contato.nome, contato.telefone],
-        (tx, results) => {
-          console.log('Contato inserido com sucesso!');
-        }
+        (_, error) => console.log('Erro ao executar a query:', error),
       );
     });
   }
@@ -219,7 +218,7 @@ export default class DatabaseManager {
     console.log("entrou no getContatos");
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tb_contato',
+        'SELECT * FROM tb_contatos',
         [],
         (_, { rows }) => callback(rows._array)
       );
@@ -229,7 +228,7 @@ export default class DatabaseManager {
   static updateContato(contato, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE tb_contato SET nome = ?, telefone = ? WHERE id = ?',
+        `UPDATE tb_contatos SET nome = ?, telefone = ? WHERE id = ?`,
         [contato.nome, contato.telefone, contato.id],
         () => callback()
       );
@@ -239,8 +238,7 @@ export default class DatabaseManager {
   static deleteContato() {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM tb_contato`,
-       
+        `DELETE FROM tb_contatos`,   
         (_, result) => {
           console.log('Contato excluído com sucesso!');
         },
@@ -269,22 +267,22 @@ export default class DatabaseManager {
         'DROP TABLE IF EXISTS tb_gavetas;',
         [],
         (_, result) => {
-          console.log('Tabela tb_medicamentos dropada com sucesso!');
+          console.log('Tabela tb_gavetas dropada com sucesso!');
         },
         (_, error) => {
-          console.log('Erro ao dropar a tabela tb_medicamentos', error);
+          console.log('Erro ao dropar a tabela tb_gavetas', error);
         }
       );
     });
     db.transaction(tx => {
       tx.executeSql(
-        'DROP TABLE IF EXISTS tb_contato',
+        'DROP TABLE IF EXISTS tb_contatos',
         [],
         (_, result) => {
-          console.log('Tabela tb_medicamentos dropada com sucesso!');
+          console.log('Tabela tb_contatos dropada com sucesso!');
         },
         (_, error) => {
-          console.log('Erro ao dropar a tabela tb_medicamentos', error);
+          console.log('Erro ao dropar a tabela tb_contatos', error);
         }
       );
     });

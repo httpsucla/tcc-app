@@ -5,27 +5,16 @@ import DatabaseManager from '../../services/testDb';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 
-export default function Contatos({ navigation }) {
+export default function Contatos({ route, navigation }) {
 
+    const { item } = route.params ? route.params : [];
     const [contato, setContato] = useState([])
-    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         DatabaseManager.getContatos((contato) => {
             setContato(contato);
-            console.log(contato)
         })
-    }, []);
-    
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 1000)
-
-        DatabaseManager.getContatos((contato) => {
-            setContato(contato)
-        });
+        console.log(contato)
     }, []);
 
     cadastrarInutil = () => {
@@ -33,29 +22,34 @@ export default function Contatos({ navigation }) {
             nome: contato.nome,
             telefone: contato.telefone
         };
-        
+
         DatabaseManager.addContato(data, () => {
             Alert.alert('Sucesso', 'Contato salvo com sucesso.');
-            navigation.navigate("Configuracao", data);
+            navigation.navigate("Configuracao");
         });
+
     };
 
     cadastrar = () => {
         const data = {
             nome: contato.nome,
-            telefone: contato.telefone
+            telefone: contato.telefone,
+            id: 1
         };
-        console.log(data)
-        DatabaseManager.addContatoTeste(data, () => {
+
+        DatabaseManager.updateContato(data, () => {
             Alert.alert('Sucesso', 'Contato salvo com sucesso.');
-            navigation.navigate("Configuracao");
+            navigation.navigate("Configuracao", { item: data });
         });
- 
+
+        console.log("cadastroo")
+        console.log(data)
+
     };
     const deletarContato = () => {
         Alert.alert(
             "Atenção",
-            'Você tem certeza que deseja excluir o contato: '  + '?',
+            'Você tem certeza que deseja excluir o contato: ' + '?',
             [{
                 text: "Não",
                 onPress: () => console.log("Cancel Pressed"),
@@ -66,7 +60,7 @@ export default function Contatos({ navigation }) {
                 onPress: () => {
                     DatabaseManager.deleteContato();
                     Alert.alert('Sucesso', 'Contato ' + ' removido com sucesso.');
-
+                    navigation.navigate("Configuracao");
                 }
             }],
             { cancelable: false }
@@ -74,40 +68,39 @@ export default function Contatos({ navigation }) {
     }
 
     return (
-        <ScrollView>
             <View style={styles.container}>
                 <Text style={styles.title}> Cadastrar Contato</Text>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
                         placeholder="Nome"
-                        clearButtonMode="always"
-                        value={contato.nome}
+                        value={contato.nome ? contato.nome : ''}
                         onChangeText={nome => setContato({ ...contato, nome })}
-                        maxLenght={30}
+                        returnKeyType='done'
+                        clearButtonMode="always"
                     />
                     <TextInputMask
                         style={styles.input}
                         placeholder="Telefone"
                         type={'cel-phone'}
                         clearButtonMode="always"
-                        value={contato.telefone}
+                        value={contato.telefone? contato.telefone : ''}
                         onChangeText={telefone => setContato({ ...contato, telefone })}
                         maxLenght={30}
                     />
-                    <TouchableOpacity style={styles.button} 
-                    onPress={() => {
-                       // cadastrar();
-                        onRefresh();
-                        cadastrar();
-                    }}
+                    <TouchableOpacity style={styles.button}
+                        onPress={cadastrar}
                     >
                         <Text style={styles.buttonText}>Cadastrar contato</Text>
                     </TouchableOpacity>
                 </View>
-                    
+                <View>
+                    <TouchableOpacity style={styles.button} onPress={deletarContato}>
+                        <Text>DELETAAAAAAAAAAAAAR</Text>
+                    </TouchableOpacity>
+                </View>
                 {
-                    contato.lenght > 0 ?
+                    contato != undefined ?
                         <FlatList
                             style={styles.lista}
                             data={contato}
@@ -129,8 +122,6 @@ export default function Contatos({ navigation }) {
                             showsVerticalScrollIndicator={false} /> :
                         <Text style={styles.emptyList}>Nenhum contato cadastrado!</Text>
                 }
-            </View>
-
-        </ScrollView>
+            </View>        
     )
 }
