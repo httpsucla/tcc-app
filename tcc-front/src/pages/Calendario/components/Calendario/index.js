@@ -17,10 +17,9 @@ export default function CalendarioComponent() {
             for (let i = 0; i < medicamentos.length; i++) {
                 const medicamento = medicamentos[i];
                 const dataInicial = new Date(medicamento.data_inicial);
-                const dataInicialFormatada = dataInicial.toLocaleDateString('pt-br');
                 const dataFinal = new Date(dataInicial.getTime() + medicamento.qtde * 86400000); // Multiplica por 86400000 para converter de dias para milissegundos
                 const diaClicado = new Date(day.timestamp);
-                if ((dataFinal >= diaClicado) && (dataInicial < diaClicado)) {
+                if ((dataFinal >= diaClicado) && (dataInicial <= diaClicado)) {
                     medicamentosFiltrados.push({
                         id: medicamento.id,
                         title: medicamento.nome,

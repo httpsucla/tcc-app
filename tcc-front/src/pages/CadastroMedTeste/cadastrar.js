@@ -22,36 +22,56 @@ export default function CadastrarMedicamento({navigation}) {
   const [qtde, setQtde] = useState('');
   const [qtdeDias, setQtdeDias] = useState('');
   const [ativo, setAtivo] = useState(false);
+  let isDataValida = true;
+  let isHoraValida = true;
 
   function handleInsert() {
-    const item = {
-      nome,
-      horario: new Date(`2023-04-06T${horario}`).toLocaleTimeString(),
-      data_inicial: moment(dataInicial, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-      qtde,
-      qtde_dias: qtdeDias,
-      ativo,
-    };
+    if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()){
+      //Alert.alert('Erro', 'Data está inválida.');
+      isDataValida = false;
+    }
+    if (!moment(horario, 'HH:mm', true).isValid()){
+      isHoraValida = false;
+    }
+    
+    if (!isDataValida || !isHoraValida){
+      Alert.alert('Erro', 'Existem erros de preenchimento.');
+      if (!isDataValida){
+        setDataInicial('');
+      }
+      if (!isHoraValida){
+        setHorario('');
+      }
+    }
+    else{
+      const item = {
+        nome,
+        horario: new Date(`2023-04-06T${horario}`).toLocaleTimeString(),
+        data_inicial: moment(dataInicial, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+        qtde,
+        qtde_dias: qtdeDias,
+        ativo,
+      };
 
-    console.log(item);
-    DatabaseManager.teste();
+      console.log(item);
+      DatabaseManager.teste();
 
-    DatabaseManager.addMedicamento(item, () => {
-      console.log(`Medicamento inserido com sucesso.`);
-      setNome('');
-      setDataInicial('');
-      setHorario('');
-      setQtde('');
-      setQtdeDias('');
-      setAtivo(false);
-    });
+      DatabaseManager.addMedicamento(item, () => {
+        console.log(`Medicamento inserido com sucesso.`);
+        setNome('');
+        setDataInicial('');
+        setHorario('');
+        setQtde('');
+        setQtdeDias('');
+        setAtivo(false);
+      });
 
-    Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
-    navigation.navigate("CadastroMedTeste", item);
-    DatabaseManager.getMedicamentos((medicamentos) => {
-      console.log(medicamentos);
-    });
-
+      Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
+      navigation.navigate("CadastroMedTeste", item);
+      DatabaseManager.getMedicamentos((medicamentos) => {
+        console.log(medicamentos);
+      });
+    }
   }
 
   return (
@@ -105,7 +125,7 @@ export default function CadastrarMedicamento({navigation}) {
             />
             <TextInput
               style={styles.input}
-              placeholder="Quantidade"
+              placeholder="Quantidade por dia"
               value={qtde}
               onChangeText={setQtde}
               keyboardType='numeric'
