@@ -15,6 +15,7 @@ export default function Historico({ navigation, route }) {
     const [medId, setMedId] = useState('');
     const [dataStart, setDataStart] = useState(new Date());
     const [dataEnd, setDataEnd] = useState(new Date());
+    const [medById, setMedById] = useState('');
 
     componentDidMount = () => {
         this.atualizaFiltros();
@@ -49,7 +50,11 @@ export default function Historico({ navigation, route }) {
            // DatabaseManager.getMedicamentoById(medId)
             //    setHistorico(medId);
             //    setLoading(false);
+            DatabaseManager.getMedicamentoById((medId) => {
+                setMedById(medId);
+            })
                console.log("entrou no filtrado")
+               console.log(medById);
                 
         } else {
             DatabaseManager.getMedicamentos((medicamentos) => {
