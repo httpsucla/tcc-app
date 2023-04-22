@@ -87,16 +87,21 @@ export default function Box({ gaveta, navigation, meds }) {
                         <View style={styles.modalView}>
                             <View style={styles.indicator} />
                             <Text style={styles.modalTitle}>Gaveta {gavetas.id + 1}</Text>
-                            <SelectList
-                                data={this.data}
-                                setSelected={setSelected}
-                                keyExtractor={(item) => item.id}
-                                labelExtractor={(item) => item.label}
-                                notFoundText="Nenhum medicamento encontrado"
-                                placeholder={meds ? this.nomeMed : "Selecione o medicamento"}
-                                searchInputStyle={{ backgroundColor: '#f2f2f2' }}
-                                listStyle={{ backgroundColor: '#fff' }}
-                            />
+                            {
+                                this.data ?
+                                    <SelectList
+                                        data={this.data}
+                                        setSelected={setSelected}
+                                        keyExtractor={(item) => item.id}
+                                        labelExtractor={(item) => item.label}
+                                        notFoundText="Nenhum medicamento encontrado"
+                                        placeholder={meds ? this.nomeMed : "Selecione o medicamento"}
+                                        searchInputStyle={{ backgroundColor: '#f2f2f2' }}
+                                        listStyle={{ backgroundColor: '#fff' }}
+                                    />
+                                    : <Text style={styles.dataVazio}>Nenhum medicamento cadastrado</Text>
+                            }
+
                             <TouchableOpacity
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => {
@@ -106,20 +111,25 @@ export default function Box({ gaveta, navigation, meds }) {
                             >
                                 <Text style={styles.textStyle}>Cadastrar novo medicamento</Text>
                             </TouchableOpacity>
+                            {
+                                this.data ?
+                                    <TouchableOpacity
+                                        style={[styles.button, styles.buttonOpen]}
+                                        onPress={() => {
+                                            hideModal();
+                                            salvar(gavetas.id)
+                                        }}
+                                    >
+                                        {
+                                            meds
+                                                ? <Text style={styles.textStyle}>Alterar</Text>
+                                                : <Text style={styles.textStyle}>Salvar</Text>
+                                        }
+                                    </TouchableOpacity>
+                                    :
+                                    null
+                            }
 
-                            <TouchableOpacity
-                                style={[styles.button, styles.buttonOpen]}
-                                onPress={() => {
-                                    hideModal();
-                                    salvar(gavetas.id)
-                                }}
-                            >
-                                {
-                                    meds
-                                        ? <Text style={styles.textStyle}>Alterar</Text>
-                                        : <Text style={styles.textStyle}>Salvar</Text>
-                                }
-                            </TouchableOpacity>
                             {
                                 meds
                                     ?

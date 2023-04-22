@@ -7,9 +7,6 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    flex: {
-        flexDirection: 'row'
-    },
     gaveta: {
         flexDirection: 'column',
         alignItems: 'center',
@@ -20,5 +17,9 @@ export default styles = StyleSheet.create({
         color: '#292929f3',
         fontSize: 20,
         marginTop: 5
+    },
+    lista: {
+        marginTop: '30%'
     }
+
 });
