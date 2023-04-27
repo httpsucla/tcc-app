@@ -30,19 +30,34 @@ export default styles = StyleSheet.create({
         alignItems: 'stretch'
     },
     button: {
-        marginTop: 25,
-        height: 50,
+        marginTop: 20,
+        height: 60,
         backgroundColor: '#414BB2',
-        borderRadius: 2,
-        paddingHorizontal: 110,
+        borderRadius: 5,
+        paddingHorizontal: 100,
         fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 20
+        elevation: 20,
+        shadowOpacity: 20,
+        shadowColor: '#ccc',
     },
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
+    },
+    buttonLista: {
+        marginTop: 20,
+        height: 60,
+        backgroundColor: '#414BB2',
+        borderRadius: 2,
+        paddingHorizontal: 115,
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 20,
+        shadowOpacity: 20,
+        shadowColor: '#ccc',
     },
     calendario: {
         height: 50,
@@ -50,36 +65,33 @@ export default styles = StyleSheet.create({
     },
     lista: {
         flex: 1,
-        marginTop: 10,
+        marginTop: 20,
         width: '90%',
         padding: 20
     },
     campolista: {
         flexDirection: 'row',
-        marginTop: 5,
-        height: 60,
+        marginVertical: 1,
+        paddingHorizontal: 15,
+        height: 75,
         backgroundColor: '#fff',
-        borderColor: '#292929f3',
-        borderWidth: 2,
-        borderRadius: 15,
+        borderRadius: 2,
         flex: 1,
-        marginBottom: 10,
         justifyContent: 'space-between'
     },
-    campoconteudo: {  
+    campoconteudo: {
         justifyContent: 'center',
-        paddingHorizontal: 12
+        paddingHorizontal: 10,
     },
-    campoicone: {  
+    campoicone: {
         justifyContent: 'center',
-        paddingHorizontal: 2,
-        
+        flexDirection: 'row'
     },
     componentenumero: {
-        flexDirection: 'column',
-        paddingVertical: 10
+        paddingHorizontal: 10,
+        justifyContent: 'center',
     },
-    emptyList : {
+    emptyList: {
         fontStyle: 'italic',
         color: '#292929f3',
         fontSize: 20,

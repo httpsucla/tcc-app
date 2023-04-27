@@ -6,15 +6,15 @@ import { DrawerActions } from "@react-navigation/native";
 
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao/";
-import VisualizarMedicamento from "../pages/CadastroMedTeste/visualizar";
-import EditarMedicamento from "../pages/CadastroMedTeste/editar";
+import VisualizarMedicamento from "../pages/Medicamento/visualizar";
+import EditarMedicamento from "../pages/Medicamento/editar";
 import TelaContatos from "../pages/Configuracao/telaContatos";
 import Gavetas from "../pages/Gaveta";;
 import Filtro from "../pages/Historico/filtro";
 import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
-import CadastrarMedicamento from "../pages/CadastroMedTeste/cadastrar";
-import CadastroMedTeste from "../pages/CadastroMedTeste";
+import CadastrarMedicamento from "../pages/Medicamento/cadastrar";
+import Medicamentos from "../pages/Medicamento";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -87,12 +87,12 @@ function HomeTabs() {
                     title: "Histórico"
                 }}
             />
-            <Tab.Screen name="CadastroMedTeste" component={CadastroMedTeste}
+            <Tab.Screen name="Medicamentos" component={Medicamentos}
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Icon name="pills" size={size} color={color} />
                     ),
-                    title: "Medicamento"
+                    title: "Medicamentos"
                 }} />
             <Tab.Screen name="Gaveta" component={Gavetas}
                 options={{

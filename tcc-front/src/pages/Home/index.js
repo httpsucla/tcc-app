@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import styles from './style';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 import { BarChart, LineChart } from 'react-native-chart-kit'
 import moment from 'moment';
 
 export default function Home() {
 
     useEffect(() => {
-        DatabaseManager.joinGavetaMedicamento((gavetas) => {
+        Database.joinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
         });
 
-        DatabaseManager.getMedicamentos((medicamentos) => {
+        Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos);
         });
         ultimoMed();

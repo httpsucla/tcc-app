@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, TextInput, FlatList, Alert } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text'
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 
@@ -11,7 +11,7 @@ export default function Contatos({ route, navigation }) {
     const [contato, setContato] = useState([])
 
     useEffect(() => {
-        DatabaseManager.getContatos((contato) => {
+        Database.getContatos((contato) => {
             setContato(contato);
         })
         console.log(contato)
@@ -23,7 +23,7 @@ export default function Contatos({ route, navigation }) {
             telefone: contato.telefone
         };
 
-        DatabaseManager.addContato(data, () => {
+        Database.addContato(data, () => {
             Alert.alert('Sucesso', 'Contato salvo com sucesso.');
             navigation.navigate("Configuracao");
         });
@@ -37,7 +37,7 @@ export default function Contatos({ route, navigation }) {
             id: 1
         };
 
-        DatabaseManager.updateContato(data, () => {
+        Database.updateContato(data, () => {
             Alert.alert('Sucesso', 'Contato salvo com sucesso.');
             navigation.navigate("Configuracao", { item: data });
         });
@@ -58,7 +58,7 @@ export default function Contatos({ route, navigation }) {
             {
                 text: "Sim",
                 onPress: () => {
-                    DatabaseManager.deleteContato();
+                    Database.deleteContato();
                     Alert.alert('Sucesso', 'Contato ' + ' removido com sucesso.');
                     navigation.navigate("Configuracao");
                 }

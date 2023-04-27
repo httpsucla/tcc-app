@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Modal, FlatList, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CalendarList, Calendar } from 'react-native-calendars';
 import styles from './style';
-import DatabaseManager from '../../../../services/testDb';
+import Database from '../../../../services/database';
 
 export default function CalendarioComponent() {
 
@@ -12,7 +12,7 @@ export default function CalendarioComponent() {
 
 
     const handleDayPress = (day) => {
-        DatabaseManager.getMedicamentos((medicamentos) => {
+        Database.getMedicamentos((medicamentos) => {
             const medicamentosFiltrados = [];
             for (let i = 0; i < medicamentos.length; i++) {
                 const medicamento = medicamentos[i];

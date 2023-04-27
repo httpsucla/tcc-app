@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Alert, Input } from 'react-native';
 import styles from './style';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 
 export default function EditarMedicamento({ route, navigation }) {
 
@@ -19,9 +19,9 @@ export default function EditarMedicamento({ route, navigation }) {
       id: medicamento.id
     };
 
-    DatabaseManager.updateMedicamento(data, () => {
+    Database.updateMedicamento(data, () => {
       Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.');
-      navigation.navigate("CadastroMedTeste", data);
+      navigation.navigate("Medicamentos", data);
     });
   }
 

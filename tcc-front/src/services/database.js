@@ -1,170 +1,292 @@
-import Medicamento from '../models/medicamento'
-import Gaveta from '../models/gaveta'
-import LDatabase from './ldatabase'
-import Contato from '../models/contato';
+import * as SQLite from 'expo-sqlite';
 
-export default class Database{
-    constructor(){
-        this.table_name = 'tb_medicamentos'
-        this.table_name2 = 'tb_gavetas'
-        this.table_name3 = 'tb_contato'
-        this.table_name4 = 'tb_historico'
-        this.db = new LDatabase('tcc2.db', (db) => {
-        //    db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name}( id integer PRIMARY KEY AUTOINCREMENT, nome text, horario TEXT, data_inicial TEXT, qtde integer, qtde_dias integer, ativo boolean);`, () => {}, (error) => {console.log(error)});
-        //    db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name2}( id integer PRIMARY KEY AUTOINCREMENT, id_medicamentos integer, horario TEXT, datahora_abertura TEXT, is_ocupado boolean, is_atrasado boolean,
-        //                     FOREIGN KEY(id_medicamentos) REFERENCES tb_medicamentos(id));`, () => {}, (error) => {console.log(error)});
-            db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name3}( id integer PRIMARY KEY, nome text, fone TEXT);`, () => {}, (error) => {console.log(error)});
-            db.executeQuery(`CREATE TABLE IF NOT EXISTS ${this.table_name4}( 
-                            id integer PRIMARY KEY, 
-                            id_gaveta integer,
-                            id_medicamento integer,
-                            dthora_abertura TEXT,
-                            dthora_prevista TEXT,
-                            situacao TEXT);`, () => {}, (error) => {console.log(error)});
+const db = SQLite.openDatabase('mydb.db');
 
-            db.executeQuery(`INSERT INTO ${this.table_name4}  
-                (id integer, id_gaveta, id_medicamento, dthora_abertura, dthora_prevista, situacao)
-                VALUES (1, 1, 2, '10/12/2022 12:00', '10/12/2022 12:03', 'Ok')
-                VALUES (2, 2, 1, '11/12/2022 14:00', '11/12/2022 14:07', 'Ok')
-                VALUES (3, 2, 1, '11/12/2022 06:00', '11/12/2022 07:30', 'Atraso')
-                VALUES (4, 3, 4, '14/12/2022 00:00', '14/12/2022 00:10', 'Ok');`, () => {}, (error) => {console.log(error)});
-         /*   for (var i = 1; i <= 4; i++){
-                console.log('entrou aq')
-                let gaveta = new Gaveta();
-                gaveta.id = i;
-                gaveta.id_medicamentos = 0;
-                gaveta.datahora_abertura = "";
-                gaveta.is_ocupado = false;
-                gaveta.is_atrasado = false;
-                console.log(gaveta);
-                this.insertNewGaveta(gaveta);
-            }*/
-        console.log("Banco de dados iniciado")
-        })
-    }
-    getAllMedicine(){
-        return new Promise(resolve => {
-            console.log('teste')
-            var query = `SELECT * FROM ${this.table_name}`;
-            console.log(query)
-            this.db.executeQuery(query, (_, res) => {
-                console.log(res.rows._array);
-                resolve(res.rows._array)
-            }, (e)=>console.log(e))
-        })
-    } 
-    
-    getAllMedicineById(id){
-        return new Promise(resolve => {
-            this.db.executeQuery(`SELECT * FROM ${this.table_name} WHERE id = ${id}`, (_, res) => {
-                resolve(res.rows._array)
-            }, (e)=>console.log(e))
-        })
-    }
+export default class Database {
 
-    insertNewMedicine(medicamento=new Medicamento()){
-        return new Promise(resolve => {
-            console.log(medicamento);
-            if(medicamento){
-                const query = `INSERT INTO ${this.table_name} (nome, horario, data_inicial, qtde, qtde_dias, ativo) VALUES ('${medicamento.nome}', '${medicamento.horario}', '${medicamento.data_inicial}', ${medicamento.qtde}, ${medicamento.qtde_dias}, ${medicamento.ativo});`
-                console.log(query)
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            }else resolve(false)
-        })
-    }
+  static createTables() {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tb_medicamentos (' +
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+        'nome TEXT,' +
+        'horario TEXT,' +
+        'data_inicial DATE,' +
+        'qtde INTEGER,' +
+        'qtde_dias INTEGER,' +
+        'ativo BOOLEAN);'
+      );
 
-    deleteMedicineById(id){
-        return new Promise(resolve => {
-            if(id != null && id != 0){
-                console.log('entrou')
-                const query = `DELETE FROM ${this.table_name} WHERE id = ${id};`
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            }else resolve(false)
-            
-        })
-    }
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tb_gavetas (' +
+        'id INTEGER PRIMARY KEY,' +
+        'id_medicamento INTEGER,' +
+        'datahora_abertura DATETIME,' +
+        'is_ocupado BOOLEAN,' +
+        'is_atrasado BOOLEAN,' +
+        'FOREIGN KEY(id_medicamento) REFERENCES tb_medicamentos(id));'
+      );
 
-    getGavetaById(gavetaId){
-        return new Promise(resolve => {
-            var query = `SELECT tb_gavetas.*, tb_medicamentos.nome FROM tb_gavetas inner join tb_medicamentos on tb_medicamentos.id = tb_gavetas.id and tb_gavetas.id = ${gavetaId} `;
-            console.log(query)
-            this.db.executeQuery(query, (_, res) => {
-                console.log(res.rows._array);
-                resolve(res.rows._array)
-            }, (e)=>console.log(e))
-        })
-    } 
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tb_contatos (' +
+        'id INTEGER PRIMARY KEY,' +
+        'nome TEXT,' +
+        'telefone TEXT);'
+      );
+    });
+  }
+  static teste() {
+    db.transaction(tx => {
+      tx.executeSql(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='tb_medicamentos';",
+        [],
+        (_, { rows }) => {
+          if (rows.length > 0) {
+            console.log("A tabela existe.");
+          } else {
+            console.log("A tabela não existe.");
+          }
+        }
+      );
+    });
+  }
+  static addMedicamento(medicamento, callback) {
+    console.log(medicamento)
+    console.log('PORRA')
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO tb_medicamentos (nome, horario, data_inicial, qtde, qtde_dias, ativo) VALUES (?, ?, ?, ?, ?, ?)',
+        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, 1],
+        (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  }
 
-    deleteGavetaById(id){
-        return new Promise(resolve => {
-            if(id != null && id != 0){
-                const query = `DELETE FROM ${this.table_name2} WHERE id = ${id};`
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            }else resolve(false)
-            
-        })
-    }
+  static updateMedicamento(medicamento, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tb_medicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, ativo = ? WHERE id = ?',
+        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.ativo, medicamento.id],
+        () => callback()
+      );
+    });
+  }
 
-    insertNewGaveta(gaveta=new Gaveta()){
-        return new Promise(resolve => {
-            console.log(gaveta);
-            if(gaveta){
-                const query = `INSERT INTO tb_gaveta(id_medicamentos, datahora_abertura, is_ocupado, is_atrasado) VALUES (${gaveta.id_medicamentos}, '${gaveta.datahora_abertura}', ${gaveta.is_ocupado}, ${gaveta.is_atrasado});`
-                console.log(query)
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            }else resolve(false)
-        })
-    }
-    
-    editMedicineById(medicamento=new Medicamento()){
-        return new Promise(resolve => {
-            console.log(medicamento);
-            if(medicamento){
-                const query = `
-                    UPDATE ${this.table_name} 
-                    SET nome='${medicamento.nome}',
-                        horario='${medicamento.horario}',
-                        data_inicial='${medicamento.data_inicial}',
-                        qtde=${medicamento.qtde},
-                        qtde_dias=${medicamento.qtde_dias},
-                        ativo=${medicamento.ativo}
-                    WHERE id=${medicamento.id} ;`
-                console.log(query)
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            }else resolve(false)
-        })
-    }
+  static deleteMedicamento(id) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM tb_medicamentos WHERE id = ?`,
+        [id],
+        (_, result) => {
+          console.log('Item excluído com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao excluir o item:', error);
+        },
+      );
+    });
+  };
 
-    // usar pra insert ou update
-    insertNewContato(contato=new Contato()){
-        return new Promise(resolve => {
-            console.log(contato);
-            if(contato){
-                const query = `INSERT OR REPLACE INTO tb_contato(id, nome, fone) VALUES (1, '${contato.nome}', '${contato.fone}');`
-                console.log(query)
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            }else resolve(false)
-        })
-    }
+  static getMedicamentos(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_medicamentos',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
 
-    deleteContato(){
-        return new Promise(resolve => {
-                const query = `DELETE FROM ${this.table_name3} WHERE id = 1`
-                this.db.executeQuery(query, ()=>resolve(true), (_)=>{console.log(_); resolve(false)})
-            })
-    }
-    getContato(){
-        return new Promise(resolve => {
-            var query = `SELECT * FROM tb_contato`;
-            console.log(query)
-            this.db.executeQuery(query, (_, res) => {
-                console.log(res.rows._array);
-                if (res.rows._array.length == 0)
-                    resolve('')
-                else
-                    resolve(res.rows._array)
-            }, (e)=>console.log('e ' + e))
-        })
-    }
+  static getMedicamentoById(id, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_medicamentos WHERE id = ?',
+        [id],
+        () => callback()
+      );
+    });
+  }
 
+  static getMedicamentosByDay(day, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM tb_medicamentos WHERE date(data_inicial, '+' || qtde || ' days') >= date(?, '+0 day')`,
+        [day.toISOString().substring(0, 10)],
+        (_, result) => callback(result.rows._array),
+        (_, error) => console.log(error)
+      );
+    });
+  }
+
+  static addGaveta(gaveta, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO tb_gavetas (id, id_medicamento, datahora_abertura, is_ocupado, is_atrasado) VALUES (?, ?, ?, ?, ?)',
+        [gaveta.id, gaveta.id_medicamento, gaveta.datahora_abertura, gaveta.is_ocupado, gaveta.is_atrasado],
+        (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
+      );
+    });
+  }
+
+  static addGavetaTeste() {
+    db.transaction(tx => {
+      for (let i = 0; i < 4; i++) {
+        tx.executeSql(
+          'INSERT INTO tb_gavetas (id, id_medicamento, datahora_abertura, is_ocupado, is_atrasado) VALUES (?, ?, ?, ?, ?)',
+          [i, '', '', '', ''],
+          (_, error) => console.log('Erro ao executar a query:', error),
+        );
+      }
+
+    });
+  }
+
+  static updateGaveta(gaveta, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'UPDATE tb_gavetas SET id_medicamento = ?, datahora_abertura = ?, is_ocupado = ?, is_atrasado = ? WHERE id = ?',
+        [gaveta.id_medicamento, gaveta.datahora_abertura, gaveta.is_ocupado, gaveta.is_atrasado, gaveta.id],
+        () => callback()
+      );
+    });
+  }
+
+  static getGavetas(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_gavetas',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+
+    });
+  }
+
+  static deleteGaveta(id, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM tb_gavetas WHERE id = ?`,
+        [id],
+        (tx, results) => {
+          if (results.rowsAffected > 0) {
+            console.log(`Gaveta com ID ${id} deletada com sucesso`);
+            callback(true);
+          } else {
+            console.log(`Gaveta com ID ${id} não encontrada`);
+            callback(false);
+          }
+        },
+        error => console.log(`Erro ao deletar a gaveta com ID ${id}:`, error)
+      );
+    });
+  }
+
+  static joinGavetaMedicamento(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT tb_gavetas.*, tb_medicamentos.* tb_medicamentos.nome as nome_medicamento, tb_medicamentos.qtde as qtde_medicamento ' +
+        'FROM tb_gavetas JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static addContato(contato, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO tb_contatos (nome, telefone) VALUES (?, ?)',
+        [contato.nome, contato.telefone],
+        (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  }
+
+  static addContatoTeste(contato) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO tb_contatos (id, nome, telefone) VALUES (?, ?, ?)`,
+        [1, contato.nome, contato.telefone],
+        (_, error) => console.log('Erro ao executar a query:', error),
+      );
+    });
+  }
+
+  static getContatos(callback) {
+    console.log("entrou no getContatos");
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_contatos',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static updateContato(contato, callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        `UPDATE tb_contatos SET nome = ?, telefone = ? WHERE id = ?`,
+        [contato.nome, contato.telefone, contato.id],
+        () => callback()
+      );
+    });
+  }
+
+  static deleteContato() {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM tb_contatos`,   
+        (_, result) => {
+          console.log('Contato excluído com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao excluir contato:', error);
+        },
+      );
+    });
+  };
+
+  static dropTables() {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE IF EXISTS tb_medicamentos;',
+        [],
+        (_, result) => {
+          console.log('Tabela tb_medicamentos dropada com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao dropar a tabela tb_medicamentos', error);
+        }
+      );
+    });
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE IF EXISTS tb_gavetas;',
+        [],
+        (_, result) => {
+          console.log('Tabela tb_gavetas dropada com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao dropar a tabela tb_gavetas', error);
+        }
+      );
+    });
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE IF EXISTS tb_contatos',
+        [],
+        (_, result) => {
+          console.log('Tabela tb_contatos dropada com sucesso!');
+        },
+        (_, error) => {
+          console.log('Erro ao dropar a tabela tb_contatos', error);
+        }
+      );
+    });
+  }
 }
+
+

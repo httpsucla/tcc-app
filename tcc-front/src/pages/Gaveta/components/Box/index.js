@@ -3,7 +3,7 @@ import { Alert, Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback, P
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import { SelectList } from 'react-native-dropdown-select-list';
-import DatabaseManager from '../../../../services/testDb';
+import Database from '../../../../services/database';
 
 export default function Box({ gaveta, navigation, meds }) {
 
@@ -19,7 +19,7 @@ export default function Box({ gaveta, navigation, meds }) {
             setGavetas(gaveta);
         }
 
-        DatabaseManager.getMedicamentos((medicamentos) => {
+        Database.getMedicamentos((medicamentos) => {
 
             for (let i = 0; i < medicamentos.length; i++) {
 
@@ -50,7 +50,7 @@ export default function Box({ gaveta, navigation, meds }) {
             id: item,
         };
 
-        DatabaseManager.updateGaveta(teste, () => {
+        Database.updateGaveta(teste, () => {
             Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
         })
         console.log(selected);
@@ -67,7 +67,7 @@ export default function Box({ gaveta, navigation, meds }) {
             id: item,
         };
 
-        DatabaseManager.updateGaveta(teste, () => {
+        Database.updateGaveta(teste, () => {
             Alert.alert('Sucesso', 'Gaveta está livre agora.');
         })
     };

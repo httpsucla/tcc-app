@@ -10,7 +10,7 @@ import {
   Alert,
   ScrollView
 } from 'react-native';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 import styles from './style';
 import moment from 'moment';
 
@@ -54,9 +54,9 @@ export default function CadastrarMedicamento({navigation}) {
       };
 
       console.log(item);
-      DatabaseManager.teste();
+      Database.teste();
 
-      DatabaseManager.addMedicamento(item, () => {
+      Database.addMedicamento(item, () => {
         console.log(`Medicamento inserido com sucesso.`);
         setNome('');
         setDataInicial('');
@@ -67,8 +67,8 @@ export default function CadastrarMedicamento({navigation}) {
       });
 
       Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
-      navigation.navigate("CadastroMedTeste", item);
-      DatabaseManager.getMedicamentos((medicamentos) => {
+      navigation.navigate("Medicamentos", item);
+      Database.getMedicamentos((medicamentos) => {
         console.log(medicamentos);
       });
     }

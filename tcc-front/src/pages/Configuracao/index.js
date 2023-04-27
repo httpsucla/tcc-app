@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, Alert } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 
 export default function Configuracao({ route, navigation }) {
 
@@ -11,7 +11,7 @@ export default function Configuracao({ route, navigation }) {
     const [contato, setContatos] = useState([]);
 
     useEffect(() => {
-        DatabaseManager.addGavetaTeste();
+        Database.addGavetaTeste();
     }, []);
 
     telaContato = (() => {
@@ -29,7 +29,7 @@ export default function Configuracao({ route, navigation }) {
             {
                 text: "Sim",
                 onPress: () => {
-                    DatabaseManager.dropTables();
+                    Database.dropTables();
                     Alert.alert('Sucesso', 'Banco resetado com sucesso.');
             //        DatabaseManager.getContatos((contato) => {
              //           setContatos(contato);

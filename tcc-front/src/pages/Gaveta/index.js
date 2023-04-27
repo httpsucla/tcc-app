@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import styles from './style';
 import Box from './components/Box';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function Gavetas({ navigation }) {
@@ -11,8 +11,8 @@ export default function Gavetas({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        DatabaseManager.addGavetaTeste();
-        DatabaseManager.getGavetas((gavetas) => {
+        Database.addGavetaTeste();
+        Database.getGavetas((gavetas) => {
             setGavetas(gavetas);
             console.log(gavetas);
         })
@@ -24,7 +24,7 @@ export default function Gavetas({ navigation }) {
             setRefreshing(false);
         }, 500)
 
-        DatabaseManager.getGavetas((gavetas) => {
+        Database.getGavetas((gavetas) => {
             setGavetas(gavetas)
         });
     }, []);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import styles from './style';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -19,7 +19,7 @@ export default function Filtro({ navigation }) {
     var data = [];
 
     useEffect(() => {
-        DatabaseManager.getMedicamentos((medicamentos) => {
+        Database.getMedicamentos((medicamentos) => {
             for (let i = 0; i < medicamentos.length; i++) {
                 data = medicamentos.map(m => ({
                     key: m.id,

@@ -2,20 +2,20 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 
-export default function CadastroMedTeste({ route, navigation }) {
+export default function Medicamentos({ route, navigation }) {
 
     const [medicamentos, setMedicamentos] = useState([]);
     const [gavetas, setGavetas] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        DatabaseManager.getMedicamentos((medicamentos) => {
+        Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos)
         });
 
-        DatabaseManager.getGavetas((gavetas) => {
+        Database.getGavetas((gavetas) => {
             setGavetas(gavetas)
         });
     }, [route]);
@@ -26,7 +26,7 @@ export default function CadastroMedTeste({ route, navigation }) {
             setRefreshing(false);
         }, 1000)
 
-        DatabaseManager.getMedicamentos((medicamentos) => {
+        Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos)
         });
     }, []);
@@ -53,15 +53,15 @@ export default function CadastroMedTeste({ route, navigation }) {
                                 id: gavetas[i].id,
                             };
                     
-                            DatabaseManager.updateGaveta(gaveta, () => {
+                            Database.updateGaveta(gaveta, () => {
                                 console.log("foi");
                             })
-                            DatabaseManager.deleteMedicamento(item.id);
+                            Database.deleteMedicamento(item.id);
                             Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' foi removido com sucesso. Gaveta ' + (gavetas[i].id+1) + ' está vazia agora!');
                             break;
                             
                         } else if(item.id != gavetas[i].id_medicamento && i == 3) {
-                            DatabaseManager.deleteMedicamento(item.id);
+                            Database.deleteMedicamento(item.id);
                             Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' removido com sucesso.');
                             break;
                         }

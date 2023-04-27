@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { DataTable } from 'react-native-paper';
-import DatabaseManager from '../services/testDb';
+import DatabaseManager from '../services/database';
 import moment from 'moment';
 
 export default function HorarioMed({ item }) {
@@ -65,7 +65,7 @@ export default function HorarioMed({ item }) {
                 return 0;
             }
         });
-        
+
         setListaMed(lastMed);
         console.log(lastMed);
 

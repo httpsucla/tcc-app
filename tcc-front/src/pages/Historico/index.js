@@ -4,7 +4,7 @@ import { DataTable } from 'react-native-paper';
 import { StackActions } from '@react-navigation/native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import DatabaseManager from '../../services/testDb';
+import Database from '../../services/database';
 import HorarioMed from '../../components/horarioMed';
 
 export default function Historico({ navigation, route }) {
@@ -44,14 +44,14 @@ export default function Historico({ navigation, route }) {
 
     refresh = () => {
         if (filtro) {
-            DatabaseManager.getMedicamentoById((medId) => {
+            Database.getMedicamentoById((medId) => {
                 setMedById(medId);
             })
             console.log("entrou no filtrado")
             console.log(medById);
 
         } else {
-            DatabaseManager.joinGavetaMedicamento((medicamentos) => {
+            Database.joinGavetaMedicamento((medicamentos) => {
                 setHistorico(medicamentos);
                 setLoading(false);
             })
