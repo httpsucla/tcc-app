@@ -9,26 +9,14 @@ export default function Contatos({ route, navigation }) {
 
     const { item } = route.params ? route.params : [];
     const [contato, setContato] = useState([])
+    
+    console.log(contato)
 
     useEffect(() => {
         Database.getContatos((contato) => {
             setContato(contato);
         })
-        console.log(contato)
-    }, []);
-
-    cadastrarInutil = () => {
-        const data = {
-            nome: contato.nome,
-            telefone: contato.telefone
-        };
-
-        Database.addContato(data, () => {
-            Alert.alert('Sucesso', 'Contato salvo com sucesso.');
-            navigation.navigate("Configuracao");
-        });
-
-    };
+      }, []);
 
     cadastrar = () => {
         const data = {
@@ -41,6 +29,10 @@ export default function Contatos({ route, navigation }) {
             Alert.alert('Sucesso', 'Contato salvo com sucesso.');
             navigation.navigate("Configuracao", { item: data });
         });
+
+        Database.getContatos((contato) => {
+            setContato(contato);
+        })
 
         console.log("cadastroo")
         console.log(data)
