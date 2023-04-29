@@ -215,7 +215,6 @@ export default class Database {
   }
 
   static getContatos(callback) {
-    console.log("entrou no getContatos");
     db.transaction(tx => {
       tx.executeSql(
         'SELECT * FROM tb_contatos',
@@ -228,8 +227,8 @@ export default class Database {
   static updateContato(contato, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        `UPDATE tb_contatos SET nome = ?, telefone = ? WHERE id = ?`,
-        [contato.nome, contato.telefone, contato.id],
+        `REPLACE INTO tb_contatos (id, nome, telefone) VALUES (?, ?, ?);`,
+        [1, contato.nome, contato.telefone],
         () => callback()
       );
     });

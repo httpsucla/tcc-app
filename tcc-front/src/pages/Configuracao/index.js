@@ -31,9 +31,6 @@ export default function Configuracao({ route, navigation }) {
                 onPress: () => {
                     Database.dropTables();
                     Alert.alert('Sucesso', 'Banco resetado com sucesso.');
-            //        DatabaseManager.getContatos((contato) => {
-             //           setContatos(contato);
-              //      });
                 }
             }],
             { cancelable: false }

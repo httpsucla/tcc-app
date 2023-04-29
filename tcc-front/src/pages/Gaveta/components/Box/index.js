@@ -5,7 +5,7 @@ import styles from './style';
 import { SelectList } from 'react-native-dropdown-select-list';
 import Database from '../../../../services/database';
 
-export default function Box({ gaveta, navigation, meds }) {
+export default function Box({ gaveta, navigation, meds, todasGavetas }) {
 
     const [gavetas, setGavetas] = useState([]);
     const [medicamentos, setMedicamentos] = useState([]);
@@ -13,25 +13,37 @@ export default function Box({ gaveta, navigation, meds }) {
     const [selected, setSelected] = useState("");
     const nomeMed = '';
 
+
     const showMedicamentos = () => {
 
         if (gaveta) {
             setGavetas(gaveta);
         }
 
+        console.log('aopa')
         Database.getMedicamentos((medicamentos) => {
+
 
             for (let i = 0; i < medicamentos.length; i++) {
 
                 if (medicamentos[i].id == meds) {
                     this.nomeMed = medicamentos[i].nome;
                     console.log(this.nomeMed)
-                }
+                }             
                 this.data = medicamentos.map(m => ({
                     key: m.id,
                     value: m.nome
                 }));
             }
+
+            todasGavetas.forEach(g => {
+                if (g.is_ocupado){
+                    for (let i = 0; i< this.data.length; i++){
+                        if (this.data[i].key === g.id_medicamento)
+                        this.data.splice(i, this.data[i].key)
+                    }
+                }
+            });
             setMedicamentos(this.data);
         });
 
@@ -90,7 +102,7 @@ export default function Box({ gaveta, navigation, meds }) {
                             {
                                 this.data ?
                                     <SelectList
-                                        data={this.data}
+                                        data={medicamentos}
                                         setSelected={setSelected}
                                         keyExtractor={(item) => item.id}
                                         labelExtractor={(item) => item.label}

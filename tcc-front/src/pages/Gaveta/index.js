@@ -48,7 +48,7 @@ export default function Gavetas({ navigation }) {
 
                             <View style={styles.gaveta}>
                                 <Text style={styles.title}>Gaveta {item.id + 1}</Text>
-                                <Box gaveta={item} navigation={navigation} meds={item.id_medicamento} />
+                                <Box todasGavetas={gavetas} gaveta={item} navigation={navigation} meds={item.id_medicamento}/>
                             </View>
 
                         )}
