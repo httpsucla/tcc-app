@@ -10,6 +10,7 @@ export default function Home() {
     useEffect(() => {
         Database.joinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
+            console.log(gavetas)
         });
 
         Database.getMedicamentos((medicamentos) => {
@@ -17,24 +18,24 @@ export default function Home() {
         });
         ultimoMed();
     }, []);
-
-    const [medicamentos, setMedicamentos] = useState([]);
+    
+    const [medicamentos, setMedicamentos] = useState([]); 
     const [gavetas, setGavetas] = useState([]);
     const [listaMed, setListaMed] = useState([]);
 
     const g = [
         gavetas[0] ?
-            { nome: 'Gaveta ' + (gavetas[0].id + 1), medicamento: gavetas[0].nome_medicamento, qtde: gavetas[0].qtde_medicamento }
-            : { nome: 'Gaveta 1', medicamento: '', qtde: null },
+            { nome: 'Gaveta ' + (gavetas[0].id + 1), medicamento: gavetas[0].nome, qtde: gavetas[0].qtde }
+            : { nome: 'Gaveta 1', medicamento: '', qtde: 0 },
         gavetas[1] ?
-            { nome: 'Gaveta ' + (gavetas[1].id + 1), medicamento: gavetas[1].nome_medicamento, qtde: gavetas[1].qtde_medicamento }
-            : { nome: 'Gaveta 2', medicamento: '', qtde: null },
+            { nome: 'Gaveta ' + (gavetas[1].id + 1), medicamento: gavetas[1].nome, qtde: gavetas[1].qtde }
+            : { nome: 'Gaveta 2', medicamento: '', qtde: 0 },
         gavetas[2] ?
-            { nome: 'Gaveta ' + (gavetas[2].id + 1), medicamento: gavetas[2].nome_medicamento, qtde: gavetas[2].qtde_medicamento }
-            : { nome: 'Gaveta 3', medicamento: '', qtde: null },
+            { nome: 'Gaveta ' + (gavetas[2].id + 1), medicamento: gavetas[2].nome, qtde: gavetas[2].qtde }
+            : { nome: 'Gaveta 3', medicamento: '', qtde: 0 },
         gavetas[3] ?
-            { nome: 'Gaveta ' + (gavetas[3].id + 1), medicamento: gavetas[3].nome_medicamento, qtde: gavetas[3].qtde_medicamento }
-            : { nome: 'Gaveta 4', medicamento: '', qtde: null },
+            { nome: 'Gaveta ' + (gavetas[3].id + 1), medicamento: gavetas[3].nome, qtde: gavetas[3].qtde }
+            : { nome: 'Gaveta 4', medicamento: '', qtde: 0 },
     ]
 
     const data = {
@@ -60,6 +61,7 @@ export default function Home() {
 
         const lastMed = [];
 
+       
         medicamentos.forEach((medicamento) => {
             const dateObj = new Date(medicamento.data_inicial) // transforma a data inicial em Date
             const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); // transforma o horario inicial em date
@@ -82,11 +84,10 @@ export default function Home() {
                 lastMed.push({ // cria objeto com o horario mais proximo de cada medicamento
                     id: medicamento.id,
                     title: medicamento.nome,
-                    DataAtual: horarioProximo,
-                    Horario: String(moment.utc(horarioProximo).format('hh:mm')),
+                    DataAtual: moment(horarioProximo),
+                    Horario: String(moment.utc(horarioProximo).format('HH:mm')),
                 });
             }
-            console.log(agora)
 
             lastMed.sort((a, b) => { // ordena a lista por ordem crescente de data
                 const dataA = new Date(a.DataAtual);
@@ -99,8 +100,8 @@ export default function Home() {
                     return 0;
                 }
             });
+
             setListaMed(lastMed);
-            console.log(lastMed)
         });
     }
 

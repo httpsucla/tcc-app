@@ -200,7 +200,7 @@ export default class Database {
   static joinGavetaMedicamento(callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT tb_gavetas.*, tb_medicamentos.* tb_medicamentos.nome as nome_medicamento, tb_medicamentos.qtde as qtde_medicamento ' +
+        'SELECT tb_gavetas.*, tb_medicamentos.nome as nome, tb_medicamentos.qtde as qtde ' +
         'FROM tb_gavetas JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id',
         [],
         (_, { rows }) => callback(rows._array)
