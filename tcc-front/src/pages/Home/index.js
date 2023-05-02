@@ -64,23 +64,26 @@ export default function Home() {
        
         medicamentos.forEach((medicamento) => {
             const dateObj = new Date(medicamento.data_inicial) // transforma a data inicial em Date
+
+    
             const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); // transforma o horario inicial em date
             const now = new Date();
             const combinedDate = new Date(dateObj.setHours(timeObj.getHours(), timeObj.getMinutes(), timeObj.getSeconds())); // junta a data e o horario em um novo objeto
 
-            const dataInicio = moment(combinedDate).format(); // data inicio do tratamento
+            const dataInicio = moment.utc(combinedDate); // data inicio do tratamento
+            dataInicio.add(1, 'days');
             const agora = moment(now); // momento atual
 
             const diasDecorridos = agora.diff(dataInicio, 'days'); // quantos dias ja passaram desde o inicio do tratamento
             const diasFaltantes = medicamento.qtde_dias - diasDecorridos; // quantos dias faltam para terminar o tratamento
             const mediaHoras = 24 / (parseInt(medicamento.qtde) / parseInt(medicamento.qtde_dias)); // calcula de quanto em quanto tempo deve-se engerir o medicamento
-            let horarioProximo = moment(new Date(now.setHours(timeObj.getHours(), timeObj.getMinutes(), timeObj.getSeconds())));
-            horarioProximo.add(mediaHoras, 'hours'); // calcula os futuros horarios que o usuario deverá tomar o medicamento
+            const auxHour = moment.utc(new Date(now.setUTCHours(0, 0, 0))).format();
+            let horarioProximo = moment.utc(new Date(auxHour));
 
             while (horarioProximo.isBefore(agora)) // enquanto o horario do dia for menor que o horario do dia atual, incrementa o horario
                 horarioProximo.add(mediaHoras, 'hours');
 
-            if (horarioProximo.isAfter(agora)) {
+            if (horarioProximo.isAfter(agora) && diasFaltantes > 0) {
                 lastMed.push({ // cria objeto com o horario mais proximo de cada medicamento
                     id: medicamento.id,
                     title: medicamento.nome,
@@ -88,7 +91,7 @@ export default function Home() {
                     Horario: String(moment.utc(horarioProximo).format('HH:mm')),
                 });
             }
-
+            
             lastMed.sort((a, b) => { // ordena a lista por ordem crescente de data
                 const dataA = new Date(a.DataAtual);
                 const dataB = new Date(b.DataAtual);
@@ -100,7 +103,7 @@ export default function Home() {
                     return 0;
                 }
             });
-
+            console.log(lastMed)
             setListaMed(lastMed);
         });
     }

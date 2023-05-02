@@ -20,7 +20,15 @@ export default styles = StyleSheet.create({
         flex: 1,
         marginVertical: 50,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 5
     },
     boxHourText: {
         color: 'white',
@@ -34,8 +42,7 @@ export default styles = StyleSheet.create({
     },
     box: {
         height: 100,
-        borderColor: '#E6E6E6',
-        borderWidth: 1,
+        
         backgroundColor: 'white',
         marginHorizontal: 10,
         marginBottom: 20,
@@ -43,8 +50,8 @@ export default styles = StyleSheet.create({
         paddingVertical: 10,
         shadowColor: "#000",
         shadowOffset: {
-            width: 0,
-            height: 2
+            width: 5,
+            height: 5
         },
         shadowOpacity: 0.1,
         shadowRadius: 4,

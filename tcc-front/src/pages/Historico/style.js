@@ -46,7 +46,9 @@ export default styles = StyleSheet.create({
         fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 20
+        elevation: 20,
+        shadowOpacity: 20,
+        shadowColor: '#ccc'
     },
     buttonText: {
         color: '#fff',
@@ -105,7 +107,7 @@ export default styles = StyleSheet.create({
         color: '#292929f3',
         fontStyle: 'italic'
     },
-    emptyList : {
+    emptyList: {
         fontStyle: 'italic',
         color: '#292929f3',
         fontSize: 20,
