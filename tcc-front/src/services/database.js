@@ -33,7 +33,22 @@ export default class Database {
         'nome TEXT,' +
         'telefone TEXT);'
       );
+      
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS tb_historico (' +
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+        'id_gaveta INTEGER,' +
+        'id_medicamento INTEGER,' +
+        'datahora_abertura DATE,' +
+        'situacao BOOLEAN' +
+        'FOREIGN KEY(id_medicamento) REFERENCES tb_medicamentos(id));' +
+        'FOREIGN KEY(id_gaveta) REFERENCES tb_gavetas(id));' +
+        ');'
+      );
+
     });
+
+      
   }
   static teste() {
     db.transaction(tx => {
@@ -248,6 +263,52 @@ export default class Database {
     });
   };
 
+  static addHistorico(){
+    db.transaction((tx) => {
+      tx.executeSql(
+        'INSERT INTO tb_historico (id_gaveta, id_medicamento, datahora_abertura, situacao) VALUES (?, ?, ?, ?)',
+        [id_gaveta, id_medicamento, datahora_abertura, situacao],
+        (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  };
+  
+  static updateHistorico(){
+    db.transaction((tx) => {
+      tx.executeSql(
+        'UPDATE tb_historico SET id_gaveta = ?, id_medicamento = ?, datahora_abertura = ?, situacao = ? WHERE id = ?',
+        [id_gaveta, id_medicamento, datahora_abertura, situacao, id],
+        (_, { rowsAffected }) => callback(rowsAffected),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  };
+
+  static removeHistorico(){
+    db.transaction((tx) => {
+      tx.executeSql(
+        'DELETE FROM tb_historico WHERE id = ?',
+        [id],
+        (_, { rowsAffected }) => callback(rowsAffected),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  };
+
+  static getHistorico(){
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM tb_historico',
+        [],
+        (_, { rows }) => callback(rows._array),
+        (_, error) => console.log('Erro ao executar a query:', error)
+      );
+    });
+  };
+
+
+
   static dropTables() {
     db.transaction(tx => {
       tx.executeSql(
@@ -286,6 +347,8 @@ export default class Database {
       );
     });
   }
+
+
 }
 
 
