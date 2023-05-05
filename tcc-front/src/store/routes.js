@@ -2,7 +2,6 @@ import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { DrawerActions } from "@react-navigation/native";
 
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao/";
@@ -15,6 +14,7 @@ import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
 import CadastrarMedicamento from "../pages/Medicamento/cadastrar";
 import Medicamentos from "../pages/Medicamento";
+import HistoMedicamento from "../pages/Medicamento/historico";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,6 +44,9 @@ export default function Routes() {
             <Stack.Screen
                 name="Historico"
                 component={Historico} />
+            <Stack.Screen
+                name="Historico Medicamento"
+                component={HistoMedicamento} />
         </Stack.Navigator>
 
     )

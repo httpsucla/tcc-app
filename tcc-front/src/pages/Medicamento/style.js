@@ -1,3 +1,4 @@
+import { width } from "deprecated-react-native-prop-types/DeprecatedImagePropType";
 import { StyleSheet } from "react-native";
 
 export default styles = StyleSheet.create({
@@ -46,6 +47,24 @@ export default styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
+    buttonTransp : {
+        marginTop: 20,
+        height: 60,
+        backgroundColor: 'transparent',
+        borderRadius: 5,
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: '#414BB2',
+        borderWidth: 1.5,
+        elevation: 20,
+        shadowOpacity: 20,
+        shadowColor: '#ccc',
+    },
+    buttonTextTransp: {
+        color: '#292929f3',
+        fontWeight: 'bold',
+    },
     buttonLista: {
         marginTop: 20,
         height: 60,
@@ -77,7 +96,7 @@ export default styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 2,
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     campoconteudo: {
         justifyContent: 'center',

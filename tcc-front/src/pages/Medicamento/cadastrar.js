@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,8 +14,10 @@ import Database from '../../services/database';
 import styles from './style';
 import moment from 'moment';
 
-export default function CadastrarMedicamento({navigation}) {
-  
+export default function CadastrarMedicamento({ navigation, route }) {
+
+  const { hist } = route.params ? route.params.hist : {};
+  const [medicamento, setMedicamento] = useState([]);
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');
   const [horario, setHorario] = useState('');
@@ -25,31 +27,35 @@ export default function CadastrarMedicamento({navigation}) {
   let isDataValida = true;
   let isHoraValida = true;
 
+  useEffect(() => { 
+  //  console.log(hist) 
+}, []);
+
   function handleInsert() {
-    if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()){
+    if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
       //Alert.alert('Erro', 'Data está inválida.');
       isDataValida = false;
     }
-    if (!moment(horario, 'HH:mm', true).isValid()){
+    if (!moment(horario, 'HH:mm', true).isValid()) {
       isHoraValida = false;
     }
-    
-    if (!isDataValida || !isHoraValida){
+
+    if (!isDataValida || !isHoraValida) {
       Alert.alert('Erro', 'Existem erros de preenchimento.');
-      if (!isDataValida){
+      if (!isDataValida) {
         setDataInicial('');
       }
-      if (!isHoraValida){
+      if (!isHoraValida) {
         setHorario('');
       }
     }
-    else{
+    else {
       const item = {
-        nome,
+        nome : medicamento.nome,
         horario: new Date(`2023-04-06T${horario}`).toLocaleTimeString(),
         data_inicial: moment(dataInicial, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-        qtde,
-        qtde_dias: qtdeDias,
+        qtde : String(medicamento.qtde),
+        qtde_dias: String(medicamento.qtde_dias),
         ativo,
       };
 
@@ -83,11 +89,19 @@ export default function CadastrarMedicamento({navigation}) {
         >
           <Text style={styles.title}> Cadastrar Medicamento</Text>
           <View style={styles.inputContainer}>
+            <TouchableOpacity style={styles.buttonTransp}
+              onPress={() => {
+                navigation.navigate("Historico Medicamento");
+               // console.log(hist);
+              }}>
+              <Text style={styles.buttonTextTransp}>Selecionar medicamento do banco</Text>
+            </TouchableOpacity>
+           
             <TextInput
               style={styles.input}
               placeholder="Nome"
-              value={nome}
-              onChangeText={setNome}
+              value={medicamento.nome}
+              onChangeText={nome => setMedicamento({ ...medicamento, nome })}
               returnKeyType='done'
               clearButtonMode="always"
             />
@@ -126,8 +140,8 @@ export default function CadastrarMedicamento({navigation}) {
             <TextInput
               style={styles.input}
               placeholder="Quantidade por dia"
-              value={qtde}
-              onChangeText={setQtde}
+              value={String(medicamento.qtde)}
+              onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
@@ -135,13 +149,12 @@ export default function CadastrarMedicamento({navigation}) {
             <TextInput
               placeholder="Quantidade de dias"
               style={styles.input}
-              value={qtdeDias}
-              onChangeText={setQtdeDias}
+              value={String(medicamento.qtde_dias)}
+              onChangeText={qtde_dias => setMedicamento({ ...medicamento, qtde_dias })}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
             />
-
             <TouchableOpacity style={styles.button} onPress={handleInsert}>
               <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
