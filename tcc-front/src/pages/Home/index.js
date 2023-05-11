@@ -10,7 +10,7 @@ export default function Home() {
     useEffect(() => {
         Database.joinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
-            console.log(gavetas)
+            //  console.log(gavetas)
         });
 
         Database.getMedicamentos((medicamentos) => {
@@ -18,8 +18,8 @@ export default function Home() {
         });
         ultimoMed();
     }, []);
-    
-    const [medicamentos, setMedicamentos] = useState([]); 
+
+    const [medicamentos, setMedicamentos] = useState([]);
     const [gavetas, setGavetas] = useState([]);
     const [listaMed, setListaMed] = useState([]);
 
@@ -60,39 +60,76 @@ export default function Home() {
     const ultimoMed = () => {
 
         const lastMed = [];
+        let apenasHorario = [];
 
-       
         medicamentos.forEach((medicamento) => {
-            const dateObj = new Date(medicamento.data_inicial) // transforma a data inicial em Date
 
-    
-            const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); // transforma o horario inicial em date
+            const dateObj = new Date(medicamento.data_inicial) 
+            const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); 
             const now = new Date();
-            const combinedDate = new Date(dateObj.setHours(timeObj.getHours(), timeObj.getMinutes(), timeObj.getSeconds())); // junta a data e o horario em um novo objeto
+            const hourAux = moment.utc(timeObj).format('HH');
+            const minuteAux = moment.utc(timeObj).format('mm');
+            const combinedDate = new Date(dateObj.setHours(timeObj.getHours(), timeObj.getMinutes(), timeObj.getSeconds())); 
+            const dataInicio = moment.utc(combinedDate);    
+            dataInicio.add(1, 'days'); 
+            const agora = moment(); 
+            const agora2 = agora.subtract(3, 'hours')
+            const diasDecorridos = agora.diff(dataInicio, 'days'); 
+            const diasFaltantes = medicamento.qtde_dias - diasDecorridos; 
+            const qtdeDia = parseInt(medicamento.qtde) / parseInt(medicamento.qtde_dias); 
+            const aCada = 24 / qtdeDia; 
 
-            const dataInicio = moment.utc(combinedDate); // data inicio do tratamento
-            dataInicio.add(1, 'days');
-            const agora = moment(now); // momento atual
+            let horarioProximo = moment.utc(new Date(now.setUTCHours(0, 0, 0))); 
 
-            const diasDecorridos = agora.diff(dataInicio, 'days'); // quantos dias ja passaram desde o inicio do tratamento
-            const diasFaltantes = medicamento.qtde_dias - diasDecorridos; // quantos dias faltam para terminar o tratamento
-            const mediaHoras = 24 / (parseInt(medicamento.qtde) / parseInt(medicamento.qtde_dias)); // calcula de quanto em quanto tempo deve-se engerir o medicamento
-            const auxHour = moment.utc(new Date(now.setUTCHours(0, 0, 0))).format();
-            let horarioProximo = moment.utc(new Date(auxHour));
+            let horario = moment(new Date(now.setUTCHours(Number(hourAux), Number(minuteAux), timeObj.getSeconds()))); 
+            
+            for (let i = 0; i < qtdeDia; i++) { 
+                apenasHorario.push(moment.utc(horario).format('HH:mm'))
+                horario.add(aCada, 'hours');
+            }
+       
+            apenasHorario.sort((a, b) => { 
+                const dataA = a;
+                const dataB = b;
+                if (dataA < dataB) {
+                    return -1;
+                } else if (dataA > dataB) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            
+            const hour1 = apenasHorario[0];
+            const hour2 = hour1[0] + hour1[1];
+            const minute1 = apenasHorario[0];
+            const minute2 = minute1[3] + minute1[4];
 
-            while (horarioProximo.isBefore(agora)) // enquanto o horario do dia for menor que o horario do dia atual, incrementa o horario
-                horarioProximo.add(mediaHoras, 'hours');
+            horario = moment(new Date(now.setUTCHours(Number(hour2), Number(minute2), timeObj.getSeconds()))); 
+            apenasHorario = [];
 
-            if (horarioProximo.isAfter(agora) && diasFaltantes > 0) {
-                lastMed.push({ // cria objeto com o horario mais proximo de cada medicamento
+            for (let j = 0; j < qtdeDia; j++) {
+                while (horario.isBefore(agora2)) { 
+                    horario.add(aCada, 'hours');
+                }
+            }
+            
+            const horarioFormat = moment.utc(horario).format('HH:mm'); 
+
+            horarioProximo.add(horarioFormat, 'hours');
+            if (horarioProximo.isSameOrBefore(agora2)) 
+                horarioProximo.add(1, 'days');
+
+            if (horarioProximo.isSameOrAfter(agora2) && diasFaltantes > 0) {
+                lastMed.push({ 
                     id: medicamento.id,
                     title: medicamento.nome,
                     DataAtual: moment(horarioProximo),
                     Horario: String(moment.utc(horarioProximo).format('HH:mm')),
                 });
             }
-            
-            lastMed.sort((a, b) => { // ordena a lista por ordem crescente de data
+
+            lastMed.sort((a, b) => { 
                 const dataA = new Date(a.DataAtual);
                 const dataB = new Date(b.DataAtual);
                 if (dataA < dataB) {

@@ -16,6 +16,8 @@ export default function Filtro({ navigation }) {
     const [showC2, setShowC2] = useState(false);
     const [dataStartView, setDataStartView] = useState('');
     const [dataEndView, setDataEndView] = useState('');
+    const [filtro, setFiltro] = useState(true);
+
     var data = [];
 
     useEffect(() => {
@@ -57,12 +59,12 @@ export default function Filtro({ navigation }) {
             navigation.replace('Historico', {
                 medId: selected,
                 DataIni: dataStartView,
-                DataFim: dataEndView
+                DataFim: dataEndView,
+                filtro
             });
         } else {
             Alert.alert("Atenção", "Preencha todos os campos!");
         }
-        console.log(medicamentos)
     }
 
     return (

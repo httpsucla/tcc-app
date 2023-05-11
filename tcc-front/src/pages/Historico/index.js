@@ -16,7 +16,7 @@ export default function Historico({ navigation, route }) {
     const [medId, setMedId] = useState('');
     const [dataStart, setDataStart] = useState(new Date());
     const [dataEnd, setDataEnd] = useState(new Date());
-    const [medById, setMedById] = useState('');
+    const [medById, setMedById] = useState([]);
     const [listaMed, setListaMed] = useState([]);
 
     componentDidMount = () => {
@@ -29,37 +29,73 @@ export default function Historico({ navigation, route }) {
             setMedicamentos(medicamentos);
         });
         atualizaFiltros();
-        relatorio();
+
         gerarRelatorio();
     }, []);
 
     atualizaFiltros = () => {
         if (route.params) {
-            console.log("Com filtro");
-            const { medId, DataIni, DataFim } = route.params;
-            console.log(medId, DataIni, DataFim);
+            const { medId, DataIni, DataFim, filtro } = route.params;
+            console.log(medId, DataIni, DataFim, filtro);
             setMedId(medId);
             setDataStart(DataIni);
             setDataEnd(DataFim);
-            setFiltro(true);
+            setFiltro(filtro);
+
         } else {
             console.log("Sem filtro");
         }
     }
 
-    relatorio = () => {
+    filtrarRelatorio = () => {
+        console.log(filtro)
         if (filtro) {
-            Database.getMedicamentoById((medId) => {
-                setMedById(medId);
-            })
-        } else {
-            Database.joinGavetaMedicamento((medicamentos) => {
-                setHistorico(medicamentos);
-                setLoading(false);
-            })
-            console.log("sem filtro")
-            gerarRelatorio();
-        }
+            if (medId) {
+                if (dataStart) {
+                    if (dataEnd) {
+                        console.log("medicamento inicio e fim existem");
+                        Database.getMedicamentoDataFimHistorico(medId, dataStart, dataEnd, (historico) => {
+                            setHistorico(historico);
+                        });
+                    } else {
+                        console.log("medicamento e data inicio existe");
+                        Database.getMedicamentoDataInicioHistorico(medId, dataStart, (historico) => {
+                            setHistorico(historico);
+                        });
+                    }
+                }
+                else if (dataEnd) {
+                    console.log("medicamento e data fim existe");
+                    Database.getMedicamentoDataFimHistorico(medId, dataEnd, (historico) => {
+                        setHistorico(historico);
+                    });
+                } else {
+                    console.log("só medicamento")
+                    Database.getMedicamentoHistorico(medId, () => {
+
+                    });
+                }
+            }
+            else if (dataStart) {
+                if (dataEnd) {
+                    console.log("data inicio e data fim existe");
+                    Database.getInicioFimHistorico(dataStart, dataEnd, (historico) => {
+                        setHistorico(historico);
+                    });
+                } else {
+                    console.log("só data inicio existe");
+                    Database.getDataInicioHistorico(dataStart, (historico) => {
+                        setHistorico(historico);
+                    });
+                }
+            } else {
+                console.log("só data fim existe");
+                Database.getDataFimHistorico(dataEnd, (historico) => {
+                    setHistorico(historico);
+                });
+            }
+        } 
+        gerarRelatorio();
     }
 
     removeFiltro = () => {
@@ -78,7 +114,7 @@ export default function Historico({ navigation, route }) {
         const lastMed = [];
         let totalArray = 0;
 
-        medicamentos.forEach((medicamento) => {
+        medicamentos.forEach((medicamento) => { 
             const dateObj = new Date(medicamento.data_inicial) // transforma a data inicial em Date
             const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); // transforma o horario inicial em date
             const now = new Date();
@@ -135,31 +171,31 @@ export default function Historico({ navigation, route }) {
                     </TouchableOpacity>
                 )}
             </View>
-            <TouchableOpacity style={styles.button} onPress={relatorio}>
+            <TouchableOpacity style={styles.button} onPress={filtrarRelatorio}>
                 <Text style={styles.buttonText}>Gerar relatório</Text>
             </TouchableOpacity>
             <View style={styles.container}>
-            <DataTable>
-                <DataTable.Header>
-                    <DataTable.Title>Medicamento</DataTable.Title>
-                    <DataTable.Title>Horário previsto</DataTable.Title>
-                    <DataTable.Title>Abertura gaveta</DataTable.Title>
-                </DataTable.Header>
-                <ScrollView style={{marginBottom:50}}>
-                    {
-                        listaMed.map(item => {
-                            return (
-                                <DataTable.Row key={item.id}>
-                                    <DataTable.Cell> {item.title}  </DataTable.Cell>
-                                    <DataTable.Cell> {item.horario} </DataTable.Cell>
-                                    <DataTable.Cell> {item.abertura} </DataTable.Cell>
-                                </DataTable.Row>
-                            )
-                        })
-                    }
-                </ScrollView>
-            </DataTable>
-        </View>
+                <DataTable>
+                    <DataTable.Header>
+                        <DataTable.Title>Medicamento</DataTable.Title>
+                        <DataTable.Title>Horário previsto</DataTable.Title>
+                        <DataTable.Title>Abertura gaveta</DataTable.Title>
+                    </DataTable.Header>
+                    <ScrollView style={{ marginBottom: 50 }}>
+                        {
+                            listaMed.map(item => {
+                                return (
+                                    <DataTable.Row key={item.id}>
+                                        <DataTable.Cell> {item.title}  </DataTable.Cell>
+                                        <DataTable.Cell> {item.horario} </DataTable.Cell>
+                                        <DataTable.Cell> {item.abertura} </DataTable.Cell>
+                                    </DataTable.Row>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </DataTable>
+            </View>
         </View>
     )
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Alert, Input } from 'react-native';
 import styles from './style';
 import Database from '../../services/database';
+import { TextInputMask } from 'react-native-masked-text'
 
 export default function EditarMedicamento({ route, navigation }) {
 
@@ -42,9 +43,13 @@ export default function EditarMedicamento({ route, navigation }) {
               returnKeyType='done'
               clearButtonMode="always"
             />
-            <TextInput
+            <TextInputMask
               style={styles.input}
               value={medicamento.data_inicial}
+              type={'datetime'}
+              options={{
+                format: 'YYYY/MM/DD'
+              }}
               placeholder='Data de início'
               maxLength={10}
               keyboardType='numeric'
@@ -52,10 +57,14 @@ export default function EditarMedicamento({ route, navigation }) {
               clearButtonMode="always"
               onChangeText={data_inicial => setMedicamento({ ...medicamento, data_inicial })}
             />
-            <TextInput
+            <TextInputMask
               style={styles.input}
               value={medicamento.horario}
               placeholder='Horário de início'
+              type={'datetime'}
+              options={{
+                format: 'HH:mm'
+              }}
               maxLength={5}
               keyboardType='numeric'
               returnKeyType='done'
@@ -64,7 +73,7 @@ export default function EditarMedicamento({ route, navigation }) {
             />
             <TextInput
               style={styles.input}
-              placeholder="Quantidade"
+              placeholder="Quantidade total"
               value={String(medicamento.qtde)}
               onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
               keyboardType='numeric'

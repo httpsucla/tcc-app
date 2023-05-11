@@ -10,40 +10,42 @@ import {
   Alert,
   ScrollView
 } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text'
 import Database from '../../services/database';
 import styles from './style';
 import moment from 'moment';
 
-export default function CadastrarMedicamento({navigation}) {
-  
+export default function CadastrarMedicamento({ navigation }) {
+
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');
   const [horario, setHorario] = useState('');
   const [qtde, setQtde] = useState('');
   const [qtdeDias, setQtdeDias] = useState('');
   const [ativo, setAtivo] = useState(false);
+
   let isDataValida = true;
   let isHoraValida = true;
 
   function handleInsert() {
-    if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()){
+    if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
       //Alert.alert('Erro', 'Data está inválida.');
       isDataValida = false;
     }
-    if (!moment(horario, 'HH:mm', true).isValid()){
+    if (!moment(horario, 'HH:mm', true).isValid()) {
       isHoraValida = false;
     }
-    
-    if (!isDataValida || !isHoraValida){
+
+    if (!isDataValida || !isHoraValida) {
       Alert.alert('Erro', 'Existem erros de preenchimento.');
-      if (!isDataValida){
+      if (!isDataValida) {
         setDataInicial('');
       }
-      if (!isHoraValida){
+      if (!isHoraValida) {
         setHorario('');
       }
     }
-    else{
+    else {
       const item = {
         nome,
         horario: new Date(`2023-04-06T${horario}`).toLocaleTimeString(),
@@ -91,41 +93,37 @@ export default function CadastrarMedicamento({navigation}) {
               returnKeyType='done'
               clearButtonMode="always"
             />
-            <TextInput
+            <TextInputMask
               style={styles.input}
               value={dataInicial}
+              type={'datetime'}
+              options={{
+                format: 'DD/MM/YYYY'
+              }}
               placeholder='Data de início'
               maxLength={10}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
-              onChangeText={(text) => {
-                if (text.length === 2 || text.length === 5) {
-                  setDataInicial(text + '/');
-                } else {
-                  setDataInicial(text);
-                }
-              }}
+              onChangeText={setDataInicial}
             />
-            <TextInput
+            <TextInputMask
               style={styles.input}
               value={horario}
+              type={'datetime'}
+              options={{
+                format: 'HH:mm'
+              }}
               placeholder='Horário de início'
               maxLength={5}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
-              onChangeText={(text) => {
-                if (text.length === 2) {
-                  setHorario(text + ':');
-                } else {
-                  setHorario(text);
-                }
-              }}
+              onChangeText={setHorario}
             />
             <TextInput
               style={styles.input}
-              placeholder="Quantidade por dia"
+              placeholder="Quantidade total"
               value={qtde}
               onChangeText={setQtde}
               keyboardType='numeric'
