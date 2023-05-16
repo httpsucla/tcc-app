@@ -17,6 +17,8 @@ import moment from 'moment';
 
 export default function CadastrarMedicamento({ navigation }) {
 
+  const { hist } = route.params;
+  const [medicamento, setMedicamento] = useState([]);
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');
   const [horario, setHorario] = useState('');
@@ -26,6 +28,14 @@ export default function CadastrarMedicamento({ navigation }) {
 
   let isDataValida = true;
   let isHoraValida = true;
+
+  useEffect(() => { 
+
+    if (hist != null){
+      console.log('entrou no hist')
+      setMedicamento(hist);
+    }
+}, []);
 
   function handleInsert() {
     if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
@@ -88,8 +98,8 @@ export default function CadastrarMedicamento({ navigation }) {
             <TextInput
               style={styles.input}
               placeholder="Nome"
-              value={nome}
-              onChangeText={setNome}
+              value={hist ? hist.nome : medicamento.nome}
+              onChangeText={nome => { setMedicamento({ ...medicamento, nome })} }
               returnKeyType='done'
               clearButtonMode="always"
             />
@@ -123,9 +133,9 @@ export default function CadastrarMedicamento({ navigation }) {
             />
             <TextInput
               style={styles.input}
-              placeholder="Quantidade total"
-              value={qtde}
-              onChangeText={setQtde}
+              placeholder="Quantidade por dia"
+              value={ hist ? String(hist.qtde) : medicamento.qtde}
+              onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"
@@ -133,8 +143,8 @@ export default function CadastrarMedicamento({ navigation }) {
             <TextInput
               placeholder="Quantidade de dias"
               style={styles.input}
-              value={qtdeDias}
-              onChangeText={setQtdeDias}
+              value={hist ? String(hist.qtde_dias) : medicamento.qtde_dias}
+              onChangeText={qtde_dias => setMedicamento({ ...medicamento, qtde_dias })}
               keyboardType='numeric'
               returnKeyType='done'
               clearButtonMode="always"

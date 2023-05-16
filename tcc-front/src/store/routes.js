@@ -15,6 +15,7 @@ import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
 import CadastrarMedicamento from "../pages/Medicamento/cadastrar";
 import Medicamentos from "../pages/Medicamento";
+import TesteAngelo from "../pages/TesteAngelo/angelo";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,6 +45,9 @@ export default function Routes() {
             <Stack.Screen
                 name="Historico"
                 component={Historico} />
+            <Stack.Screen
+                name="Teste angelo"
+                component={TesteAngelo} />
         </Stack.Navigator>
 
     )
@@ -115,6 +119,14 @@ function HomeTabs() {
                         <Icon name="cog" size={size} color={color} />
                     ),
                     title: "Configuração"
+                }}
+            />
+            <Tab.Screen name="Teste Angelo" component={TesteAngelo}
+                options={{
+                    tabBarIcon: ({ size, color }) => (
+                        <Icon name="cog" size={size} color={color} />
+                    ),
+                    title: "TesteAngelo"
                 }}
             />
         </Tab.Navigator>
