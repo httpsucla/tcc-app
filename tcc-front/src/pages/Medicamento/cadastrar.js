@@ -18,6 +18,8 @@ import moment from 'moment';
 
 export default function CadastrarMedicamento({ navigation }) {
 
+  const { hist } = route.params;
+  const [medicamento, setMedicamento] = useState([]);
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');
   const [horario, setHorario] = useState('');
@@ -27,6 +29,14 @@ export default function CadastrarMedicamento({ navigation }) {
 
   let isDataValida = true;
   let isHoraValida = true;
+
+  useEffect(() => {
+
+    if (hist != null) {
+      console.log('entrou no hist')
+      setMedicamento(hist);
+    }
+  }, []);
 
   function handleInsert() {
     if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
@@ -79,8 +89,11 @@ export default function CadastrarMedicamento({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView style={{ flex: 1 }}
+
+
+      <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={{flex: 1}}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <LinearGradient
@@ -90,6 +103,7 @@ export default function CadastrarMedicamento({ navigation }) {
             colors={['#A62A5C', '#6A2597']}
             style={styles.container}
           >
+            <Text style={styles.title}> Cadastrar Medicamento</Text>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -153,8 +167,6 @@ export default function CadastrarMedicamento({ navigation }) {
           </LinearGradient>
         </ScrollView>
       </KeyboardAvoidingView>
-
-
     </TouchableWithoutFeedback>
   );
 }
