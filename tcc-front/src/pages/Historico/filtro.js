@@ -3,6 +3,7 @@ import { Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import styles from './style';
 import Database from '../../services/database';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -68,9 +69,14 @@ export default function Filtro({ navigation }) {
     }
 
     return (
-        <ScrollView>
-            <View style={styles.containerFiltro}>
-                <Text style={styles.titleFiltro}>Filtrar</Text>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <LinearGradient
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 0 }}
+                locations={[0.5, 0.9]}
+                colors={['#A62A5C', '#6A2597']}
+                style={styles.containerFiltro}
+            >
                 <View style={styles.inputContainer}>
                     <Text style={styles.textFiltro}>Medicamento</Text>
                     <SelectList
@@ -123,12 +129,12 @@ export default function Filtro({ navigation }) {
                                 />
                             )}
                     </View>
-                    <TouchableOpacity style={styles.button}
+                    <TouchableOpacity style={styles.buttonFiltro}
                         onPress={verifica}>
                         <Text style={styles.buttonText}>Gerar relatório</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </LinearGradient>
         </ScrollView>
     )
 }

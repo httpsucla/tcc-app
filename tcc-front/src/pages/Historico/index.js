@@ -5,6 +5,7 @@ import { StackActions } from '@react-navigation/native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Database from '../../services/database';
+import { LinearGradient } from 'expo-linear-gradient';
 import moment from 'moment';
 
 export default function Historico({ navigation, route }) {
@@ -94,7 +95,7 @@ export default function Historico({ navigation, route }) {
                     setHistorico(historico);
                 });
             }
-        } 
+        }
         gerarRelatorio();
     }
 
@@ -114,7 +115,7 @@ export default function Historico({ navigation, route }) {
         const lastMed = [];
         let totalArray = 0;
 
-        medicamentos.forEach((medicamento) => { 
+        medicamentos.forEach((medicamento) => {
             const dateObj = new Date(medicamento.data_inicial) // transforma a data inicial em Date
             const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); // transforma o horario inicial em date
             const now = new Date();
@@ -153,13 +154,19 @@ export default function Historico({ navigation, route }) {
     }
 
     return (
-        <View style={styles.container} >
+        <LinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0.5, 0.9]}
+            colors={['#A62A5C', '#6A2597']}
+            style={styles.container}
+        >
             <View style={styles.filters}>
                 <View >
                     <TouchableOpacity style={styles.fontFilter} onPress={() => {
                         navigation.navigate('Filtro');
                     }}>
-                        <Icon style={styles.textFilter} name="filter" size={18} color={'#292929f3'} />
+                        <Icon style={styles.textFilter} name="filter" size={18} color={'white'} />
                         <Text style={styles.textFilter}>Filtrar</Text>
                     </TouchableOpacity>
                 </View>
@@ -174,14 +181,13 @@ export default function Historico({ navigation, route }) {
             <TouchableOpacity style={styles.button} onPress={filtrarRelatorio}>
                 <Text style={styles.buttonText}>Gerar relatório</Text>
             </TouchableOpacity>
-            <View style={styles.container}>
                 <DataTable>
                     <DataTable.Header>
                         <DataTable.Title>Medicamento</DataTable.Title>
                         <DataTable.Title>Horário previsto</DataTable.Title>
                         <DataTable.Title>Abertura gaveta</DataTable.Title>
                     </DataTable.Header>
-                    <ScrollView style={{ marginBottom: 50 }}>
+                    <ScrollView style={{ marginBottom: 200}}>
                         {
                             listaMed.map(item => {
                                 return (
@@ -195,7 +201,7 @@ export default function Historico({ navigation, route }) {
                         }
                     </ScrollView>
                 </DataTable>
-            </View>
-        </View>
+          
+        </LinearGradient>
     )
 }

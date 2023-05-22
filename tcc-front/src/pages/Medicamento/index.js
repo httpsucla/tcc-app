@@ -3,6 +3,7 @@ import { Text, View, FlatList, TouchableOpacity, Alert, RefreshControl } from 'r
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import Database from '../../services/database';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Medicamentos({ route, navigation }) {
 
@@ -52,15 +53,15 @@ export default function Medicamentos({ route, navigation }) {
                                 is_atrasado: '',
                                 id: gavetas[i].id,
                             };
-                    
+
                             Database.updateGaveta(gaveta, () => {
                                 console.log("foi");
                             })
                             Database.deleteMedicamento(item.id);
-                            Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' foi removido com sucesso. Gaveta ' + (gavetas[i].id+1) + ' está vazia agora!');
+                            Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' foi removido com sucesso. Gaveta ' + (gavetas[i].id + 1) + ' está vazia agora!');
                             break;
-                            
-                        } else if(item.id != gavetas[i].id_medicamento && i == 3) {
+
+                        } else if (item.id != gavetas[i].id_medicamento && i == 3) {
                             Database.deleteMedicamento(item.id);
                             Alert.alert('Sucesso', 'Medicamento ' + item.nome + ' removido com sucesso.');
                             break;
@@ -75,8 +76,13 @@ export default function Medicamentos({ route, navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Todos os medicamentos</Text>
+        <LinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0.5, 0.9]}
+            colors={['#A62A5C', '#6A2597']}
+            style={styles.container}
+        >
             <TouchableOpacity style={styles.buttonLista} onPress={() =>
                 navigation.navigate("Cadastrar Medicamento")}>
                 <Text style={styles.buttonText}>Cadastrar</Text>
@@ -124,7 +130,7 @@ export default function Medicamentos({ route, navigation }) {
                     /> :
                     <Text style={styles.emptyList}>Não há medicamentos cadastrados no momento!</Text>
             }
-        </View>
+        </LinearGradient>
     )
 }
 

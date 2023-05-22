@@ -6,12 +6,29 @@ export default styles = StyleSheet.create({
         backgroundColor: '#f7f7f7',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingTop: 50
     },
     gaveta: {
         flexDirection: 'column',
+        padding: 15,
+        
+    },
+    unidadeGaveta: {
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 15
+        paddingHorizontal: 25,
+        paddingVertical: 10,
+        borderRadius: 20,
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
     },
     title: {
         color: '#292929f3',
@@ -21,5 +38,4 @@ export default styles = StyleSheet.create({
     lista: {
         marginTop: '30%'
     }
-
 });

@@ -10,6 +10,7 @@ import {
   Alert,
   ScrollView
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { TextInputMask } from 'react-native-masked-text'
 import Database from '../../services/database';
 import styles from './style';
@@ -78,74 +79,82 @@ export default function CadastrarMedicamento({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={styles.container}
-        >
-          <Text style={styles.title}> Cadastrar Medicamento</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Nome"
-              value={nome}
-              onChangeText={setNome}
-              returnKeyType='done'
-              clearButtonMode="always"
-            />
-            <TextInputMask
-              style={styles.input}
-              value={dataInicial}
-              type={'datetime'}
-              options={{
-                format: 'DD/MM/YYYY'
-              }}
-              placeholder='Data de início'
-              maxLength={10}
-              keyboardType='numeric'
-              returnKeyType='done'
-              clearButtonMode="always"
-              onChangeText={setDataInicial}
-            />
-            <TextInputMask
-              style={styles.input}
-              value={horario}
-              type={'datetime'}
-              options={{
-                format: 'HH:mm'
-              }}
-              placeholder='Horário de início'
-              maxLength={5}
-              keyboardType='numeric'
-              returnKeyType='done'
-              clearButtonMode="always"
-              onChangeText={setHorario}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Quantidade total"
-              value={qtde}
-              onChangeText={setQtde}
-              keyboardType='numeric'
-              returnKeyType='done'
-              clearButtonMode="always"
-            />
-            <TextInput
-              placeholder="Quantidade de dias"
-              style={styles.input}
-              value={qtdeDias}
-              onChangeText={setQtdeDias}
-              keyboardType='numeric'
-              returnKeyType='done'
-              clearButtonMode="always"
-            />
+      <KeyboardAvoidingView style={{ flex: 1 }}
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <LinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0.5, 0.9]}
+            colors={['#A62A5C', '#6A2597']}
+            style={styles.container}
+          >
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Nome"
+                value={nome}
+                onChangeText={setNome}
+                returnKeyType='done'
+                clearButtonMode="always"
+              />
+              <TextInputMask
+                style={styles.input}
+                value={dataInicial}
+                type={'datetime'}
+                options={{
+                  format: 'DD/MM/YYYY'
+                }}
+                placeholder='Data de início'
+                maxLength={10}
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode="always"
+                onChangeText={setDataInicial}
+              />
+              <TextInputMask
+                style={styles.input}
+                value={horario}
+                type={'datetime'}
+                options={{
+                  format: 'HH:mm'
+                }}
+                placeholder='Horário de início'
+                maxLength={5}
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode="always"
+                onChangeText={setHorario}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Quantidade total"
+                value={qtde}
+                onChangeText={setQtde}
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode="always"
+              />
+              <TextInput
+                placeholder="Quantidade de dias"
+                style={styles.input}
+                value={qtdeDias}
+                onChangeText={setQtdeDias}
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode="always"
+              />
 
-            <TouchableOpacity style={styles.button} onPress={handleInsert}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </ScrollView>
+              <TouchableOpacity style={styles.button} onPress={handleInsert}>
+                <Text style={styles.buttonText}>Cadastrar</Text>
+              </TouchableOpacity>
+            </View>
+          </LinearGradient>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+
     </TouchableWithoutFeedback>
   );
 }

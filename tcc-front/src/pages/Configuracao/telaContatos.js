@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, TextInput, FlatList, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, TouchableOpacity, TextInput, FlatList, Alert } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { TextInputMask } from 'react-native-masked-text'
 import Database from '../../services/database';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -9,14 +10,14 @@ export default function Contatos({ route, navigation }) {
 
     const { item } = route.params ? route.params : [];
     const [contato, setContato] = useState([])
-    
+
     console.log(contato)
 
     useEffect(() => {
         Database.getContatos((contato) => {
             setContato(contato);
         })
-      }, []);
+    }, []);
 
     cadastrar = () => {
         const data = {
@@ -33,10 +34,6 @@ export default function Contatos({ route, navigation }) {
         Database.getContatos((contato) => {
             setContato(contato);
         })
-
-        console.log("cadastroo")
-        console.log(data)
-
     };
     const deletarContato = () => {
         Alert.alert(
@@ -60,60 +57,61 @@ export default function Contatos({ route, navigation }) {
     }
 
     return (
-            <View style={styles.container}>
-                <Text style={styles.title}> Cadastrar Contato</Text>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Nome"
-                        value={contato.nome ? contato.nome : ''}
-                        onChangeText={nome => setContato({ ...contato, nome })}
-                        returnKeyType='done'
-                        clearButtonMode="always"
-                    />
-                    <TextInputMask
-                        style={styles.input}
-                        placeholder="Telefone"
-                        type={'cel-phone'}
-                        clearButtonMode="always"
-                        value={contato.telefone? contato.telefone : ''}
-                        onChangeText={telefone => setContato({ ...contato, telefone })}
-                        maxLenght={30}
-                    />
-                    <TouchableOpacity style={styles.button}
-                        onPress={cadastrar}
-                    >
-                        <Text style={styles.buttonText}>Cadastrar contato</Text>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <TouchableOpacity style={styles.button} onPress={deletarContato}>
-                        <Text>DELETAAAAAAAAAAAAAR</Text>
-                    </TouchableOpacity>
-                </View>
+        <LinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0.5, 0.9]}
+            colors={['#A62A5C', '#6A2597']}
+            style={styles.container}
+        >
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Nome"
+                    value={contato.nome ? contato.nome : ''}
+                    onChangeText={nome => setContato({ ...contato, nome })}
+                    returnKeyType='done'
+                    clearButtonMode="always"
+                />
+                <TextInputMask
+                    style={styles.input}
+                    placeholder="Telefone"
+                    type={'cel-phone'}
+                    clearButtonMode="always"
+                    value={contato.telefone ? contato.telefone : ''}
+                    onChangeText={telefone => setContato({ ...contato, telefone })}
+                    maxLenght={30}
+                />
+                <TouchableOpacity style={styles.button}
+                    onPress={cadastrar}
+                >
+                    <Text style={styles.buttonText}>Cadastrar contato</Text>
+                </TouchableOpacity>
                 {
-                    contato != undefined ?
-                        <FlatList
-                            style={styles.lista}
-                            data={contato}
-                            keyExtractor={((item, index) => "Index do item" + index)}
-                            renderItem={({ item }) => (
-                                <View style={styles.campolista}>
-                                    <View style={styles.campoconteudo}>
-                                        <Text style={styles.campoconteudo}>Nome: {item.nome}</Text>
-                                        <Text style={styles.campoconteudo}>Telefone: {item.telefone}</Text>
-                                    </View >
-                                    <View style={styles.campoconteudo}>
-                                        <TouchableOpacity onPress={() => deletarContato(item)}>
-                                            <Icon name="trash" size={15} color={'#292929f3'} />
-                                        </TouchableOpacity>
-                                    </View >
-                                </View>
-                            )}
-                            showsHorizontalScrollIndicator={false}
-                            showsVerticalScrollIndicator={false} /> :
-                        <Text style={styles.emptyList}>Nenhum contato cadastrado!</Text>
-                }
-            </View>        
+                contato != undefined ?
+                    <FlatList
+                        style={styles.lista}
+                        data={contato}
+                        keyExtractor={((item, index) => "Index do item" + index)}
+                        renderItem={({ item }) => (
+                            <View style={styles.campolista}>
+                                <View style={styles.campoconteudo}>
+                                    <Text style={styles.campoconteudo}>Nome: {item.nome}</Text>
+                                    <Text style={styles.campoconteudo}>Telefone: {item.telefone}</Text>
+                                </View >
+                                <View style={styles.campoconteudo}>
+                                    <TouchableOpacity onPress={() => deletarContato(item)}>
+                                        <Icon name="trash" size={15} color={'#292929f3'} />
+                                    </TouchableOpacity>
+                                </View >
+                            </View>
+                        )}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false} /> :
+                    <Text style={styles.emptyList}>Nenhum contato cadastrado!</Text>
+            }
+            </View>
+           
+        </LinearGradient>
     )
 }

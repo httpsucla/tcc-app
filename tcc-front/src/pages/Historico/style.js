@@ -4,7 +4,7 @@ export default styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f7f7f7',
-
+        paddingTop: 50
     },
     title: {
         color: '#292929f3',
@@ -35,33 +35,53 @@ export default styles = StyleSheet.create({
     textFilter: {
         paddingHorizontal: 5,
         fontSize: 18,
-        color: '#292929f3',
+        color: 'white',
     },
     button: {
         marginVertical: 10,
-        marginHorizontal: 25,
         height: 50,
+        marginHorizontal: 20,
         backgroundColor: '#414BB2',
         borderRadius: 2,
         fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 20,
-        shadowOpacity: 20,
-        shadowColor: '#ccc'
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
     },
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
     },
-    container1: {
-        paddingTop: 100,
-        paddingHorizontal: 30,
-    },
     containerFiltro: {
         flex: 1,
         backgroundColor: '#f7f7f7',
         alignItems: 'center',
+        paddingTop: 50
+    },
+    buttonFiltro: {
+        marginVertical: 10,
+        height: 50,
+        width: '100%',
+        backgroundColor: '#414BB2',
+        borderRadius: 2,
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
     },
     titleFiltro: {
         color: '#292929f3',

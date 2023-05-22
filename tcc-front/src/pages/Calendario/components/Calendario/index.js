@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Modal, FlatList, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CalendarList, Calendar } from 'react-native-calendars';
+import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style';
 import Database from '../../../../services/database';
 
@@ -56,35 +57,43 @@ export default function CalendarioComponent() {
     };
 
     return (
-        <View>
-            <Calendar
-                locale={'pt-br'}
-                pastScrollRange={1}
-                hideExtraDays={true}
-                futureScrollRange={1}
-                onDayPress={handleDayPress}
-            />
+        <LinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 0 }}
+                    locations={[0.5, 0.9]}
+                    colors={['#A62A5C', '#6A2597']}
+                    style={styles.container}
+                >
+       
+                <Calendar
+                    locale={'pt-br'}
+                    pastScrollRange={1}
+                    hideExtraDays={true}
+                    futureScrollRange={1}
+                    onDayPress={handleDayPress}
+                />
 
-            <Modal
-                visible={modalVisible}
-                animationType="slide"
-                onRequestClose={hideModal}
-                transparent>
-                <TouchableWithoutFeedback onPress={hideModal}>
-                    <View style={styles.container}>
-                        <View style={styles.modalView}>
-                            <View style={styles.indicator} />
-                            <Text style={styles.modalTitle}> Medicamentos a serem tomados</Text>
-                            <FlatList
-                                data={selectedDayInfo.events}
-                                renderItem={renderItem}
-                                contentContainerStyle={styles.flatlistContentContainer}
-                                keyExtractor={(item) => item.id}
-                            />
+                <Modal
+                    visible={modalVisible}
+                    animationType="slide"
+                    onRequestClose={hideModal}
+                    transparent>
+                    <TouchableWithoutFeedback onPress={hideModal}>
+                        <View style={styles.container}>
+                            <View style={styles.modalView}>
+                                <View style={styles.indicator} />
+                                <Text style={styles.modalTitle}> Medicamentos a serem tomados</Text>
+                                <FlatList
+                                    data={selectedDayInfo.events}
+                                    renderItem={renderItem}
+                                    contentContainerStyle={styles.flatlistContentContainer}
+                                    keyExtractor={(item) => item.id}
+                                />
+                            </View>
                         </View>
-                    </View>
-                </TouchableWithoutFeedback>
-            </Modal>
-        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+          
+        </LinearGradient>
     );
 }

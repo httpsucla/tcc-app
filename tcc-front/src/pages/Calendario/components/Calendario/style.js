@@ -7,6 +7,7 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingTop: 75
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -22,7 +23,6 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 20,
   },
-
   modalContent: {
     fontSize: 16,
     textAlign: 'left',
@@ -71,7 +71,7 @@ export default StyleSheet.create({
   modalView: {
     bottom: 0,
     position: 'absolute',
-    height: '40%',
+    height: '50%',
     backgroundColor: '#fff',
     width: '100%',
     borderTopLeftRadius: 20,

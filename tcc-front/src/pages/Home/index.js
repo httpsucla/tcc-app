@@ -4,7 +4,7 @@ import styles from './style';
 import Database from '../../services/database';
 import { BarChart, LineChart } from 'react-native-chart-kit'
 import moment from 'moment';
-
+import { LinearGradient } from 'expo-linear-gradient';
 export default function Home() {
 
     useEffect(() => {
@@ -64,31 +64,31 @@ export default function Home() {
 
         medicamentos.forEach((medicamento) => {
 
-            const dateObj = new Date(medicamento.data_inicial) 
-            const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`); 
+            const dateObj = new Date(medicamento.data_inicial)
+            const timeObj = new Date(`1970-01-01T${medicamento.horario}000Z`);
             const now = new Date();
             const hourAux = moment.utc(timeObj).format('HH');
             const minuteAux = moment.utc(timeObj).format('mm');
-            const combinedDate = new Date(dateObj.setHours(timeObj.getHours(), timeObj.getMinutes(), timeObj.getSeconds())); 
-            const dataInicio = moment.utc(combinedDate);    
-            dataInicio.add(1, 'days'); 
-            const agora = moment(); 
+            const combinedDate = new Date(dateObj.setHours(timeObj.getHours(), timeObj.getMinutes(), timeObj.getSeconds()));
+            const dataInicio = moment.utc(combinedDate);
+            dataInicio.add(1, 'days');
+            const agora = moment();
             const agora2 = agora.subtract(3, 'hours')
-            const diasDecorridos = agora.diff(dataInicio, 'days'); 
-            const diasFaltantes = medicamento.qtde_dias - diasDecorridos; 
-            const qtdeDia = parseInt(medicamento.qtde) / parseInt(medicamento.qtde_dias); 
-            const aCada = 24 / qtdeDia; 
+            const diasDecorridos = agora.diff(dataInicio, 'days');
+            const diasFaltantes = medicamento.qtde_dias - diasDecorridos;
+            const qtdeDia = parseInt(medicamento.qtde) / parseInt(medicamento.qtde_dias);
+            const aCada = 24 / qtdeDia;
 
-            let horarioProximo = moment.utc(new Date(now.setUTCHours(0, 0, 0))); 
+            let horarioProximo = moment.utc(new Date(now.setUTCHours(0, 0, 0)));
 
-            let horario = moment(new Date(now.setUTCHours(Number(hourAux), Number(minuteAux), timeObj.getSeconds()))); 
-            
-            for (let i = 0; i < qtdeDia; i++) { 
+            let horario = moment(new Date(now.setUTCHours(Number(hourAux), Number(minuteAux), timeObj.getSeconds())));
+
+            for (let i = 0; i < qtdeDia; i++) {
                 apenasHorario.push(moment.utc(horario).format('HH:mm'))
                 horario.add(aCada, 'hours');
             }
-       
-            apenasHorario.sort((a, b) => { 
+
+            apenasHorario.sort((a, b) => {
                 const dataA = a;
                 const dataB = b;
                 if (dataA < dataB) {
@@ -99,29 +99,29 @@ export default function Home() {
                     return 0;
                 }
             });
-            
+
             const hour1 = apenasHorario[0];
             const hour2 = hour1[0] + hour1[1];
             const minute1 = apenasHorario[0];
             const minute2 = minute1[3] + minute1[4];
 
-            horario = moment(new Date(now.setUTCHours(Number(hour2), Number(minute2), timeObj.getSeconds()))); 
+            horario = moment(new Date(now.setUTCHours(Number(hour2), Number(minute2), timeObj.getSeconds())));
             apenasHorario = [];
 
             for (let j = 0; j < qtdeDia; j++) {
-                while (horario.isBefore(agora2)) { 
+                while (horario.isBefore(agora2)) {
                     horario.add(aCada, 'hours');
                 }
             }
-            
-            const horarioFormat = moment.utc(horario).format('HH:mm'); 
+
+            const horarioFormat = moment.utc(horario).format('HH:mm');
 
             horarioProximo.add(horarioFormat, 'hours');
-            if (horarioProximo.isSameOrBefore(agora2)) 
+            if (horarioProximo.isSameOrBefore(agora2))
                 horarioProximo.add(1, 'days');
 
             if (horarioProximo.isSameOrAfter(agora2) && diasFaltantes > 0) {
-                lastMed.push({ 
+                lastMed.push({
                     id: medicamento.id,
                     title: medicamento.nome,
                     DataAtual: moment(horarioProximo),
@@ -129,7 +129,7 @@ export default function Home() {
                 });
             }
 
-            lastMed.sort((a, b) => { 
+            lastMed.sort((a, b) => {
                 const dataA = new Date(a.DataAtual);
                 const dataB = new Date(b.DataAtual);
                 if (dataA < dataB) {
@@ -147,103 +147,108 @@ export default function Home() {
 
     return (
         <ScrollView>
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.boxHour} onPress={ultimoMed}>
-                    <View >
-                        <Text style={styles.boxHourText}>Próximo horário às {listaMed[0] ? listaMed[0].Horario : ''}</Text>
-                    </View>
-                </TouchableOpacity>
-                <View style={styles.boxesMedicamento}>
-                    <View style={[styles.box, styles.boxData]}>
-                        <View style={styles.boxContent}>
-                            <Text style={styles.valorContent}>22</Text>
-                            <Text style={styles.diasContent}> dias</Text>
+                <LinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 0 }}
+                    locations={[0.5, 0.9]}
+                    colors={['#A62A5C', '#6A2597']}
+                    style={styles.container}
+                >
+                    <TouchableOpacity style={styles.boxHour} onPress={ultimoMed}>
+                        <View >
+                            <Text style={styles.boxHourText}>Próximo horário às {listaMed[0] ? listaMed[0].Horario : ''}</Text>
                         </View>
-                        <Text style={styles.descricao}>Sequência de dias</Text>
-                    </View>
-                    <View style={[styles.box, styles.boxData]}>
-                        <View style={styles.boxContent}>
-                            <Text style={styles.valorContent}>0</Text>
-                            <Text style={styles.diasContent}> dias</Text>
+                    </TouchableOpacity>
+                    <View style={styles.boxesMedicamento}>
+                        <View style={[styles.box, styles.boxData]}>
+                            <View style={styles.boxContent}>
+                                <Text style={styles.valorContent}>22</Text>
+                                <Text style={styles.diasContent}> dias</Text>
+                            </View>
+                            <Text style={styles.descricao}>Sequência de dias</Text>
                         </View>
-                        <Text style={styles.descricao}>Erros cometidos</Text>
-                    </View>
-                </View>
-                <View style={styles.boxesMedicamento}>
-                    <View style={[styles.box, styles.boxNome]}>
-                        <View style={styles.boxContent}>
-                            <Text style={styles.valorContent}>{listaMed.title}</Text>
+                        <View style={[styles.box, styles.boxData]}>
+                            <View style={styles.boxContent}>
+                                <Text style={styles.valorContent}>0</Text>
+                                <Text style={styles.diasContent}> dias</Text>
+                            </View>
+                            <Text style={styles.descricao}>Erros cometidos</Text>
                         </View>
-                        <Text style={styles.descricao}>Último medicamento tomado</Text>
                     </View>
-                </View>
-                <View style={styles.boxesMedicamento}>
-                    <View style={[styles.box, styles.boxGrafico]}>
-                        <BarChart
-                            style={{
-                                marginVertical: 0,
-                                marginLeft: -10
-                            }}
-                            data={data}
-                            width={315}
-                            height={200}
-                            chartConfig={{
-                                backgroundColor: 'transparent',
-                                backgroundGradientFrom: '#ffffff',
-                                backgroundGradientTo: '#ffffff',
-                                decimalPlaces: 0,
-                                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                barPercentage: 1,
-
-                            }}
-                            withHorizontalLabels={true}
-                            fromZero={true}
-                            withCustomBarColorFromData={false}
-                            flatColor={true}
-                            withInnerLines={true}
-                            showBarTops={true}
-                            showValuesOnTopOfBars={true}
-                        />
-
-                        <Text style={styles.descricao}>Quantidade remédios por gaveta</Text>
+                    <View style={styles.boxesMedicamento}>
+                        <View style={[styles.box, styles.boxNome]}>
+                            <View style={styles.boxContent}>
+                                <Text style={styles.valorContent}>{listaMed.title} Fluoxitina 50mg</Text>
+                            </View>
+                            <Text style={styles.descricao}>Último medicamento tomado</Text>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.boxesMedicamento}>
-                    <View style={[styles.box, styles.boxGrafico]}>
-                        <LineChart
-                            data={dias}
-                            transparent={true}
-                            width={300} // from react-native
-                            height={200}
-                            fromZero={true}
-                            yAxisInterval={7} // optional, defaults to 1
-                            chartConfig={{
-                                backgroundColor: "transparent",
-                                backgroundGradientFrom: '#ffffff',
-                                backgroundGradientTo: '#ffffff',
-                                decimalPlaces: 0, // optional, defaults to 2dp
-                                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                propsForDots: {
-                                    r: "4",
-                                    strokeWidth: "1",
-                                    stroke: "#414BB2"
-                                }
-                            }}
-                            style={{
-                                marginVertical: 0,
-                                borderRadius: 0,
+                    <View style={styles.boxesMedicamento}>
+                        <View style={[styles.box, styles.boxGrafico]}>
+                            <BarChart
+                                style={{
+                                    marginVertical: 0,
+                                    marginLeft: -10
+                                }}
+                                data={data}
+                                width={315}
+                                height={200}
+                                chartConfig={{
+                                    backgroundColor: 'transparent',
+                                    backgroundGradientFrom: 'rgba(255, 255, 255)',
+                                    backgroundGradientTo: 'rgba(255, 255, 255)',
+                                    backgroundGradientToOpacity: 1,
+                                    decimalPlaces: 0,
+                                    color: (opacity = 0) => `rgba(65, 75, 178, ${opacity})`,
+                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    barPercentage: 1,
 
-                                paddingRight: 24
-                            }}
-                        />
+                                }}
+                                withHorizontalLabels={true}
+                                fromZero={true}
+                                withCustomBarColorFromData={false}
+                                flatColor={true}
+                                withInnerLines={true}
+                                showBarTops={true}
+                                showValuesOnTopOfBars={true}
+                            />
 
-                        <Text style={styles.descricao}>Quantidade remédios por semana</Text>
+                            <Text style={styles.descricao}>Quantidade remédios por gaveta</Text>
+                        </View>
                     </View>
-                </View>
-            </View>
+                    <View style={styles.boxesMedicamento}>
+                        <View style={[styles.box, styles.boxGrafico]}>
+                            <LineChart
+                                data={dias}
+                                transparent={true}
+                                width={300} // from react-native
+                                height={200}
+                                fromZero={true}
+                                yAxisInterval={7} // optional, defaults to 1
+                                chartConfig={{
+                                    backgroundColor: "transparent",
+                                    backgroundGradientFrom: '#ffffff',
+                                    backgroundGradientTo: '#ffffff',
+                                    decimalPlaces: 0, // optional, defaults to 2dp
+                                    color: (opacity = 0) => `rgba(65, 75, 178, ${opacity})`,
+                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    propsForDots: {
+                                        r: "4",
+                                        strokeWidth: "1",
+                                        stroke: "black"
+                                    }
+                                }}
+                                style={{
+                                    marginVertical: 0,
+                                    borderRadius: 0,
+                                    paddingRight: 24
+                                }}
+                            />
 
-
+                            <Text style={styles.descricao}>Quantidade remédios por semana</Text>
+                        </View>
+                    </View>
+                </LinearGradient>
         </ScrollView>
     );
 }

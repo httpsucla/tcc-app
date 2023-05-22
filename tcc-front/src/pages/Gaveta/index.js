@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style';
 import Box from './components/Box';
 import Database from '../../services/database';
@@ -30,7 +31,14 @@ export default function Gavetas({ navigation }) {
     }, []);
 
     return (
-        <View style={styles.container}>
+        
+            <LinearGradient
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 0 }}
+                    locations={[0.5, 0.9]}
+                    colors={['#A62A5C', '#6A2597']}
+                    style={styles.container}
+                >
             {
                 gavetas.length > 0 ?
                     <FlatList
@@ -47,8 +55,11 @@ export default function Gavetas({ navigation }) {
                         renderItem={({ item }) => (
 
                             <View style={styles.gaveta}>
+                                <View style={styles.unidadeGaveta}>
                                 <Text style={styles.title}>Gaveta {item.id + 1}</Text>
                                 <Box todasGavetas={gavetas} gaveta={item} navigation={navigation} meds={item.id_medicamento}/>
+                                </View>
+                                
                             </View>
 
                         )}
@@ -56,6 +67,7 @@ export default function Gavetas({ navigation }) {
                     :
                     null
             }
-        </View>
+            </LinearGradient>
+    
     )
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, Alert } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { LinearGradient } from 'expo-linear-gradient';
 import Database from '../../services/database';
 
 export default function Configuracao({ route, navigation }) {
@@ -39,7 +40,13 @@ export default function Configuracao({ route, navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <LinearGradient
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0.5, 0.9]}
+            colors={['#A62A5C', '#6A2597']}
+            style={styles.container}
+        >
             <View style={styles.inputContainer}>
                 <View style={styles.campo}>
                     <Text style={styles.text}>Conexão com a gaveta</Text>
@@ -72,6 +79,6 @@ export default function Configuracao({ route, navigation }) {
                     </View>
                 </TouchableOpacity>
             </View>
-        </View>
+        </LinearGradient>
     );
 }

@@ -5,6 +5,7 @@ export default styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f7f7f7',
         alignItems: 'center',
+        paddingTop: 50
     },
     title: {
         color: '#292929f3',
@@ -14,33 +15,37 @@ export default styles = StyleSheet.create({
     },
     inputContainer: {
         flex: 1,
-        marginTop: 30,
+        marginTop: 50,
         width: '90%',
         padding: 20,
         alignItems: 'stretch',
-        backgroundColor: '#fff'
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
     },
     input: {
         marginTop: 10,
         height: 60,
-        backgroundColor: '#fff',
         borderRadius: 10,
         paddingHorizontal: 24,
         fontSize: 16,
         alignItems: 'stretch'
     },
     button: {
-        marginTop: 20,
+        marginVertical: 20,
         height: 60,
+        width: '100%',
         backgroundColor: '#414BB2',
-        borderRadius: 5,
-        paddingHorizontal: 100,
+        borderRadius: 2,
         fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 20,
-        shadowOpacity: 20,
-        shadowColor: '#ccc',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
     },
     buttonText: {
         color: '#fff',
@@ -51,13 +56,18 @@ export default styles = StyleSheet.create({
         height: 60,
         backgroundColor: '#414BB2',
         borderRadius: 2,
-        paddingHorizontal: 115,
+        width: '85%',
         fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 20,
-        shadowOpacity: 20,
-        shadowColor: '#ccc',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
     },
     calendario: {
         height: 50,
@@ -65,16 +75,17 @@ export default styles = StyleSheet.create({
     },
     lista: {
         flex: 1,
-        marginTop: 20,
-        width: '90%',
-        padding: 20
+        marginTop: 25,
+        width: '95%',
+        paddingHorizontal: 20,
+        paddingBottom: 100
     },
     campolista: {
         flexDirection: 'row',
         marginVertical: 1,
         paddingHorizontal: 15,
         height: 75,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
         borderRadius: 2,
         flex: 1,
         justifyContent: 'space-between'
@@ -82,10 +93,11 @@ export default styles = StyleSheet.create({
     campoconteudo: {
         justifyContent: 'center',
         paddingHorizontal: 10,
+        width: 200
     },
     campoicone: {
         justifyContent: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     componentenumero: {
         paddingHorizontal: 10,

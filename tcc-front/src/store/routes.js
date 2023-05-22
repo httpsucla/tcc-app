@@ -1,8 +1,9 @@
 import React from "react";
+import { View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { DrawerActions } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao/";
@@ -21,7 +22,12 @@ const Stack = createNativeStackNavigator();
 
 export default function Routes() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerTransparent: true,
+                headerBackTitleVisible: false,
+                headerTintColor: 'white'
+            }}>
             <Stack.Screen
                 name="Home2"
                 component={HomeTabs}
@@ -54,21 +60,29 @@ function HomeTabs() {
         <Tab.Navigator
             screenOptions={{
                 headerShown: true,
-                tabBarActiveTintColor: "#414BB2",
-                tabBarInactiveTintColor: "#808080",
+                tabBarActiveTintColor: "#A62A5C",
+                tabBarInactiveTintColor: "#858585",
                 tabBarActiveBackgroundColor: 'transparent',
                 tabBarInactiveBackgroundColor: 'transparent',
+                headerTransparent: true,
+                headerTintColor: 'white',
+                headerShadowVisible: true,
                 tabBarStyle: {
                     paddingTop: 5,
-                    paddingBottom: 5
+                    paddingBottom: 5,
+                    shadowColor: '#000',
+                    shadowRadius: 5,
+                    elevation: 10,
+                    shadowOpacity: 0.2
                 },
                 tabBarLabelStyle: {
                     fontSize: 9,
                     top: 0,
                     bottom: 0,
                     left: 0,
-                    right: 0
+                    right: 0,
                 }
+
             }}
         >
             <Tab.Screen name="Home" component={Home}
