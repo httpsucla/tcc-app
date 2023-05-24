@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect
+ } from 'react';
 import {
   View,
   Text,
@@ -16,9 +17,9 @@ import Database from '../../services/database';
 import styles from './style';
 import moment from 'moment';
 
-export default function CadastrarMedicamento({ navigation }) {
+export default function CadastrarMedicamento({ route, navigation }) {
 
-  const { hist } = route.params;
+  const { hist } = route.params ? route.params : {};
   const [medicamento, setMedicamento] = useState([]);
   const [nome, setNome] = useState('');
   const [dataInicial, setDataInicial] = useState('');
@@ -89,8 +90,6 @@ export default function CadastrarMedicamento({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={{flex: 1}}
@@ -103,7 +102,6 @@ export default function CadastrarMedicamento({ navigation }) {
             colors={['#A62A5C', '#6A2597']}
             style={styles.container}
           >
-            <Text style={styles.title}> Cadastrar Medicamento</Text>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
