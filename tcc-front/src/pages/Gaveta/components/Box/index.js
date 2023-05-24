@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import { SelectList } from 'react-native-dropdown-select-list';
 import Database from '../../../../services/database';
+import axios from 'axios';
+import moment from 'moment';
 
 export default function Box({ gaveta, navigation, meds, todasGavetas }) {
 
@@ -13,6 +15,30 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
     const [selected, setSelected] = useState("");
     const nomeMed = '';
 
+
+    const inserirRemedioArduino = async (nroGaveta, horario, qtdeRemedios, dosagem) => {
+        console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
+        let request = 'http://192.168.15.3/setDataGaveta' + nroGaveta + '?params=' + horario + '000120' + qtdeRemedios + dosagem;
+        console.log(request);
+        axios.get(request)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
+
+   /* const retirarRemedioArduino = async (nroGaveta) => {
+        console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
+        axios.get('http://192.168.25.3/?clean=' + nroGaveta)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };*/
 
     const showMedicamentos = () => {
 
@@ -32,7 +58,10 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
                 }             
                 this.data = medicamentos.map(m => ({
                     key: m.id,
-                    value: m.nome
+                    value: m.nome,
+                    horario: moment(m.horario, 'HH:mm').format('HH:mm'),
+                    qtde: m.qtde,
+                    qtdeDias: m.qtde_dias
                 }));
             }
 
@@ -61,13 +90,22 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
             is_atrasado: '',
             id: item,
         };
+        
+        let medicamentoSelecionado = medicamentos.find(m => m.key === selected);
 
+        let dosagem = medicamentoSelecionado.qtde/medicamentoSelecionado.qtdeDias;
+        let dosagemFormatada = String(dosagem).padStart(2, '0').slice(0, 2);
+
+        console.log(medicamentoSelecionado)
+        console.log(dosagemFormatada)
         Database.updateGaveta(teste, () => {
+            inserirRemedioArduino(teste.id, medicamentoSelecionado.horario, medicamentoSelecionado.qtde, dosagemFormatada);
             Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
         })
         console.log(selected);
         console.log(item);
         console.log(teste);
+        console.log(medicamentos)
     };
 
     function limparGaveta(item) {
@@ -80,6 +118,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
         };
 
         Database.updateGaveta(teste, () => {
+            //retirarRemedioArduino(teste.id);
             Alert.alert('Sucesso', 'Gaveta está livre agora.');
         })
     };
