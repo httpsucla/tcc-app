@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback, Pressable } from "react-native";
+import { Alert, Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback, Pressable, Linking } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './style';
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -13,11 +13,11 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
     const [medicamentos, setMedicamentos] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selected, setSelected] = useState("");
-    const nomeMed = '';
-
+    const [nomeMed, setNomeMed] = useState("");
 
     const inserirRemedioArduino = async (nroGaveta, horario, qtdeRemedios, dosagem) => {
         console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
+        horario = horario.replace(/:/g, '%3A');
         let request = 'http://192.168.15.3/setDataGaveta' + nroGaveta + '?params=' + horario + '000120' + qtdeRemedios + dosagem;
         console.log(request);
         axios.get(request)
@@ -29,16 +29,16 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
         });
     };
 
-   /* const retirarRemedioArduino = async (nroGaveta) => {
+   const retirarRemedioArduino = async (nroGaveta) => {
         console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
-        axios.get('http://192.168.25.3/?clean=' + nroGaveta)
+        axios.get('http://192.168.25.3/?clean=' + nroGaveta + 1)
         .then(response => {
           console.log(response.data);
         })
         .catch(error => {
           console.error(error);
         });
-    };*/
+    };
 
     const showMedicamentos = () => {
 
@@ -96,16 +96,12 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
         let dosagem = medicamentoSelecionado.qtde/medicamentoSelecionado.qtdeDias;
         let dosagemFormatada = String(dosagem).padStart(2, '0').slice(0, 2);
 
-        console.log(medicamentoSelecionado)
-        console.log(dosagemFormatada)
         Database.updateGaveta(teste, () => {
+            setNomeMed(medicamentoSelecionado.value);
             inserirRemedioArduino(teste.id, medicamentoSelecionado.horario, medicamentoSelecionado.qtde, dosagemFormatada);
             Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
         })
-        console.log(selected);
-        console.log(item);
-        console.log(teste);
-        console.log(medicamentos)
+
     };
 
     function limparGaveta(item) {
@@ -118,7 +114,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
         };
 
         Database.updateGaveta(teste, () => {
-            //retirarRemedioArduino(teste.id);
+            retirarRemedioArduino(teste.id);
             Alert.alert('Sucesso', 'Gaveta está livre agora.');
         })
     };
@@ -137,7 +133,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
                     <View style={styles.container}>
                         <View style={styles.modalView}>
                             <View style={styles.indicator} />
-                            <Text style={styles.modalTitle}>Gaveta {gavetas.id + 1}</Text>
+                            <Text style={styles.modalTitle}></Text>
                             {
                                 this.data ?
                                     <SelectList
@@ -175,6 +171,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
                                             meds
                                                 ? <Text style={styles.textStyle}>Alterar</Text>
                                                 : <Text style={styles.textStyle}>Salvar</Text>
+                                                
                                         }
                                     </TouchableOpacity>
                                     :
