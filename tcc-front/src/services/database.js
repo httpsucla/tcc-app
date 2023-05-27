@@ -215,6 +215,17 @@ export default class Database {
     });
   }
 
+  static leftJoinGavetaMedicamento(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT tb_gavetas.*, tb_medicamentos.nome as nome, tb_medicamentos.qtde as qtde ' +
+        'FROM tb_gavetas LEFT JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
   static addContato(contato, callback) {
     db.transaction(tx => {
       tx.executeSql(

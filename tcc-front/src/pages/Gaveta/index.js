@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import { Text, View, FlatList, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style';
 import Box from './components/Box';
 import Database from '../../services/database';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function Gavetas({ navigation }) {
 
@@ -13,10 +12,11 @@ export default function Gavetas({ navigation }) {
 
     useEffect(() => {
         Database.addGavetaTeste();
-        Database.getGavetas((gavetas) => {
+        Database.leftJoinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
             console.log(gavetas);
         })
+        
     }, []);
 
     const onRefresh = useCallback(async () => {
@@ -53,10 +53,9 @@ export default function Gavetas({ navigation }) {
                         }
                         keyExtractor={((item, index) => "Index do item" + index)}
                         renderItem={({ item }) => (
-
                             <View style={styles.gaveta}>
                                 <View style={styles.unidadeGaveta}>
-                                <Text style={styles.title}>Gaveta {item.id + 1}</Text>
+                                <Text style={styles.title}>{item.id_medicamento === "" ? `Gaveta ${item.id+1}` : item.nome}</Text>
                                 <Box todasGavetas={gavetas} gaveta={item} navigation={navigation} meds={item.id_medicamento}/>
                                 </View>
                                 
