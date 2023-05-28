@@ -46,34 +46,92 @@ export default class Database {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS tb_historico (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          id_gaveta INTEGER,
-          frequencia DATE,
+          id_gaveta INTEGER, 
+          id_medicamento INTEGER,
+          dt_prevista DATE,
+          dt_abertura DATE,
           situacao BOOLEAN,
-          FOREIGN KEY (id_gaveta) REFERENCES tb_gavetas(id)
+          FOREIGN KEY (id_gaveta) REFERENCES tb_gavetas(id),
+          FOREIGN KEY (id_medicamento) REFERENCES tb_medicamentos(id)
         );`,
         [],
         () => console.log('Tabela Historico com sucesso'),
         (_, error) => console.log('Erro ao criar tabela Historico:', error)
       );
     });
-
-
   }
+
+  // static teste() {
+  //   db.transaction(tx => {
+  //     tx.executeSql(
+  //       "SELECT name FROM sqlite_master WHERE type='table' AND name='tb_historico';",
+  //       [],
+  //       (_, { rows }) => {
+  //         if (rows.length > 0) {
+  //           console.log("A tabela existe.");
+  //         } else {
+  //           console.log("A tabela não existe.");
+  //         }
+  //       }
+  //     );
+  //   });
+  // }
+
+
   static teste() {
-    db.transaction(tx => {
-      tx.executeSql(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='tb_historico';",
-        [],
-        (_, { rows }) => {
-          if (rows.length > 0) {
-            console.log("A tabela existe.");
-          } else {
-            console.log("A tabela não existe.");
-          }
-        }
-      );
-    });
+    // db.transaction(tx => {
+    //   tx.executeSql(`drop table tb_medicamentos;`,
+    //   [],
+    //   () => console.log('Tabela dropada'),
+    //   (_, error) => console.log('Erro ao criar tabela Historico:', error)
+    //   );
+    // });
+
+    // db.transaction(tx => {
+    //   tx.executeSql(`drop table tb_historico;`,
+    //   [],
+    //   () => console.log('Tabela dropada'),
+    //   (_, error) => console.log('Erro ao criar tabela Historico:', error)
+    //   );
+    // });
+
+    // db.transaction(tx => {
+    //   tx.executeSql(`INSERT INTO tb_medicamentos (nome, horario, data_inicial, qtde, qtde_dias, ativo) 
+    //   VALUES ('Dramin', '08:00', '2022-01-01', 10, 10, 1),
+    //   ('Rilalina', '12:00', '2022-01-01', 10, 10, 1),
+    //   ('Dipirona', '05:00', '2022-01-01', 10, 10, 1),
+    //   ('Calmante', '13:00', '2022-01-01', 10, 10, 1)
+    //   `,
+    //   [],
+    //   () => console.log('Tabela Historico com sucesso'),
+    //   (_, error) => console.log('Erro ao criar tabela Historico:', error)
+    //   );
+    // });
+
+    // db.transaction(tx => {
+    //   tx.executeSql(`INSERT INTO tb_historico (id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao) 
+    //   VALUES (1, 1, '2023-05-01 10:00', '2023-05-01 10:02', 1),
+    //   (1, 1, '2023-05-02 10:00', '2023-05-02 10:45', 1),
+    //   (1, 1, '2023-05-03 10:00', '', 0),
+    //   (1, 1, '2023-05-04 10:00', '2023-05-04 10:10', 1),
+    //   (2, 2, '2023-05-09 19:00', '2023-05-09 19:00', 1),
+    //   (2, 2, '2023-05-10 19:00', '2023-05-10 19:30', 1),
+    //   (2, 2, '2023-05-11 19:00', '2023-05-11 19:08', 1),
+    //   (3, 3, '2023-05-01 00:00', '2023-05-01 00:02', 1),
+    //   (3, 3, '2023-05-02 00:00', '2023-05-02 00:11', 1),
+    //   (3, 3, '2023-05-03 00:00', '', 0),
+    //   (4, 4, '2023-04-01 14:00', '2023-04-01 14:08', 1),
+    //   (4, 4, '2023-04-02 14:00', '2023-04-02 14:58', 1),
+    //   (4, 4, '2023-04-03 14:00', '2023-04-03 14:14', 1)
+    //   `,
+    //   [],
+    //   () => console.log('Insert com sucesso'),
+    //   (_, error) => console.log('Erro ao criar tabela A2:', error)
+    //   );
+    // });
   }
+
+
   static addMedicamento(medicamento, callback) {
     db.transaction(tx => {
       tx.executeSql(
@@ -273,8 +331,8 @@ export default class Database {
   static addHistorico() {
     db.transaction((tx) => {
       tx.executeSql(
-        'INSERT INTO tb_historico (id_gaveta, frequencia, situacao) VALUES (?, ?, ?)',
-        [id_gaveta, frequencia, situacao],
+        'INSERT INTO tb_historico (id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao) VALUES (?, ?, ?, ?, ?)',
+        [id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao],
         (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
         (_, error) => console.log('Erro ao executar a query:', error)
       );
@@ -284,21 +342,67 @@ export default class Database {
   static updateHistorico() {
     db.transaction((tx) => {
       tx.executeSql(
-        'UPDATE tb_historico SET id_gaveta = ?, frequencia = ?, situacao = ? WHERE id = ?',
-        [id_gaveta, id_medicamento, datahora_abertura, situacao, id],
+        'UPDATE tb_historico SET id_gaveta = ?, id_medicamento = ?, dt_prevista = ?, dt_abertura = ?, situacao = ? WHERE id = ?',
+        [id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao, id],
         (_, { rowsAffected }) => callback(rowsAffected),
         (_, error) => console.log('Erro ao executar a query:', error)
       );
     });
   };
 
+  static getHistoricoRelatorio(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        FROM tb_historico
+        INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
+        WHERE tb_historico.dt_prevista > DateTime('Now', 'LocalTime', '-30 Day')
+        ORDER BY tb_historico.dt_prevista DESC;`,
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  };
+
+  static getHistoricoByMed(medicamento, callback) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        FROM tb_historico
+        INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
+        WHERE tb_historico.id_medicamento = ?
+        AND tb_historico.dt_prevista > DateTime('Now', 'LocalTime', '-30 Day')
+        ORDER BY tb_historico.dt_prevista DESC;`,
+        [medicamento],
+        (_, result) => callback(result.rows._array),
+        (_, error) => console.log('Erro ao acessar:', error)
+      ); 
+    });
+  };
+
+  static getHistoricoByDate(medicamento, dt_inicio, dt_fim, callback) {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        FROM tb_historico
+        INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
+        WHERE tb_historico.id_medicamento = ?
+        AND tb_historico.dt_prevista BETWEEN ? AND ?
+        ORDER BY tb_historico.dt_prevista DESC`,
+        [medicamento,dt_inicio, dt_fim],
+        (_, result) => callback(result.rows._array),
+        (_, error) => console.log('Erro ao acessar:', error)
+      ); 
+    });
+  };
+
+
   static getMedicamentoHistorico(medicamento) {
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT tb_medicamentos.nome
         FROM tb_historico
-        INNER JOIN tb_gavetas ON tb_historico.id_gaveta = tb_gavetas.id
-        INNER JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id
+        INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
         WHERE tb_medicamentos.id = ?`,
         [medicamento],
         (_, result) => callback(result.rows._array),
@@ -310,7 +414,7 @@ export default class Database {
   static getDataInicioHistorico(data) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT frequencia FROM tb_historico WHERE frequencia >= ?`,
+        `SELECT dt_prevista FROM tb_historico WHERE dt_prevista >= ?`,
         [data],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log('Erro ao buscar a frequência:', error)
@@ -321,7 +425,7 @@ export default class Database {
   static getDataFimHistorico(data) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT frequencia FROM tb_historico WHERE frequencia <= ?`,
+        `SELECT dt_prevista FROM tb_historico WHERE dt_prevista <= ?`,
         [data],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log('Erro ao buscar a frequência:', error)
@@ -332,7 +436,7 @@ export default class Database {
   static getInicioFimHistorico(dataI, dataF) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT frequencia FROM tb_historico WHERE frequencia BETWEEN ? AND ?`,
+        `SELECT dt_prevista FROM tb_historico WHERE dt_prevista BETWEEN ? AND ?`,
         [dataI, dataF],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log('Erro ao buscar a frequência:', error)
@@ -343,11 +447,11 @@ export default class Database {
   static getMedicamentoDataInicioHistorico(medicamento, data) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT tb_medicamentos.nome, tb_historico.frequencia
+        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista
         FROM tb_historico
         INNER JOIN tb_gavetas ON tb_historico.id_gaveta = tb_gavetas.id
         INNER JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id
-        WHERE tb_medicamentos.id = ? AND tb_historico.frequencia >= ?`,
+        WHERE tb_medicamentos.id = ? AND tb_historico.dt_prevista >= ?`,
         [medicamento, data],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log('Erro ao buscar o medicamento e a frequência:', error)
@@ -358,11 +462,11 @@ export default class Database {
   static getMedicamentoDataFimHistorico(medicamento, data) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT tb_medicamentos.nome, tb_historico.frequencia
+        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista
         FROM tb_historico
         INNER JOIN tb_gavetas ON tb_historico.id_gaveta = tb_gavetas.id
         INNER JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id
-        WHERE tb_medicamentos.id = ? AND tb_historico.frequencia <= ?`,
+        WHERE tb_medicamentos.id = ? AND tb_historico.dt_prevista <= ?`,
         [medicamento, data],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log('Erro ao buscar o medicamento e a frequência:', error)
@@ -373,11 +477,11 @@ export default class Database {
   static getMedicamentoInicioFimHistorico(medicamento, dataI, dataF) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT tb_medicamentos.nome, tb_historico.frequencia
+        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista
         FROM tb_historico
         INNER JOIN tb_gavetas ON tb_historico.id_gaveta = tb_gavetas.id
         INNER JOIN tb_medicamentos ON tb_gavetas.id_medicamento = tb_medicamentos.id
-        WHERE tb_medicamentos.id = ? AND tb_historico.frequencia BETWEEN ? and ?`,
+        WHERE tb_medicamentos.id = ? AND tb_historico.dt_prevista BETWEEN ? and ?`,
         [medicamento, dataI, dataF],
         (_, result) => callback(result.rows._array),
         (_, error) => console.log('Erro ao buscar o medicamento e a frequência:', error)
