@@ -26,6 +26,7 @@
     "@react-navigation/native-stack": "^6.6.1",
     "@react-navigation/stack": "^6.2.1",
     "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
     "deprecated-react-native-prop-types": "^4.0.0",
     "expo": "^48.0.6",
     "expo-constants": "~14.2.1",
@@ -57,7 +58,8 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10",
     "react-native-wifi-reborn": "^4.7.0",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "toggle-switch-react-native": "^3.3.0"
   },
   "resolutions": {
     "react-native-svg": "13.4.0"

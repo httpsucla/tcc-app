@@ -30,7 +30,8 @@ export default styles = StyleSheet.create({
     fontFilter: {
         flexDirection: 'row',
         alignItems: 'center',
-        textAlignVertical: 'center'
+        textAlignVertical: 'center',
+        marginTop: 20,
     },
     textFilter: {
         paddingHorizontal: 5,
@@ -106,12 +107,13 @@ export default styles = StyleSheet.create({
         alignItems: 'stretch'
     },
     textFiltro: {
-        margin: 10,
+        marginLeft: 5,
         fontSize: 16,
         fontWeight: 'bold',
         display: 'flex',
         flexDirection: 'row',
-        alignContent: 'center'
+        alignContent: 'center',
+        marginTop: 10
     },
     calendario: {
         marginBottom: 25,
@@ -134,5 +136,22 @@ export default styles = StyleSheet.create({
         paddingHorizontal: 20,
         textAlign: 'center',
         marginVertical: 30
+    },
+
+    textWarning: {
+        display: 'flex',
+        margin: 20,
+        fontStyle: 'italic',
+    },
+
+    SwitchStyle: {
+        flexDirection: 'row',
+        marginTop: 20,
+        marginRight: 0
+    },
+    SwitchText: {
+        flexDirection: 'row',
+        marginTop: 15
     }
+
 });
