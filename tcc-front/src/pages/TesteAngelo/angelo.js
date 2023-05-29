@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { IP_ARDUINO } from '../../services/ipArduino';
 
 export default function TesteAngelo({ route }) {
 
     const testeRequest = async () => {
         console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
-        axios.get('https://192.168.25.3/setGaveta3?horario=02:00')
+        axios.get('https://' + IP_ARDUINO + '/setGaveta3?horario=02:00')
         .then(response => {
           console.log(response.data);
         })

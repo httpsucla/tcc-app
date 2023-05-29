@@ -6,6 +6,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import Database from '../../../../services/database';
 import axios from 'axios';
 import moment from 'moment';
+import { IP_ARDUINO } from '../../../../services/ipArduino';
 
 export default function Box({ gaveta, navigation, meds, todasGavetas }) {
 
@@ -18,7 +19,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
     const inserirRemedioArduino = async (nroGaveta, horario, qtdeRemedios, dosagem) => {
         console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
         horario = horario.replace(/:/g, '%3A');
-        let request = 'http://192.168.15.3/setDataGaveta' + nroGaveta + '?params=' + horario + '000120' + qtdeRemedios + dosagem;
+        let request = 'http://' + IP_ARDUINO + '/setDataGaveta' + nroGaveta + '?params=' + horario + '000120' + qtdeRemedios + dosagem;
         console.log(request);
         axios.get(request)
         .then(response => {
@@ -31,7 +32,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
 
    const retirarRemedioArduino = async (nroGaveta) => {
         console.log('entrou no request. Caso nao apareça nada, nao conseguiu conectar no IP')
-        axios.get('http://192.168.25.3/?clean=' + nroGaveta + 1)
+        axios.get('http://' + IP_ARDUINO + '/?clean=' + nroGaveta + 1)
         .then(response => {
           console.log(response.data);
         })
@@ -133,7 +134,7 @@ export default function Box({ gaveta, navigation, meds, todasGavetas }) {
                     <View style={styles.container}>
                         <View style={styles.modalView}>
                             <View style={styles.indicator} />
-                            <Text style={styles.modalTitle}></Text>
+                            <Text style={styles.modalTitle}> {nomeMed ? nomeMed : `Gaveta ${gavetas.id + 1}`}</Text>
                             {
                                 this.data ?
                                     <SelectList

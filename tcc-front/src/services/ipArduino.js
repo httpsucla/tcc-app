@@ -1,0 +1,1 @@
+export const IP_ARDUINO = '192.168.25.3';
