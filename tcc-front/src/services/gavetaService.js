@@ -9,7 +9,7 @@ export default class GavetaService {
           horario = '0' + horario;
         }
 
-        intervalo = intervalo*60;
+        intervalo = intervalo*60*60;
         intervalo = String(intervalo).padStart(6, '0');
 
         console.log(horario)
