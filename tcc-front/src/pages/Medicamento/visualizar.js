@@ -27,6 +27,10 @@ export default function VisualizarMedicamento() {
                     </Text>
                     <Text style={styles.input}>Horário: {hourFormat}
                     </Text>
+                    <Text style={styles.input}>Intervalo: tomar a cada {item.intervalo} horas
+                    </Text>
+                    <Text style={styles.input}>Dosagem: {item.dosagem} remédios por abertura
+                    </Text>
                     <Text style={styles.input}>Quantidade: {item.qtde} comprimidos
                     </Text>
                     <Text style={styles.input}>Quantidade de dias: {item.qtde_dias}

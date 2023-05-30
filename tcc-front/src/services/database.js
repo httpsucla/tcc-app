@@ -3,17 +3,43 @@ import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('mydb.db');
 
 export default class Database {
+/*
+**********************************************************************************************
+SUMÁRIO TABELAS: 
 
+tb_medicamentos :
+  id: id do medicamento
+  nome: nome do medicamento
+  horario: horario que o indivíduo deve tomar o remédio
+  data_inicial: data em que o indivíduo começou a tomar o remédio - inseriu na gaveta
+  qtde: quantidade de remédios cadastrados na gaveta
+  qtde_dias: quantidade de dias em que o individuo tomará o remedio
+  dosagem: quantos medicamentos serão tomados a cada abertura
+  intervalo: de quantas em quantas horas o individuo deve tomar o remedio
+  ativo: remedio deve ser exibido na lista ou nao - inativado caso o ciclo seja completo
+
+
+tb_gavetas: 
+  id: id da gaveta
+  id_medicamento: id do medicamento cadastrado na gaveta
+  datahora_abertura: data de abertura da gaveta
+  is_ocupado: gaveta está ou não está ocupada
+  is_atrasado: gaveta foi aberta ou não no horario programado
+
+**********************************************************************************************
+*/
   static createTables() {
     db.transaction(tx => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS tb_medicamentos (' +
         'id INTEGER PRIMARY KEY AUTOINCREMENT,' +
-        'nome TEXT,' +
-        'horario TEXT,' +
+        'nome TEXT,' + 
+        'horario TEXT,' + 
         'data_inicial DATE,' +
         'qtde INTEGER,' +
         'qtde_dias INTEGER,' +
+        'dosagem INTEGER, ' + 
+        'intervalo INTEGER, ' + 
         'ativo BOOLEAN);',
         [],
         () => console.log('Tabela Medicamento com sucesso'),
@@ -135,8 +161,8 @@ export default class Database {
   static addMedicamento(medicamento, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO tb_medicamentos (nome, horario, data_inicial, qtde, qtde_dias, ativo) VALUES (?, ?, ?, ?, ?, ?)',
-        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, 1],
+        'INSERT INTO tb_medicamentos (nome, horario, data_inicial, qtde, qtde_dias, dosagem, intervalo, ativo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.dosagem, medicamento.intervalo, 1],
         (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
         (_, error) => console.log('Erro ao executar a query:', error)
       );
@@ -146,8 +172,8 @@ export default class Database {
   static updateMedicamento(medicamento, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'UPDATE tb_medicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, ativo = ? WHERE id = ?',
-        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.ativo, medicamento.id],
+        'UPDATE tb_medicamentos SET nome = ?, horario = ?, data_inicial = ?, qtde = ?, qtde_dias = ?, dosagem = ?, intervalo = ?, ativo = ? WHERE id = ?',
+        [medicamento.nome, medicamento.horario, medicamento.data_inicial, medicamento.qtde, medicamento.qtde_dias, medicamento.dosagem, medicamento.intervalo, medicamento.ativo, medicamento.id],
         () => callback()
       );
     });

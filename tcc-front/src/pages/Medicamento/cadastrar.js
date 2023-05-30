@@ -1,5 +1,4 @@
-import React, { useState, useEffect
- } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -10,89 +9,90 @@ import {
   Keyboard,
   Alert,
   ScrollView
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+} from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import { TextInputMask } from 'react-native-masked-text'
-import Database from '../../services/database';
-import styles from './style';
-import moment from 'moment';
+import Database from '../../services/database'
+import styles from './style'
+import moment from 'moment'
 
-export default function CadastrarMedicamento({ route, navigation }) {
+export default function CadastrarMedicamento ({ route, navigation }) {
+  const { hist } = route.params ? route.params : {}
+  const [medicamento, setMedicamento] = useState([])
+  const [nome, setNome] = useState('')
+  const [dataInicial, setDataInicial] = useState('')
+  const [horario, setHorario] = useState('')
+  const [qtde, setQtde] = useState('')
+  const [qtdeDias, setQtdeDias] = useState('')
+  const [dosagem, setDosagem] = useState('')
+  const [intervalo, setIntervalo] = useState('')
+  const [ativo, setAtivo] = useState(false)
 
-  const { hist } = route.params ? route.params : {};
-  const [medicamento, setMedicamento] = useState([]);
-  const [nome, setNome] = useState('');
-  const [dataInicial, setDataInicial] = useState('');
-  const [horario, setHorario] = useState('');
-  const [qtde, setQtde] = useState('');
-  const [qtdeDias, setQtdeDias] = useState('');
-  const [ativo, setAtivo] = useState(false);
+  let isDataValida = true
+  let isHoraValida = true
 
-  let isDataValida = true;
-  let isHoraValida = true;
-
-  useEffect(() => {
-
+  useEffect(() => {    
     if (hist != null) {
-      console.log('entrou no hist')
-      setMedicamento(hist);
+      setMedicamento(hist)
     }
-  }, []);
+  }, [])
 
-  function handleInsert() {
+  function handleInsert () {
     if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
-      //Alert.alert('Erro', 'Data está inválida.');
-      isDataValida = false;
+      isDataValida = false
     }
     if (!moment(horario, 'HH:mm', true).isValid()) {
-      isHoraValida = false;
+      isHoraValida = false
     }
 
     if (!isDataValida || !isHoraValida) {
-      Alert.alert('Erro', 'Existem erros de preenchimento.');
+      Alert.alert('Erro', 'Existem erros de preenchimento.')
       if (!isDataValida) {
-        setDataInicial('');
+        setDataInicial('')
       }
       if (!isHoraValida) {
-        setHorario('');
+        setHorario('')
       }
-    }
-    else {
+    } else {
       const item = {
         nome,
         horario: new Date(`2023-04-06T${horario}`).toLocaleTimeString(),
         data_inicial: moment(dataInicial, 'DD/MM/YYYY').format('YYYY-MM-DD'),
         qtde,
         qtde_dias: qtdeDias,
-        ativo,
-      };
+        dosagem: dosagem,
+        intervalo: intervalo,
+        ativo
+      }
 
-      console.log(item);
-      Database.teste();
+      console.log(item)
+      Database.teste()
 
       Database.addMedicamento(item, () => {
-        console.log(`Medicamento inserido com sucesso.`);
-        setNome('');
-        setDataInicial('');
-        setHorario('');
-        setQtde('');
-        setQtdeDias('');
-        setAtivo(false);
-      });
+        console.log(`Medicamento inserido com sucesso.`)
+        setNome('')
+        setDataInicial('')
+        setHorario('')
+        setQtde('')
+        setQtdeDias('')
+        setDosagem('')
+        setIntervalo('')
+        setAtivo(false)
+      })
 
-      Alert.alert('Sucesso', 'Medicamento inserido com sucesso.');
-      navigation.navigate("Medicamentos", item);
-      Database.getMedicamentos((medicamentos) => {
-        console.log(medicamentos);
-      });
+      Alert.alert('Sucesso', 'Medicamento inserido com sucesso.')
+      navigation.navigate('Medicamentos', item)
+      Database.getMedicamentos(medicamentos => {
+        console.log(medicamentos)
+      })
     }
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{flex: 1}}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <LinearGradient
@@ -105,11 +105,11 @@ export default function CadastrarMedicamento({ route, navigation }) {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Nome"
+                placeholder='Nome do Remédio'
                 value={nome}
                 onChangeText={setNome}
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
               />
               <TextInputMask
                 style={styles.input}
@@ -122,7 +122,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
                 maxLength={10}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
                 onChangeText={setDataInicial}
               />
               <TextInputMask
@@ -136,26 +136,44 @@ export default function CadastrarMedicamento({ route, navigation }) {
                 maxLength={5}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
                 onChangeText={setHorario}
               />
               <TextInput
                 style={styles.input}
-                placeholder="Quantidade total"
+                placeholder='Dosagem (quantos por vez)'
+                value={dosagem}
+                onChangeText={setDosagem}
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode='always'
+              />
+              <TextInput
+                 style={styles.input}
+                 placeholder='Intervalo (horas)'
+                 value={intervalo}
+                 onChangeText={setIntervalo}
+                 keyboardType='numeric'
+                 returnKeyType='done'
+                 clearButtonMode='always'
+              />
+              <TextInput
+                style={styles.input}
+                placeholder='Quantidade total da caixa'
                 value={qtde}
                 onChangeText={setQtde}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
               />
               <TextInput
-                placeholder="Quantidade de dias"
+                placeholder='Quantidade de dias'
                 style={styles.input}
                 value={qtdeDias}
                 onChangeText={setQtdeDias}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
               />
 
               <TouchableOpacity style={styles.button} onPress={handleInsert}>
@@ -166,5 +184,5 @@ export default function CadastrarMedicamento({ route, navigation }) {
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
-  );
+  )
 }

@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { Text, View, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import styles from './style';
-import Database from '../../services/database';
+import React, { useState } from 'react'
+import {
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Alert
+} from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
+import styles from './style'
+import Database from '../../services/database'
 import { TextInputMask } from 'react-native-masked-text'
 
-export default function EditarMedicamento({ route, navigation }) {
-
+export default function EditarMedicamento ({ route, navigation }) {
   const { med } = route.params
-  const [medicamento, setMedicamento] = useState(med);
+  const [medicamento, setMedicamento] = useState(med)
 
   editar = () => {
     const data = {
@@ -17,20 +26,23 @@ export default function EditarMedicamento({ route, navigation }) {
       data_inicial: medicamento.data_inicial,
       qtde: String(medicamento.qtde),
       qtde_dias: String(medicamento.qtde_dias),
+      intervalo: String(medicamento.intervalo),
+      dosagem: String(medicamento.dosagem),
       ativo: true,
       id: medicamento.id
-    };
+    }
 
     Database.updateMedicamento(data, () => {
-      Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.');
-      navigation.navigate("Medicamentos", data);
-    });
+      Alert.alert('Sucesso', 'Medicamento atualizado com sucesso.')
+      navigation.navigate('Medicamentos', data)
+    })
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView style={{ flex: 1 }}
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <LinearGradient
@@ -43,11 +55,11 @@ export default function EditarMedicamento({ route, navigation }) {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Nome"
+                placeholder='Nome'
                 value={medicamento.nome}
                 onChangeText={nome => setMedicamento({ ...medicamento, nome })}
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
               />
               <TextInputMask
                 style={styles.input}
@@ -60,8 +72,10 @@ export default function EditarMedicamento({ route, navigation }) {
                 maxLength={10}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
-                onChangeText={data_inicial => setMedicamento({ ...medicamento, data_inicial })}
+                clearButtonMode='always'
+                onChangeText={data_inicial =>
+                  setMedicamento({ ...medicamento, data_inicial })
+                }
               />
               <TextInputMask
                 style={styles.input}
@@ -74,26 +88,54 @@ export default function EditarMedicamento({ route, navigation }) {
                 maxLength={5}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
-                onChangeText={horario => setMedicamento({ ...medicamento, horario })}
+                clearButtonMode='always'
+                onChangeText={horario =>
+                  setMedicamento({ ...medicamento, horario })
+                }
               />
               <TextInput
                 style={styles.input}
-                placeholder="Quantidade total"
+                placeholder='Dosagem'
+                value={String(medicamento.dosagem)}
+                onChangeText={dosagem =>
+                  setMedicamento({ ...medicamento, dosagem })
+                }
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode='always'
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder='Intervalo'
+                value={String(medicamento.intervalo)}
+                onChangeText={intervalo =>
+                  setMedicamento({ ...medicamento, intervalo })
+                }
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode='always'
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder='Quantidade total'
                 value={String(medicamento.qtde)}
                 onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
               />
               <TextInput
-                placeholder="Quantidade de dias"
+                placeholder='Quantidade de dias'
                 style={styles.input}
                 value={String(medicamento.qtde_dias)}
-                onChangeText={qtde_dias => setMedicamento({ ...medicamento, qtde_dias })}
+                onChangeText={qtde_dias =>
+                  setMedicamento({ ...medicamento, qtde_dias })
+                }
                 keyboardType='numeric'
                 returnKeyType='done'
-                clearButtonMode="always"
+                clearButtonMode='always'
               />
               <TouchableOpacity style={styles.button} onPress={editar}>
                 <Text style={styles.buttonText}>Atualizar</Text>
@@ -103,5 +145,5 @@ export default function EditarMedicamento({ route, navigation }) {
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
-  );
+  )
 }

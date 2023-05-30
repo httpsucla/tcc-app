@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import {  Alert,  Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback } from 'react-native'
+import {Alert,Modal,TouchableOpacity,Text,View,TouchableWithoutFeedback
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import styles from './style'
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -7,7 +8,7 @@ import Database from '../../../../services/database'
 import moment from 'moment'
 import GavetaService from '../../../../services/gavetaService'
 
-export default function Box ({  gavetasExistentes, navigation, medicamentoSelecionadoLista, todasGavetas }) 
+export default function Box ({ gavetasExistentes, navigation, medicamentoSelecionadoLista, todasGavetas}) 
 {
   const [gaveta, setGavetas] = useState([])
   const [todosMedicamentos, setMedicamentos] = useState([])
@@ -30,8 +31,11 @@ export default function Box ({  gavetasExistentes, navigation, medicamentoSeleci
           value: m.nome,
           horario: moment(m.horario, 'HH:mm').format('HH:mm'),
           qtde: m.qtde,
-          qtdeDias: m.qtde_dias
+          qtdeDias: m.qtde_dias,
+          dosagem: m.dosagem,
+          intervalo: m.intervalo
         }))
+        console.log(this.dadosMedicamento)
       }
 
       todasGavetas.forEach(g => {
@@ -71,10 +75,12 @@ export default function Box ({  gavetasExistentes, navigation, medicamentoSeleci
       GavetaService.inserirRemedioArduino(
         dadosGaveta.id,
         medicamentoSelecionado.horario,
+        medicamentoSelecionado.intervalo,
         medicamentoSelecionado.qtde,
-        dosagemFormatada
+        medicamentoSelecionado.dosagem
       )
       Alert.alert('Sucesso', 'Medicamento inserido com sucesso.')
+      console.log(medicamentoSelecionado)
     })
   }
 

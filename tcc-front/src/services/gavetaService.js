@@ -3,10 +3,19 @@ import axios from "axios";
 
 export default class GavetaService {
 
-    static inserirRemedioArduino = async (nroGaveta, horario, qtdeRemedios, dosagem) => {
+    static inserirRemedioArduino = async (nroGaveta, horario, intervalo, qtdeRemedios, dosagem) => {
         horario = horario.replace(/:/g, '%3A');
-        console.log('utilizou a service')
-        let request = 'http://' + IP_ARDUINO + '/setDataGaveta' + nroGaveta + '?params=' + horario + '000120' + qtdeRemedios + dosagem;
+        if (String(horario).length < 4){
+          horario = '0' + horario;
+        }
+
+        intervalo = intervalo*60;
+        intervalo = String(intervalo).padStart(6, '0');
+
+        console.log(horario)
+
+        let request = 'http://' + IP_ARDUINO + '/setDataGaveta' + nroGaveta + '?params=' + horario + intervalo + qtdeRemedios + dosagem;
+        console.log(request)
         axios.get(request)
         .then(response => {
           console.log(response.data);
