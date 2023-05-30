@@ -8,6 +8,9 @@ export default class GavetaService {
         if (String(horario).length < 4){
           horario = '0' + horario;
         }
+        if (String(dosagem).length < 2){
+          dosagem = '0' + dosagem
+        }
 
         intervalo = intervalo*60*60;
         intervalo = String(intervalo).padStart(6, '0');
