@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Database from '../../services/database';
 import { LinearGradient } from 'expo-linear-gradient';
 import moment from 'moment';
+import HistoricoService from '../../services/historicoService';
 
 export default function Historico({ navigation, route }) {
 
@@ -56,6 +57,28 @@ export default function Historico({ navigation, route }) {
 
 
     filtrarRelatorio = () => {
+        let array;
+        HistoricoService.requestDataHora(arrayRequest => {
+            console.log(arrayRequest);
+            array = arrayRequest;
+        });
+        //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao
+        const hist = {
+            id_gaveta: array.idGaveta,
+            id_medicamento: array.idMedicamento,
+            dt_abertura: array.dataAbertura,
+            dt_prevista: "",
+            situacao: true
+        }
+        
+        Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
+            console.log(medicamento)
+            hist.dt_prevista = new Date(medicamento.data_inicial)
+            hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento.qtde_dias);
+        })
+
+        Database.addHistorico(hist); 
+        
         console.log(filtro)
         if (filtro) {
             if (dataDefault) {

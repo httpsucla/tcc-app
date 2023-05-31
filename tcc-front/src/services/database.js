@@ -365,11 +365,11 @@ tb_gavetas:
     });
   };
 
-  static addHistorico() {
+  static addHistorico(hist) {
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO tb_historico (id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao) VALUES (?, ?, ?, ?, ?)',
-        [id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao],
+        [hist.id_gaveta, hist.id_medicamento, hist.dt_prevista, hist.dt_abertura, hist.situacao],
         (_, { insertId, rows }) => callback({ id: insertId, ...rows._array[0] }),
         (_, error) => console.log('Erro ao executar a query:', error)
       );
