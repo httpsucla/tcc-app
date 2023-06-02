@@ -27,7 +27,7 @@ export default function Home() {
         lastMed();
         sequencia();
         errosComet();
-        //    graficoSemana();
+        graficoSemana();
     }, []);
 
     const [medicamentos, setMedicamentos] = useState([]);
@@ -35,8 +35,8 @@ export default function Home() {
     const [gavetas, setGavetas] = useState([]);
     const [listaMed, setListaMed] = useState([]);
     const [lastMedicamento, setLastMedicamento] = useState([]);
-    const [erros, setErros] = useState(null);
-    const [seqc, setSeqc] = useState(null);
+    const [erros, setErros] = useState(0);
+    const [seqc, setSeqc] = useState(0);
     const [semana, setSemana] = useState([]);
 
     const g = [
@@ -83,25 +83,25 @@ export default function Home() {
         ]
     }
 
-    const hist = [
-        { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-05-01 10:00', dt_abertura: '2023-05-01 10:02', situacao: 1 },
-        { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-05-02 10:00', dt_abertura: '2023-05-02 10:45', situacao: 1 },
-        { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-05-03 10:00', dt_abertura: '', situacao: 0 },
-        { id_gaveta: 2, id_medicamento: 2, dt_prevista: '2023-05-09 08:00', dt_abertura: '2023-05-09 08:05', situacao: 1 }, // 2
-        { id_gaveta: 2, id_medicamento: 2, dt_prevista: '2023-05-09 16:00', dt_abertura: '2023-05-01 16:10', situacao: 1 },
-        { id_gaveta: 3, id_medicamento: 3, dt_prevista: '2023-05-01 00:00', dt_abertura: '2023-05-01 00:02', situacao: 1 },
-        { id_gaveta: 3, id_medicamento: 3, dt_prevista: '2023-05-02 00:00', dt_abertura: '2023-05-02 00:11', situacao: 1 },
-        { id_gaveta: 3, id_medicamento: 3, dt_prevista: '2023-05-03 00:00', dt_abertura: '', situacao: 0 },
-        { id_gaveta: 4, id_medicamento: 4, dt_prevista: '2023-04-01 14:00', dt_abertura: '2023-04-01 14:00', situacao: 1 },
-        { id_gaveta: 4, id_medicamento: 4, dt_prevista: '2023-04-01 18:00', dt_abertura: '2023-04-01 18:10', situacao: 1 },
-        { id_gaveta: 4, id_medicamento: 4, dt_prevista: '2023-05-01 22:00', dt_abertura: '2023-04-01 22:01', situacao: 1 },
-        { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-05-01 06:00', dt_abertura: '2023-05-01 06:00', situacao: 1 },
-        { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-05-07 18:00', dt_abertura: '2023-05-01 18:20', situacao: 1 },
-        { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-05-02 06:00', dt_abertura: '', situacao: 0 },
+    const hist = [ // só trocar hist pela tabela de historico e fazer join para puxar nome
+        { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-06-01 10:00', dt_abertura: '2023-06-01 10:02', situacao: 1 },
+        { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-06-02 10:00', dt_abertura: '2023-06-02 10:45', situacao: 1 },
+        { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-06-03 10:00', dt_abertura: '', situacao: 0 },
+        { id_gaveta: 2, id_medicamento: 2, dt_prevista: '2023-06-09 08:00', dt_abertura: '2023-06-09 08:05', situacao: 1 },
+        { id_gaveta: 2, id_medicamento: 2, dt_prevista: '2023-06-09 16:00', dt_abertura: '2023-06-01 16:10', situacao: 1 },
+        { id_gaveta: 3, id_medicamento: 3, dt_prevista: '2023-06-01 00:00', dt_abertura: '2023-06-01 00:02', situacao: 1 },
+        { id_gaveta: 3, id_medicamento: 3, dt_prevista: '2023-06-02 00:00', dt_abertura: '2023-06-02 00:11', situacao: 1 },
+        { id_gaveta: 3, id_medicamento: 3, dt_prevista: '2023-06-03 00:00', dt_abertura: '', situacao: 0 },
+        { id_gaveta: 4, id_medicamento: 4, dt_prevista: '2023-06-01 14:00', dt_abertura: '2023-06-01 14:00', situacao: 1 },
+        { id_gaveta: 4, id_medicamento: 4, dt_prevista: '2023-06-01 18:00', dt_abertura: '2023-06-01 18:10', situacao: 1 },
+        { id_gaveta: 4, id_medicamento: 4, dt_prevista: '2023-06-01 22:00', dt_abertura: '2023-06-01 22:01', situacao: 1 },
+        { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-06-02 06:00', dt_abertura: '2023-06-01 06:00', situacao: 1 },
+        { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-06-07 18:00', dt_abertura: '2023-06-01 18:20', situacao: 1 },
+        { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-06-02 06:00', dt_abertura: '', situacao: 0 },
     ];
 
     const lastMed = () => {
-        hist.sort((a, b) => { // só trocar hist pela tabela de historico e fazer join para puxar nome
+        hist.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
             } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
@@ -113,7 +113,6 @@ export default function Home() {
             }
         });
         setLastMedicamento(hist[0]);
-
     }
 
     const sequencia = () => {
@@ -123,10 +122,14 @@ export default function Home() {
 
         for (let i = 0; i < hist.length; i++) {
             const h = hist[i];
-            if (h.dt_abertura === '') {
-                break;
+            const now = new Date();
+            const dataPrev = new Date(h.dt_prevista);
+            if (dataPrev < now) {
+                if (h.dt_abertura === '') {
+                    break;
+                }
+                count++;
             }
-            count++;
         }
         setSeqc(count);
 
@@ -136,9 +139,14 @@ export default function Home() {
         let error = 0;
 
         hist.forEach((h) => {
-            if (h.situacao == 0) {
-                error++;
-            };
+            const now = new Date();
+            const dataPrev = new Date(h.dt_prevista);
+            if (dataPrev < now) {
+                if (h.situacao == 0) {
+                    error++;
+                };
+            }
+
         });
         setErros(error);
     };
@@ -153,35 +161,41 @@ export default function Home() {
         let sex = 0;
         let sab = 0;
 
+        const hoje = new Date();
+        const inicioSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + 1);
+        const fimSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + 7);
+
         hist.forEach(h => {
             dia = new Date(h.dt_prevista).getDay();
+            dataPrev = new Date(h.dt_prevista);
 
-            switch (dia) {
-                case 0:
-                    dom++;
-                    break;
-                case 1:
-                    seg++;
-                    break;
-                case 2:
-                    ter++;
-                    break;
-                case 3:
-                    qua++;
-                    break;
-                case 4:
-                    qui++;
-                    break;
-                case 5:
-                    sex++
-                    break;
-                case 6:
-                    sab++
-                    break;
-                default:
-                    break;
+            if (dataPrev >= inicioSemana && dataPrev <= fimSemana) {
+                switch (dia) {
+                    case 0:
+                        dom++;
+                        break;
+                    case 1:
+                        seg++;
+                        break;
+                    case 2:
+                        ter++;
+                        break;
+                    case 3:
+                        qua++;
+                        break;
+                    case 4:
+                        qui++;
+                        break;
+                    case 5:
+                        sex++
+                        break;
+                    case 6:
+                        sab++
+                        break;
+                    default:
+                        break;
+                }
             }
-
         });
         const semanal = [dom, seg, ter, qua, qui, sex, sab];
         setSemana(semanal);
