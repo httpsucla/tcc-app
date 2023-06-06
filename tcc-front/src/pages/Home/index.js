@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, LogBox } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import styles from './style';
 import Database from '../../services/database';
 import { BarChart, LineChart } from 'react-native-chart-kit'
@@ -9,8 +9,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function Home() {
 
     useEffect(() => {
-        LogBox.ignoreAllLogs();
-
         Database.joinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
         });
@@ -19,9 +17,9 @@ export default function Home() {
             setMedicamentos(medicamentos);
         });
 
-        Database.getHistorico((historico) => {
-            setHistorico(historico);
-        });
+        //    Database.getHistorico((historico) => {
+        //        setHistorico(historico);
+        //    });
 
         proxMed();
         lastMed();
@@ -31,7 +29,7 @@ export default function Home() {
     }, []);
 
     const [medicamentos, setMedicamentos] = useState([]);
-    const [historico, setHistorico] = useState([]);
+    // const [historico, setHistorico] = useState([]);
     const [gavetas, setGavetas] = useState([]);
     const [listaMed, setListaMed] = useState([]);
     const [lastMedicamento, setLastMedicamento] = useState([]);
@@ -347,9 +345,10 @@ export default function Home() {
                             height={200}
                             chartConfig={{
                                 backgroundColor: 'transparent',
-                                backgroundGradientFrom: 'rgba(255, 255, 255)',
-                                backgroundGradientTo: 'rgba(255, 255, 255)',
-                                backgroundGradientToOpacity: 1,
+                                backgroundGradientFrom: 'rgb(255, 255, 255)',
+                                backgroundGradientTo: 'rgb(255, 255, 255)',
+                                backgroundGradientFromOpacity: 0,
+                                backgroundGradientToOpacity: 0,
                                 decimalPlaces: 0,
                                 color: (opacity = 0) => `rgba(65, 75, 178, ${opacity})`,
                                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
@@ -380,8 +379,10 @@ export default function Home() {
                                 yAxisInterval={7}
                                 chartConfig={{
                                     backgroundColor: "transparent",
-                                    backgroundGradientFrom: '#ffffff',
-                                    backgroundGradientTo: '#ffffff',
+                                    backgroundGradientFrom: 'rgb(255, 255, 255)',
+                                    backgroundGradientTo: 'rgb(255, 255, 255)',
+                                    backgroundGradientFromOpacity: 0,
+                                    backgroundGradientToOpacity: 0,
                                     decimalPlaces: 0,
                                     color: (opacity = 0) => `rgba(65, 75, 178, ${opacity})`,
                                     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
