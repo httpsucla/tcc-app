@@ -57,28 +57,35 @@ export default function Historico({ navigation, route }) {
 
 
     filtrarRelatorio = () => {
-        let array;
+
         HistoricoService.requestDataHora(arrayRequest => {
             console.log(arrayRequest);
-            array = arrayRequest;
-        });
-        //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao
-        const hist = {
-            id_gaveta: array.idGaveta,
-            id_medicamento: array.idMedicamento,
-            dt_abertura: array.dataAbertura,
-            dt_prevista: "",
-            situacao: true
-        }
-        
-        Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
-            console.log(medicamento)
-            hist.dt_prevista = new Date(medicamento.data_inicial)
-            hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento.qtde_dias);
-        })
+            if (arrayRequest != null || arrayRequest != undefined){
+                const hist = {
+                    id_gaveta: arrayRequest.idGaveta,
+                    id_medicamento: 0,
+                    dt_abertura: arrayRequest.dataAbertura,
+                    dt_prevista: arrayRequest.dataPrevista,
+                    situacao: true
+                }
 
-        Database.addHistorico(hist); 
-        
+                Database.getMedicamentoByGaveta(hist.id_gaveta, medicamento => {
+                    if (medicamento != null || medicamento != undefined)
+                        hist.id_medicamento = medicamento[0].id; 
+                })
+
+                if (hist.id_medicamento != null || hist.id_medicamento != undefined){
+                    Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
+                        console.log(medicamento)
+                        hist.dt_prevista = new Date(medicamento.data_inicial)
+                        hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento.qtde_dias);
+                    })
+            
+                    Database.addHistorico(hist); 
+                }
+            }
+        });
+        //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao      
         console.log(filtro)
         if (filtro) {
             if (dataDefault) {

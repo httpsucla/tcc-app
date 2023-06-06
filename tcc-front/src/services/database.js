@@ -225,6 +225,17 @@ tb_gavetas:
     });
   }
 
+  static getMedicamentoByGaveta(gavetaId, callback){
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT id_medicamento FROM tb_gavetas WHERE id_gaveta = ?`,
+        [gavetaId],
+        (_, result) => callback(result.rows._array),
+        (_, error) => console.log(error)
+      );
+    });
+  }
+
   static addGaveta(gaveta, callback) {
     db.transaction(tx => {
       tx.executeSql(
