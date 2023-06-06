@@ -61,23 +61,25 @@ export default function Historico({ navigation, route }) {
         HistoricoService.requestDataHora(arrayRequest => {
             console.log(arrayRequest);
             if (arrayRequest != null || arrayRequest != undefined){
-                const hist = {
-                    id_gaveta: arrayRequest.idGaveta,
-                    id_medicamento: arrayRequest.idMedicamento,
-                    dt_abertura: arrayRequest.dataAbertura,
-                    dt_prevista: arrayRequest.dataPrevista,
-                    situacao: true
-                }
+                arrayRequest.forEach(array => {
+                    const hist = {
+                        id_gaveta: array.idGaveta,
+                        id_medicamento: array.idMedicamento,
+                        dt_abertura: array.dataAbertura,
+                        dt_prevista: array.dataPrevista,
+                        situacao: true
+                    }
+
+                    if (hist.id_medicamento != null || hist.id_medicamento != undefined){
+                        Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
+                            console.log(medicamento)
+                            hist.dt_prevista = new Date(medicamento.data_inicial)
+                            hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento.qtde_dias);
+                        })
                 
-                if (hist.id_medicamento != null || hist.id_medicamento != undefined){
-                    Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
-                        console.log(medicamento)
-                        hist.dt_prevista = new Date(medicamento.data_inicial)
-                        hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento.qtde_dias);
-                    })
-            
-                    Database.addHistorico(hist); 
-                }
+                        Database.addHistorico(hist); 
+                    }
+                });
             }
         });
         //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao      
