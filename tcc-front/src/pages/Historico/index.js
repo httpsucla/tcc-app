@@ -63,17 +63,12 @@ export default function Historico({ navigation, route }) {
             if (arrayRequest != null || arrayRequest != undefined){
                 const hist = {
                     id_gaveta: arrayRequest.idGaveta,
-                    id_medicamento: 0,
+                    id_medicamento: arrayRequest.idMedicamento,
                     dt_abertura: arrayRequest.dataAbertura,
                     dt_prevista: arrayRequest.dataPrevista,
                     situacao: true
                 }
-
-                Database.getMedicamentoByGaveta(hist.id_gaveta, medicamento => {
-                    if (medicamento != null || medicamento != undefined)
-                        hist.id_medicamento = medicamento[0].id; 
-                })
-
+                
                 if (hist.id_medicamento != null || hist.id_medicamento != undefined){
                     Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
                         console.log(medicamento)
