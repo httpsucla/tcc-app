@@ -23,10 +23,6 @@ export default function Historico({ navigation, route }) {
     const [listaMed, setListaMed] = useState([]);
     const isInitialMount = useRef(true);
 
-    componentDidMount = () => {
-        // Database.teste();
-    }
-
     useEffect(() => {
 
         atualizaFiltros();

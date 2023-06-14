@@ -7,7 +7,6 @@ export default function App() {
   
   useEffect(() => {
     Database.createTables();
-    Database.teste();
   }, []);
 
   return (

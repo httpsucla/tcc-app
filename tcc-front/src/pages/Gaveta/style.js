@@ -37,5 +37,28 @@ export default styles = StyleSheet.create({
     },
     lista: {
         marginTop: '30%'
-    }
+    },
+    
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    buttonLista: {
+        marginBottom: 50,
+        height: 60,
+        backgroundColor: '#414BB2',
+        borderRadius: 2,
+        width: '50%',
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
+    },
 });

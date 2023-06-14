@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import {Alert,Modal,TouchableOpacity,Text,View,TouchableWithoutFeedback
-} from 'react-native'
+import {  Alert, Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback  } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import styles from './style'
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -8,8 +7,12 @@ import Database from '../../../../services/database'
 import moment from 'moment'
 import GavetaService from '../../../../services/gavetaService'
 
-export default function Box ({ gavetasExistentes, navigation, medicamentoSelecionadoLista, todasGavetas}) 
-{
+export default function Box ({
+  gavetasExistentes,
+  navigation,
+  medicamentoSelecionadoLista,
+  todasGavetas
+}) {
   const [gaveta, setGavetas] = useState([])
   const [todosMedicamentos, setMedicamentos] = useState([])
   const [modalVisible, setModalVisible] = useState(false)
@@ -20,6 +23,7 @@ export default function Box ({ gavetasExistentes, navigation, medicamentoSelecio
     if (gavetasExistentes) {
       setGavetas(gavetasExistentes)
     }
+
     Database.getMedicamentos(todosMedicamentos => {
       for (let i = 0; i < todosMedicamentos.length; i++) {
         if (todosMedicamentos[i].id == medicamentoSelecionadoLista) {
@@ -35,17 +39,19 @@ export default function Box ({ gavetasExistentes, navigation, medicamentoSelecio
           dosagem: m.dosagem,
           intervalo: m.intervalo
         }))
-        console.log(this.dadosMedicamento)
+
       }
 
       todasGavetas.forEach(g => {
-        if (g.is_ocupado) {
           for (let i = 0; i < this.dadosMedicamento.length; i++) {
-            if (this.dadosMedicamento[i].key === g.id_medicamento)
-              this.dadosMedicamento.splice(i, this.dadosMedicamento[i].key)
+            if (this.dadosMedicamento[i].key === g.id_medicamento){
+              this.dadosMedicamento = this.dadosMedicamento.filter(e => e.key !== g.id_medicamento)
+            }
           }
-        }
       })
+      console.log('AQQQQQQQQQQQQQQQQQQ')
+      console.log(this.dadosMedicamento)
+
       setMedicamentos(this.dadosMedicamento)
     })
   }
@@ -62,41 +68,49 @@ export default function Box ({ gavetasExistentes, navigation, medicamentoSelecio
       is_atrasado: '',
       id: idGavetaEscolhida
     }
-
-    let medicamentoSelecionado = todosMedicamentos.find(
+    
+    let teste = todosMedicamentos;
+    let medicamentoSelecionado = teste.find(
       m => m.key === idMedicamentoSelecionado
     )
 
-    let dosagem = medicamentoSelecionado.qtde / medicamentoSelecionado.qtdeDias
-    let dosagemFormatada = String(dosagem).padStart(2, '0').slice(0, 2)
+    console.log(medicamentoSelecionado);
 
-    Database.updateGaveta(dadosGaveta, () => {
-      setNomeMed(medicamentoSelecionado.value)
-      GavetaService.inserirRemedioArduino(
-        dadosGaveta.id,
-        medicamentoSelecionado.horario,
-        medicamentoSelecionado.intervalo,
-        medicamentoSelecionado.qtde,
-        medicamentoSelecionado.dosagem
-      )
-      Alert.alert('Sucesso', 'Medicamento inserido com sucesso.')
-      console.log(medicamentoSelecionado)
-    })
+    if (medicamentoSelecionado) {
+      Database.updateGaveta(dadosGaveta, () => {
+        setNomeMed(medicamentoSelecionado.value)
+        GavetaService.inserirRemedioArduino(
+          dadosGaveta.id,
+          medicamentoSelecionado.horario,
+          medicamentoSelecionado.intervalo,
+          medicamentoSelecionado.qtde,
+          medicamentoSelecionado.dosagem
+        )
+        Alert.alert('Sucesso', 'Medicamento inserido com sucesso.')
+        console.log(medicamentoSelecionado)
+      })
+    } else {
+      Alert.alert('Erro', 'Erro ao inserir medicamento.')
+    }
   }
 
   function limparGaveta (idGavetaEscolhida) {
-    const dadosGaveta = {
-      id_medicamento: '',
-      datahora_abertura: '',
-      is_ocupado: false,
-      is_atrasado: '',
-      id: idGavetaEscolhida
-    }
+    if (idGavetaEscolhida !== null) {
+      const dadosGaveta = {
+        id_medicamento: '',
+        datahora_abertura: '',
+        is_ocupado: false,
+        is_atrasado: '',
+        id: idGavetaEscolhida
+      }
 
-    Database.updateGaveta(dadosGaveta, () => {
-      GavetaService.retirarRemedioArduino(dadosGaveta.id)
-      Alert.alert('Sucesso', 'Gaveta está livre agora.')
-    })
+      Database.updateGaveta(dadosGaveta, () => {
+        GavetaService.retirarRemedioArduino(dadosGaveta.id)
+        Alert.alert('Sucesso', 'Gaveta está livre agora.')
+      })
+    } else {
+      Alert.alert('Erro', 'Erro ao limpar gaveta.')
+    }
   }
 
   return (

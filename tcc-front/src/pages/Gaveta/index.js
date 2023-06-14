@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Text, View, FlatList, RefreshControl } from 'react-native'
+import {  Text, View, FlatList, RefreshControl, TouchableOpacity  } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Box from './components/Box'
@@ -7,26 +7,29 @@ import Database from '../../services/database'
 
 export default function Gavetas ({ navigation }) {
   const [gavetas, setGavetas] = useState([])
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefresh] = useState(false)
 
   useEffect(() => {
+    carregarGavetas()
+  }, [])
+
+  const carregarGavetas = useCallback(() => {
+    setRefresh(true)
     Database.addGavetaTeste()
     Database.leftJoinGavetaMedicamento(gavetas => {
       setGavetas(gavetas)
       console.log(gavetas)
+      setRefresh(false)
     })
   }, [])
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 500)
-
-    Database.getGavetas(gavetas => {
-      setGavetas(gavetas)
-    })
+  const refresh = useCallback(() => {
+    carregarGavetas()
   }, [])
+
+  const forceRefresh = () => {
+    carregarGavetas()
+  }
 
   return (
     <LinearGradient
@@ -41,9 +44,6 @@ export default function Gavetas ({ navigation }) {
           style={styles.lista}
           data={gavetas}
           numColumns={2}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
           keyExtractor={(item, index) => 'Index do item' + index}
           renderItem={({ item }) => (
             <View style={styles.gaveta}>
@@ -62,8 +62,20 @@ export default function Gavetas ({ navigation }) {
               </View>
             </View>
           )}
+          
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          }
+          
         />
+        
       ) : null}
+      <TouchableOpacity 
+        style={styles.buttonLista}
+        onPress={forceRefresh}>
+        <Text style={styles.buttonText} >Sincronizar Dados</Text>
+      </TouchableOpacity>
+
     </LinearGradient>
   )
 }

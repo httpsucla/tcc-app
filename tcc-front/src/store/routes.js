@@ -1,10 +1,7 @@
 import React from "react";
-import { View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { LinearGradient } from "expo-linear-gradient";
-
 import Home from "../pages/Home";
 import Configuracao from "../pages/Configuracao/";
 import VisualizarMedicamento from "../pages/Medicamento/visualizar";
@@ -16,7 +13,7 @@ import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
 import CadastrarMedicamento from "../pages/Medicamento/cadastrar";
 import Medicamentos from "../pages/Medicamento";
-import TesteAngelo from "../pages/TesteAngelo/angelo";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,9 +48,6 @@ export default function Routes() {
             <Stack.Screen
                 name="Historico"
                 component={Historico} />
-            <Stack.Screen
-                name="Teste angelo"
-                component={TesteAngelo} />
         </Stack.Navigator>
 
     )
@@ -133,14 +127,6 @@ function HomeTabs() {
                         <Icon name="cog" size={size} color={color} />
                     ),
                     title: "Configuração"
-                }}
-            />
-            <Tab.Screen name="Teste Angelo" component={TesteAngelo}
-                options={{
-                    tabBarIcon: ({ size, color }) => (
-                        <Icon name="cog" size={size} color={color} />
-                    ),
-                    title: "TesteAngelo"
                 }}
             />
         </Tab.Navigator>
