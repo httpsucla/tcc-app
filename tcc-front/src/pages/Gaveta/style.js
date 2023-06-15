@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 50
@@ -14,13 +14,15 @@ export default styles = StyleSheet.create({
         
     },
     unidadeGaveta: {
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backgroundColor: 'rgb(255, 255, 255)',
         textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 25,
         paddingVertical: 10,
         borderRadius: 20,
+        borderColor: '#569099',
+        borderWidth: 3,
         elevation: 5,
         shadowOpacity: 0.4,
         shadowColor: '#000',
@@ -46,7 +48,7 @@ export default styles = StyleSheet.create({
     buttonLista: {
         marginBottom: 50,
         height: 60,
-        backgroundColor: '#414BB2',
+        backgroundColor: '#569099',
         borderRadius: 2,
         width: '50%',
         fontSize: 16,

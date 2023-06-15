@@ -13,11 +13,13 @@ export default styles = StyleSheet.create({
         marginTop: 5
     },
     boxHour: {
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        backgroundColor: 'rgb(255, 255, 255)',
         width: '85%',
         height: 65,
         textAlign: 'center',
         borderRadius: 25,
+        borderColor: '#569099',
+        borderWidth: 3,
         flex: 1,
         marginVertical: 50,
         alignItems: 'center',
@@ -46,7 +48,7 @@ export default styles = StyleSheet.create({
     },
     box: {
         height: 100,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        backgroundColor: 'rgb(255, 255, 255)',
         marginHorizontal: 10,
         borderRadius: 20,
         marginBottom: 20,

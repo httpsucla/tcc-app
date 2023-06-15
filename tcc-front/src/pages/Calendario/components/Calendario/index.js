@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Modal, FlatList, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { CalendarList, Calendar } from 'react-native-calendars';
+import { LocaleConfig, Calendar } from 'react-native-calendars';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from './style';
 import Database from '../../../../services/database';
@@ -11,6 +11,16 @@ export default function CalendarioComponent() {
     const [modalVisible, setModalVisible] = useState(false);
     const [medicamentos, setMedicamentos] = useState([]);
 
+    
+    LocaleConfig.locales['br'] = {
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        dayNames: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+        today: 'Hoje'
+        };
+        
+    LocaleConfig.defaultLocale = 'br';
 
     const handleDayPress = (day) => {
         Database.getMedicamentos((medicamentos) => {
@@ -59,20 +69,21 @@ export default function CalendarioComponent() {
 
     return (
         <LinearGradient
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1, y: 0 }}
-                    locations={[0.5, 0.9]}
-                    colors={['#A62A5C', '#6A2597']}
-                    style={styles.container}
+        start={{ x: 1, y: 1 }}
+        end={{ x: 1, y: 0 }}
+        locations={[0, 1]}
+        colors={['#ffffff', '#569099']}
+        style={styles.container}
                 >
-       
+                <View style={styles.margin}>
                 <Calendar
-                    locale={'pt-br'}
+                    locales={'br'}
                     pastScrollRange={1}
                     hideExtraDays={true}
                     futureScrollRange={1}
                     onDayPress={handleDayPress}
                 />
+                </View>
 
                 <Modal
                     visible={modalVisible}

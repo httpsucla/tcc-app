@@ -92,5 +92,9 @@ export default StyleSheet.create({
     borderRadius: 50,
     alignSelf: 'center',
     marginTop: 5
+  },
+
+  margin:{
+    marginTop: 20,
   }
 });

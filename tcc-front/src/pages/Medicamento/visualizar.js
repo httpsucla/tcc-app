@@ -14,11 +14,11 @@ export default function VisualizarMedicamento() {
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <LinearGradient
-                start={{ x: 0, y: 1 }}
-                end={{ x: 1, y: 0 }}
-                locations={[0.5, 0.9]}
-                colors={['#A62A5C', '#6A2597']}
-                style={styles.container}
+        start={{ x: 1, y: 1 }}
+        end={{ x: 1, y: 0 }}
+        locations={[0, 1]}
+        colors={['#ffffff', '#569099']}
+        style={styles.container}
             >
                 <View style={styles.inputContainer}>
                     <Text style={styles.input}>Nome: {item.nome}
