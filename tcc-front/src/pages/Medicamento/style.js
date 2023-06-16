@@ -82,6 +82,7 @@ export default styles = StyleSheet.create({
         paddingBottom: 100
     },
     campolista: {
+        borderWidth: 1,
         flexDirection: 'row',
         marginVertical: 1,
         paddingHorizontal: 15,

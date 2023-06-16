@@ -49,7 +49,7 @@ export default styles = StyleSheet.create({
         marginBottom: 50,
         height: 60,
         backgroundColor: '#569099',
-        borderRadius: 2,
+        borderRadius: 20,
         width: '50%',
         fontSize: 16,
         alignItems: 'center',

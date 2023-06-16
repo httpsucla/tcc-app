@@ -30,7 +30,7 @@ export default styles = StyleSheet.create({
         width: '90%',
         padding: 20,
         alignItems: 'stretch',
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        backgroundColor: 'rgba(255, 255, 255)',
     },
     button: {
         marginTop: 25,
@@ -93,7 +93,7 @@ export default styles = StyleSheet.create({
     campo: {
         flexDirection: 'row',
         marginTop: 5,
-        borderColor: 'black',
+        borderColor: '#569099',
         borderBottomWidth: 1,
         marginBottom: 10,
         justifyContent: 'space-between',
@@ -101,7 +101,7 @@ export default styles = StyleSheet.create({
     },
     campoContato: {
         marginTop: 5,
-        borderColor: 'black',
+        borderColor: '#569099',
         borderBottomWidth: 1,
         marginBottom: 10,
         paddingBottom: 20

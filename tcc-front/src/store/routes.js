@@ -58,7 +58,7 @@ function HomeTabs() {
         <Tab.Navigator
             screenOptions={{
                 headerShown: true,
-                tabBarActiveTintColor: "#A62A5C",
+                tabBarActiveTintColor: "#569099",
                 tabBarInactiveTintColor: "#858585",
                 tabBarActiveBackgroundColor: 'transparent',
                 tabBarInactiveBackgroundColor: 'transparent',

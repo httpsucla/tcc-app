@@ -26,7 +26,8 @@ export default styles = StyleSheet.create({
         paddingRight: 25
     },
     button: {
-        borderRadius: 5,
+        backgroundColor: '#569099',
+        borderRadius: 20,
         padding: 10,
         elevation: 2,
         width: '100%',
@@ -36,10 +37,10 @@ export default styles = StyleSheet.create({
         marginTop: 10
     },
     buttonOpen: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#93c572',
     },
     buttonClose: {
-        backgroundColor: "#414BB2",
+        backgroundColor: "#569099",
     },
     buttonDelete: {
         backgroundColor: "#f72a2a",

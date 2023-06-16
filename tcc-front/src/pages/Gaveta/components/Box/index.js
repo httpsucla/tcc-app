@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import {  Alert, Modal, TouchableOpacity, Text, View, TouchableWithoutFeedback  } from 'react-native'
+import {
+  Alert,
+  Modal,
+  TouchableOpacity,
+  Text,
+  View,
+  TouchableWithoutFeedback
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import styles from './style'
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -23,36 +30,42 @@ export default function Box ({
     if (gavetasExistentes) {
       setGavetas(gavetasExistentes)
     }
-
+    this.dadosMedicamento = null;
     Database.getMedicamentos(todosMedicamentos => {
-      for (let i = 0; i < todosMedicamentos.length; i++) {
-        if (todosMedicamentos[i].id == medicamentoSelecionadoLista) {
-          this.nomeMed = todosMedicamentos[i].nome
-        }
-
-        this.dadosMedicamento = todosMedicamentos.map(m => ({
-          key: m.id,
-          value: m.nome,
-          horario: moment(m.horario, 'HH:mm').format('HH:mm'),
-          qtde: m.qtde,
-          qtdeDias: m.qtde_dias,
-          dosagem: m.dosagem,
-          intervalo: m.intervalo
-        }))
-
-      }
-
-      todasGavetas.forEach(g => {
-          for (let i = 0; i < this.dadosMedicamento.length; i++) {
-            if (this.dadosMedicamento[i].key === g.id_medicamento){
-              this.dadosMedicamento = this.dadosMedicamento.filter(e => e.key !== g.id_medicamento)
-            }
+      if (todosMedicamentos.length > 0 && todosMedicamentos !== null && todosMedicamentos !== undefined) {
+        console.log('poRRA')
+        console.log(todosMedicamentos)
+        for (let i = 0; i < todosMedicamentos.length; i++) {
+          if (todosMedicamentos[i].id == medicamentoSelecionadoLista) {
+            this.nomeMed = todosMedicamentos[i].nome
           }
-      })
-      console.log('AQQQQQQQQQQQQQQQQQQ')
-      console.log(this.dadosMedicamento)
 
-      setMedicamentos(this.dadosMedicamento)
+          console.log(todosMedicamentos)
+          console.log('^, oi?')
+
+          this.dadosMedicamento = todosMedicamentos.map(m => ({
+            key: m.id,
+            value: m.nome,
+            horario: moment(m.horario, 'HH:mm').format('HH:mm'),
+            qtde: m.qtde,
+            qtdeDias: m.qtde_dias,
+            dosagem: m.dosagem,
+            intervalo: m.intervalo
+          }))
+
+          todasGavetas.forEach(g => {
+            for (let i = 0; i < this.dadosMedicamento.length; i++) {
+              if (this.dadosMedicamento[i].key === g.id_medicamento) {
+                this.dadosMedicamento = this.dadosMedicamento.filter(
+                  e => e.key !== g.id_medicamento
+                )
+              }
+            }
+          })
+
+          setMedicamentos(this.dadosMedicamento)
+        }
+      }
     })
   }
 
@@ -68,13 +81,13 @@ export default function Box ({
       is_atrasado: '',
       id: idGavetaEscolhida
     }
-    
-    let teste = todosMedicamentos;
+
+    let teste = todosMedicamentos
     let medicamentoSelecionado = teste.find(
       m => m.key === idMedicamentoSelecionado
     )
 
-    console.log(medicamentoSelecionado);
+    console.log(medicamentoSelecionado)
 
     if (medicamentoSelecionado) {
       Database.updateGaveta(dadosGaveta, () => {
@@ -106,6 +119,8 @@ export default function Box ({
 
       Database.updateGaveta(dadosGaveta, () => {
         GavetaService.retirarRemedioArduino(dadosGaveta.id)
+        setNomeMed("");
+
         Alert.alert('Sucesso', 'Gaveta está livre agora.')
       })
     } else {
@@ -202,9 +217,9 @@ export default function Box ({
           }}
         >
           {gavetasExistentes.is_ocupado ? (
-            <Icon name='archive' size={60} color={'#b2633a'} />
+            <Icon name='archive' size={60} color={'#569099'} />
           ) : (
-            <Icon name='plus-circle' size={60} color={'#4CAF50'} />
+            <Icon name='plus-circle' size={60} color={'#93c572'} />
           )}
         </TouchableOpacity>
       </View>
