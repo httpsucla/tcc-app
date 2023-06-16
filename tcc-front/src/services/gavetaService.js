@@ -1,5 +1,8 @@
 import { IP_ARDUINO } from "./ipArduino";
 import axios from "axios";
+import { Share } from 'react-native';
+import { Linking } from "react-native";
+
 
 export default class GavetaService {
 
@@ -36,5 +39,19 @@ export default class GavetaService {
         .catch(error => {
           console.error(error);
         });
+    };
+    
+    static shareToWhatsApp = async (number, message) => {
+      const text = `${message}`;
+      const url =
+      'whatsapp://send?text=' + 
+       text +
+      '&phone=' + number;
+  
+      try {
+        await Linking.openURL(url);
+      } catch (error) {
+        console.log('Erro ao compartilhar no WhatsApp:', error);
+      }
     };
 }

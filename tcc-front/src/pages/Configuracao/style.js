@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 
 export default styles = StyleSheet.create({
     container: {
-        marginTop: 50,
         flex: 1,
         backgroundColor: '#f7f7f7',
         alignItems: 'center',
@@ -70,9 +69,9 @@ export default styles = StyleSheet.create({
     campolista: {
         flexDirection: 'row',
         marginTop: 5,
-        borderColor: '#414BB2',
+        borderColor: '#569099',
         backgroundColor: '#f7f7f7',
-        borderRadius: 2,
+        borderRadius: 20,
         flex: 1,
         marginBottom: 10,
         paddingHorizontal: 15,

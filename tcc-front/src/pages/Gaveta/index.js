@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Box from './components/Box'
 import Database from '../../services/database'
+import GavetaService from '../../services/gavetaService'
+import moment from 'moment'
 
 export default function Gavetas ({ navigation }) {
   const [gavetas, setGavetas] = useState([])
@@ -75,7 +77,6 @@ export default function Gavetas ({ navigation }) {
         onPress={forceRefresh}>
         <Text style={styles.buttonText} >Sincronizar Dados</Text>
       </TouchableOpacity>
-
     </LinearGradient>
   )
 }
