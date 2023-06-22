@@ -87,6 +87,7 @@ export default function Box ({
       m => m.key === idMedicamentoSelecionado
     )
 
+    console.log('aqui o med selec')
     console.log(medicamentoSelecionado)
 
     if (medicamentoSelecionado) {
@@ -97,7 +98,8 @@ export default function Box ({
           medicamentoSelecionado.horario,
           medicamentoSelecionado.intervalo,
           medicamentoSelecionado.qtde,
-          medicamentoSelecionado.dosagem
+          medicamentoSelecionado.dosagem,
+          medicamentoSelecionado.key
         )
         Alert.alert('Sucesso', 'Medicamento inserido com sucesso.')
         console.log(medicamentoSelecionado)

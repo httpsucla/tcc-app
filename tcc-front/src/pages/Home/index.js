@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import styles from './style';
 import Database from '../../services/database';
@@ -36,6 +36,30 @@ export default function Home() {
     const [erros, setErros] = useState(0);
     const [seqc, setSeqc] = useState(0);
     const [semana, setSemana] = useState([]);
+    const [refreshing, setRefresh] = useState(false)
+
+
+    const carregarDashboard = useCallback(() => {
+        setRefresh(true)
+        Database.joinGavetaMedicamento((gavetas) => {
+            setGavetas(gavetas);
+        });
+
+        Database.getMedicamentos((medicamentos) => {
+            setMedicamentos(medicamentos);
+        });
+
+        proxMed();
+        lastMed();
+        sequencia();
+        errosComet();
+        graficoSemana();
+        setRefresh(false)
+      }, [])
+
+    const forceRefresh = () => {
+        carregarDashboard()
+      }
 
     const g = [
         gavetas[0] ?
@@ -403,6 +427,11 @@ export default function Home() {
                         </View>
                     </View>
                 </TouchableOpacity>
+                <TouchableOpacity 
+                style={styles.buttonLista}
+                onPress={forceRefresh}>
+                <Text style={styles.buttonText} >Sincronizar Dashboard</Text>
+            </TouchableOpacity>
             </LinearGradient>
         </ScrollView>
     );

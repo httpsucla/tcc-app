@@ -98,5 +98,27 @@ export default styles = StyleSheet.create({
         color: 'black',
         display: 'flex',
         alignItems: 'flex-end'
-    }
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    buttonLista: {
+        marginBottom: 50,
+        height: 60,
+        backgroundColor: '#569099',
+        borderRadius: 20,
+        width: '50%',
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
+    },
 }); 

@@ -65,9 +65,6 @@ export default function CadastrarMedicamento ({ route, navigation }) {
         ativo
       }
 
-      console.log(item)
-      Database.teste()
-
       Database.addMedicamento(item, () => {
         console.log(`Medicamento inserido com sucesso.`)
         setNome('')

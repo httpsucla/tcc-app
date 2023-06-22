@@ -18,6 +18,8 @@ export default function Configuracao({ route, navigation }) {
 
     useEffect(() => {
         Database.addGavetaTeste();
+        
+
     }, []);
 
     telaContato = (() => {
@@ -47,12 +49,8 @@ export default function Configuracao({ route, navigation }) {
     const shareWhats = useCallback(() => {
         Database.getContatos((contato) => {
             if (contato !== null && contato !== undefined && contato.length> 0){
-                console.log('pq entrou vey')
-                console.log(contato)
                 setContatoWhats(contato[0]);
-                console.log(contato[0].telefone)
                 let telefoneFormatado = contato[0].telefone.replace(/\D/g, "");
-                console.log(telefoneFormatado)
                 let resultado = "";
                 Database.getMedicamentos(medicamentos => {
                     medicamentos.forEach(function(medicamento){
@@ -82,15 +80,6 @@ export default function Configuracao({ route, navigation }) {
         style={styles.container}
         >
             <View style={styles.inputContainer}>
-                <View style={styles.campo}>
-                    <Text style={styles.text}>Conexão com a gaveta</Text>
-                    {state
-                        ?
-                        <Text style={styles.textItalic}>conectado</Text>
-                        :
-                        <Text style={styles.textItalic}>desconectado</Text>
-                    }
-                </View>
                 <View style={styles.campoContato}>
                     <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={telaContato}>
                         <Text style={styles.text}>Contatos</Text>
@@ -101,17 +90,6 @@ export default function Configuracao({ route, navigation }) {
                             : null
                     }
                 </View>
-                <View style={styles.campo}>
-                    <Text style={styles.text}>Notificações</Text>
-                </View>
-                <View style={styles.campo}>
-                    <Text style={styles.text}>Manual do usuário</Text>
-                </View>
-                <TouchableOpacity onPress={resetarBanco}>
-                    <View style={styles.campo}>
-                        <Text style={styles.text}>Resetar SQLite</Text>
-                    </View>
-                </TouchableOpacity>
                 <TouchableOpacity onPress={shareWhats}>
                     <View style={styles.campo}>
                         <Text style={styles.text} > Enviar relatório ao contato </Text>
