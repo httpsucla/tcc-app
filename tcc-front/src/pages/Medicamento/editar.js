@@ -53,6 +53,7 @@ export default function EditarMedicamento ({ route, navigation }) {
         style={styles.container}
           >
             <View style={styles.inputContainer}>
+              <Text> Nome: </Text>
               <TextInput
                 style={styles.input}
                 placeholder='Nome'
@@ -61,12 +62,13 @@ export default function EditarMedicamento ({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
+              <Text> Data Inicial: </Text>
               <TextInputMask
                 style={styles.input}
                 value={medicamento.data_inicial}
                 type={'datetime'}
                 options={{
-                  format: 'YYYY/MM/DD'
+                  format: 'DD/MM/YYYY'
                 }}
                 placeholder='Data de início'
                 maxLength={10}
@@ -77,6 +79,7 @@ export default function EditarMedicamento ({ route, navigation }) {
                   setMedicamento({ ...medicamento, data_inicial })
                 }
               />
+              <Text> Horário Inicial: </Text>
               <TextInputMask
                 style={styles.input}
                 value={medicamento.horario}
@@ -93,6 +96,7 @@ export default function EditarMedicamento ({ route, navigation }) {
                   setMedicamento({ ...medicamento, horario })
                 }
               />
+              <Text> Dosagem: </Text>
               <TextInput
                 style={styles.input}
                 placeholder='Dosagem'
@@ -104,7 +108,7 @@ export default function EditarMedicamento ({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-
+              <Text> Intervalo: </Text>
               <TextInput
                 style={styles.input}
                 placeholder='Intervalo'
@@ -116,7 +120,7 @@ export default function EditarMedicamento ({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-
+              <Text> Quantidade total: </Text>
               <TextInput
                 style={styles.input}
                 placeholder='Quantidade total'
@@ -126,6 +130,7 @@ export default function EditarMedicamento ({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
+              <Text> Quantidade de dias: </Text>
               <TextInput
                 placeholder='Quantidade de dias'
                 style={styles.input}

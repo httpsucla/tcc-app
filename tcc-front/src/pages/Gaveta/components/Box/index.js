@@ -169,17 +169,20 @@ export default function Box ({
                   Nenhum medicamento cadastrado
                 </Text>
               )}
+              
+              {!medicamentoSelecionadoLista ? (
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {
+                    hideModal()
+                    navigation.navigate('Cadastrar Medicamento')
+                  }}
+                >
+                  <Text style={styles.textStyle}>Cadastrar novo medicamento</Text>
+                </TouchableOpacity>
+              ) : null}
 
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => {
-                  hideModal()
-                  navigation.navigate('Cadastrar Medicamento')
-                }}
-              >
-                <Text style={styles.textStyle}>Cadastrar novo medicamento</Text>
-              </TouchableOpacity>
-              {this.dadosMedicamento ? (
+              {this.dadosMedicamento && !medicamentoSelecionadoLista ? (
                 <TouchableOpacity
                   style={[styles.button, styles.buttonOpen]}
                   onPress={() => {
