@@ -136,9 +136,9 @@ tb_gavetas:
   static getMedicamentoById(id, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tb_medicamentos WHERE id = ?',
+        'SELECT * FROM tbmedicamentos WHERE id = ?',
         [id],
-        () => callback()
+        (_, { rows }) => callback(rows._array)
       );
     });
   }
@@ -316,7 +316,7 @@ tb_gavetas:
     });
   };
 
-  static addHistorico(hist) {
+  static addHistorico(hist,callback) {
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO tb_historico (id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao) VALUES (?, ?, ?, ?, ?)',
@@ -344,7 +344,6 @@ tb_gavetas:
         `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
         FROM tb_historico
         INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
-        WHERE tb_historico.dt_prevista > DateTime('Now', 'LocalTime', '-30 Day')
         ORDER BY tb_historico.dt_prevista DESC;`,
         [],
         (_, { rows }) => callback(rows._array)

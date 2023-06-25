@@ -1,1 +1,1 @@
-export const IP_ARDUINO = '192.168.25.3';
+export const IP_ARDUINO = '192.168.15.3';

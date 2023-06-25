@@ -11,7 +11,7 @@ export default class HistoricoService {
         .then(response => {
           console.log('abaixo, resposta dentro do request')
           console.log(response.data);
-          const arrayResponse = Object.values(response.data);
+          const arrayResponse = response.data;
           callback(arrayResponse);
         })
         .catch(error => {

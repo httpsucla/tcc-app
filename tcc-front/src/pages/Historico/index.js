@@ -29,7 +29,7 @@ export default function Historico({ navigation, route }) {
             setHistoricoDiff(false);
 
         atualizaFiltros();
-        filtrarRelatorio();
+       // filtrarRelatorio();
         
     }, [medId, dataStart, dataEnd, filtro, dataDefault, isHistoricoDiff]);
 
@@ -48,7 +48,7 @@ export default function Historico({ navigation, route }) {
         } else {
             console.log("Sem filtro");
 
-            Database.getHistoricoRelatorio((historico) => {
+            Database.getHistoricoRelatorio(historico => {
                 setHistorico(historico);
             });
         }
@@ -56,29 +56,38 @@ export default function Historico({ navigation, route }) {
 
 
     filtrarRelatorio = () => {
+     //  Database.dropTables();
         HistoricoService.requestDataHora(arrayRequest => {
             console.log('abaixo, console apos chamada do request')
             console.log(arrayRequest);
             if (arrayRequest != null || arrayRequest != undefined){
-                arrayRequest.forEach(array => {
+                console.log("entrou");
+                arrayRequest.gethistorico.forEach(array => {
+                    if((array != null || array != undefined) && (array.idRemedio > 0)){
+                    console.log("entrou foreach");
+                    console.log(array);
                     const hist = {
-                        id_gaveta: array.gethistorico.idGaveta,
-                        id_medicamento: array.gethistorico.idMedicamento,
-                        dt_abertura: array.gethistorico.dataAbertura,
-                        dt_prevista: array.gethistorico.dataPrevista,
+                        id_gaveta: array.idGaveta,
+                        id_medicamento: array.idRemedio,
+                        dt_abertura: array.dataAbertura,
+                        dt_prevista: array.dataPrevista,
                         situacao: true
                     }
-
-                    if (hist.id_medicamento != null || hist.id_medicamento != undefined){
+                    
+                    if ((hist.id_medicamento != null || hist.id_medicamento != undefined) && (hist.id_medicamento > 0)){
                         Database.getMedicamentoById(hist.id_medicamento, medicamento =>{
-                            console.log(medicamento)
-                            hist.dt_prevista = new Date(medicamento.data_inicial)
-                            hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento.qtde_dias);
+                            console.log(medicamento[0])
+                            hist.dt_prevista = new Date(medicamento[0].data_inicial)
+                            hist.dt_prevista.setDate(hist.data_prevista.getDate() + medicamento[0].qtde_dias);
                         })
                 
-                        Database.addHistorico(hist); 
+                        Database.addHistorico(hist, teste => {
+                            console.log(teste)
+                        });
+
                         setHistoricoDiff(true);
                     }
+                }
                 });
             }
         });
@@ -153,9 +162,9 @@ export default function Historico({ navigation, route }) {
                                 return (
                                     <DataTable.Row key={item.id}>
                                         <DataTable.Cell> {item.nome}  </DataTable.Cell>
-                                        <DataTable.Cell> {moment(item.dt_prevista,'YYYY-MM-DD HH:mm').format('DD/MM HH:mm')} </DataTable.Cell>
+                                        <DataTable.Cell> {moment(item.dt_prevista,'HH:mm').format('HH:mm')} </DataTable.Cell>
                                         {item.dt_abertura != '' && (
-                                            <DataTable.Cell> {moment(item.dt_abertura,'YYYY-MM-DD HH:mm').format('DD/MM HH:mm')} </DataTable.Cell>
+                                            <DataTable.Cell> {moment(item.dt_abertura,'HH:mm').format('HH:mm')} </DataTable.Cell>
                                         )}
                                         {item.dt_abertura == '' && (
                                             <DataTable.Cell> NA </DataTable.Cell>
@@ -170,6 +179,11 @@ export default function Historico({ navigation, route }) {
                         )}
                     </ScrollView>
                 </DataTable>
+                <TouchableOpacity 
+                      style={styles.buttonLista}
+                    onPress={filtrarRelatorio}>
+                   <Text style={styles.buttonText} >Sincronizar Dados</Text>
+                </TouchableOpacity>
         </LinearGradient>
     )
 }
