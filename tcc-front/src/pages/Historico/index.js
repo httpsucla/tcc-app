@@ -22,13 +22,16 @@ export default function Historico({ navigation, route }) {
     const [medById, setMedById] = useState([]);
     const [listaMed, setListaMed] = useState([]);
     const isInitialMount = useRef(true);
+    const [isHistoricoDiff, setHistoricoDiff] = useState(false);
 
     useEffect(() => {
-
+        if (isHistoricoDiff)
+            setHistoricoDiff(false);
+            
         atualizaFiltros();
         filtrarRelatorio();
         
-    }, [medId, dataStart, dataEnd, filtro, dataDefault]);
+    }, [medId, dataStart, dataEnd, filtro, dataDefault, isHistoricoDiff]);
 
         
     atualizaFiltros = () => {
@@ -53,7 +56,6 @@ export default function Historico({ navigation, route }) {
 
 
     filtrarRelatorio = () => {
-
         HistoricoService.requestDataHora(arrayRequest => {
             console.log(arrayRequest);
             if (arrayRequest != null || arrayRequest != undefined){
@@ -74,6 +76,7 @@ export default function Historico({ navigation, route }) {
                         })
                 
                         Database.addHistorico(hist); 
+                        setHistoricoDiff(true);
                     }
                 });
             }
