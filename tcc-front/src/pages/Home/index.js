@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import styles from './style';
 import Database from '../../services/database';
 import { BarChart, LineChart } from 'react-native-chart-kit'
@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function Home() {
 
     useEffect(() => {
-        Database.joinGavetaMedicamento((gavetas) => {
+        Database.leftJoinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
         });
 
@@ -36,30 +36,32 @@ export default function Home() {
     const [erros, setErros] = useState(0);
     const [seqc, setSeqc] = useState(0);
     const [semana, setSemana] = useState([]);
-    const [refreshing, setRefresh] = useState(false)
-
+    const [refreshing, setRefreshing] = useState(false);
 
     const carregarDashboard = useCallback(() => {
-        setRefresh(true)
-        Database.joinGavetaMedicamento((gavetas) => {
+        Database.leftJoinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
         });
 
         Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos);
         });
+    }, [])
 
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchData();
+    };
+
+    const fetchData = () => {
+        carregarDashboard();
         proxMed();
         lastMed();
         sequencia();
         errosComet();
         graficoSemana();
-        setRefresh(false)
-      }, [])
-
-    const forceRefresh = () => {
-        carregarDashboard()
-      }
+        setRefreshing(false);
+    }
 
     const g = [
         gavetas[0] ?
@@ -74,7 +76,7 @@ export default function Home() {
         gavetas[3] ?
             { nome: 'Gaveta ' + (gavetas[3].id + 1), medicamento: gavetas[3].nome, qtde: gavetas[3].qtde }
             : { nome: 'Gaveta 4', medicamento: '', qtde: 0 },
-    ]
+    ];
 
     const data = {
         labels: [g[0].nome, g[1].nome, g[2].nome, g[3].nome],
@@ -83,7 +85,7 @@ export default function Home() {
                 data: [g[0].qtde, g[1].qtde, g[2].qtde, g[3].qtde]
             }
         ]
-    }
+    };
 
     const s = [
         semana[0] ? semana[0] : 0,
@@ -103,7 +105,7 @@ export default function Home() {
                 strokeWidth: 2,
             }
         ]
-    }
+    };
 
     const hist = [ // só trocar hist pela tabela de historico e fazer join para puxar nome
         { id_gaveta: 1, id_medicamento: 1, dt_prevista: '2023-06-01 10:00', dt_abertura: '2023-06-01 10:02', situacao: 1 },
@@ -135,7 +137,7 @@ export default function Home() {
             }
         });
         setLastMedicamento(hist[0]);
-    }
+    };
 
     const sequencia = () => {
         let count = 0;
@@ -221,8 +223,7 @@ export default function Home() {
         });
         const semanal = [dom, seg, ter, qua, qui, sex, sab];
         setSemana(semanal);
-
-    }
+    };
 
     const proxMed = () => {
 
@@ -309,10 +310,18 @@ export default function Home() {
             });
             setListaMed(lastMed);
         });
-    }
+    };
 
     return (
-        <ScrollView>
+        <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }
+        >
             <LinearGradient
                 start={{ x: 1, y: 1 }}
                 end={{ x: 1, y: 0 }}
@@ -320,43 +329,34 @@ export default function Home() {
                 colors={['#ffffff', '#569099']}
                 style={styles.container}
             >
-                <TouchableOpacity style={styles.boxHour} onPress={proxMed}>
-                    <View >
-                        <Text style={styles.boxHourText}>Próximo horário às {listaMed[0] ? listaMed[0].Horario : ''}</Text>
-                    </View>
-                </TouchableOpacity>
-                <View style={styles.boxesMedicamento}>
-                    <TouchableOpacity onPress={sequencia}>
-                        <View style={[styles.box, styles.boxData]}>
-                            <View style={styles.boxContent}>
-                                <Text style={styles.valorContent}>{seqc}</Text>
-                                <Text style={styles.diasContent}> dias</Text>
-                            </View>
-                            <Text style={styles.descricao}>Sequência de dias</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={errosComet}>
-                        <View style={[styles.box, styles.boxData]}>
-                            <View style={styles.boxContent}>
-                                <Text style={styles.valorContent}>{erros}</Text>
-                                {/* <Text style={styles.diasContent}> dias</Text> */}
-                            </View>
-                            <Text style={styles.descricao}>Erros cometidos</Text>
-                        </View>
-                    </TouchableOpacity>
+                <View style={styles.boxHour}>
+                    <Text style={styles.boxHourText}>Próximo horário às {listaMed[0] ? listaMed[0].Horario : ''}</Text>
                 </View>
-                <TouchableOpacity onPress={lastMed}>
-                    <View style={styles.boxesMedicamento}>
-                        <View style={[styles.box, styles.boxNome]}>
-                            <View style={styles.boxContent}>
 
-                                <Text style={styles.valorContent}>{lastMedicamento.id_medicamento}</Text>
-
-                            </View>
-                            <Text style={styles.descricao}>Último medicamento tomado</Text>
+                <View style={styles.boxesMedicamento}>
+                    <View style={[styles.box, styles.boxData]}>
+                        <View style={styles.boxContent}>
+                            <Text style={styles.valorContent}>{seqc}</Text>
+                            <Text style={styles.diasContent}> dias</Text>
                         </View>
+                        <Text style={styles.descricao}>Sequência de dias</Text>
                     </View>
-                </TouchableOpacity>
+                    <View style={[styles.box, styles.boxData]}>
+                        <View style={styles.boxContent}>
+                            <Text style={styles.valorContent}>{erros}</Text>
+                            {/* <Text style={styles.diasContent}> dias</Text> */}
+                        </View>
+                        <Text style={styles.descricao}>Erros cometidos</Text>
+                    </View>
+                </View>
+                <View style={styles.boxesMedicamento}>
+                    <View style={[styles.box, styles.boxNome]}>
+                        <View style={styles.boxContent}>
+                            <Text style={styles.valorContent}>{lastMedicamento.id_medicamento}</Text>
+                        </View>
+                        <Text style={styles.descricao}>Último medicamento tomado</Text>
+                    </View>
+                </View>
                 <View style={styles.boxesMedicamento}>
                     <View style={[styles.box, styles.boxGrafico]}>
                         <BarChart
@@ -374,7 +374,7 @@ export default function Home() {
                                 backgroundGradientFromOpacity: 0,
                                 backgroundGradientToOpacity: 0,
                                 decimalPlaces: 0,
-                                color: (opacity = 0) => `rgba(65, 75, 178, ${opacity})`,
+                                color: (opacity = 0) => `rgba(86, 144, 153, ${opacity})`,
                                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                 barPercentage: 1,
 
@@ -391,47 +391,39 @@ export default function Home() {
                         <Text style={styles.descricao}>Quantidade remédios por gaveta</Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={graficoSemana}>
-                    <View style={styles.boxesMedicamento}>
-                        <View style={[styles.box, styles.boxGrafico]}>
-                            <LineChart
-                                data={dias}
-                                transparent={true}
-                                width={315}
-                                height={200}
-                                fromZero={true}
-                                yAxisInterval={7}
-                                chartConfig={{
-                                    backgroundColor: "transparent",
-                                    backgroundGradientFrom: 'rgb(255, 255, 255)',
-                                    backgroundGradientTo: 'rgb(255, 255, 255)',
-                                    backgroundGradientFromOpacity: 0,
-                                    backgroundGradientToOpacity: 0,
-                                    decimalPlaces: 0,
-                                    color: (opacity = 0) => `rgba(65, 75, 178, ${opacity})`,
-                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                    propsForDots: {
-                                        r: "4",
-                                        strokeWidth: "1",
-                                        stroke: "black"
-                                    }
-                                }}
-                                style={{
-                                    marginVertical: 0,
-                                    borderRadius: 0,
-                                    paddingRight: 24
-                                }}
-                            />
-
-                            <Text style={styles.descricao}>Quantidade remédios por semana</Text>
-                        </View>
+                <View style={styles.boxesMedicamento}>
+                    <View style={[styles.box, styles.boxGrafico]}>
+                        <LineChart
+                            data={dias}
+                            transparent={true}
+                            width={315}
+                            height={200}
+                            fromZero={true}
+                            yAxisInterval={7}
+                            chartConfig={{
+                                backgroundColor: "transparent",
+                                backgroundGradientFrom: 'rgb(255, 255, 255)',
+                                backgroundGradientTo: 'rgb(255, 255, 255)',
+                                backgroundGradientFromOpacity: 0,
+                                backgroundGradientToOpacity: 0,
+                                decimalPlaces: 0,
+                                color: (opacity = 0) => `rgba(86, 144, 153, ${opacity})`,
+                                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                propsForDots: {
+                                    r: "4",
+                                    strokeWidth: "1",
+                                    stroke: "#569099"
+                                }
+                            }}
+                            style={{
+                                marginVertical: 0,
+                                borderRadius: 0,
+                                paddingRight: 24
+                            }}
+                        />
+                        <Text style={styles.descricao}>Quantidade remédios por semana</Text>
                     </View>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                style={styles.buttonLista}
-                onPress={forceRefresh}>
-                <Text style={styles.buttonText} >Sincronizar Dashboard</Text>
-            </TouchableOpacity>
+                </View>
             </LinearGradient>
         </ScrollView>
     );

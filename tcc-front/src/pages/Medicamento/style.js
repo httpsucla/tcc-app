@@ -50,13 +50,13 @@ export default styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
+        fontSize: 16
     },
     buttonLista: {
         marginTop: 20,
         height: 60,
         backgroundColor: '#569099',
         borderRadius: 20,
-        borderWidth: 1,
         width: '85%',
         fontSize: 16,
         alignItems: 'center',

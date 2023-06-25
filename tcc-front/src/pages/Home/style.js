@@ -5,7 +5,7 @@ export default styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f7f7f7',
         alignItems: 'center',
-        paddingTop: 50
+        paddingTop: 100
     },
     title: {
         color: '#292929f3',
@@ -21,7 +21,7 @@ export default styles = StyleSheet.create({
         borderColor: '#569099',
         borderWidth: 3,
         flex: 1,
-        marginVertical: 50,
+        marginVertical: 20,
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 5,
@@ -102,13 +102,14 @@ export default styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
+        fontSize: 16
     },
     buttonLista: {
         marginBottom: 50,
         height: 60,
         backgroundColor: '#569099',
         borderRadius: 20,
-        width: '50%',
+        width: '95%',
         fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',

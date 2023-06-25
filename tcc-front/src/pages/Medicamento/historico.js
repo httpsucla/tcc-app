@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Database from '../../services/database'
 
-export default function HistoMedicamento ({ navigation }) {
+export default function HistoMedicamento({ navigation }) {
   const [medicamentos, setMedicamentos] = useState([])
 
   useEffect(() => {
@@ -17,15 +17,15 @@ export default function HistoMedicamento ({ navigation }) {
     navigation.navigate('Cadastrar Medicamento', { hist: item })
     console.log(item)
   }
+  
   return (
     <LinearGradient
-    start={{ x: 1, y: 1 }}
-    end={{ x: 1, y: 0 }}
-    locations={[0, 1]}
-    colors={['#ffffff', '#569099']}
-    style={styles.container}
+      start={{ x: 1, y: 1 }}
+      end={{ x: 1, y: 0 }}
+      locations={[0, 1]}
+      colors={['#ffffff', '#569099']}
+      style={styles.container}
     >
-      <Text style={styles.title}> Histórico de medicamento</Text>
       <View>
         {medicamentos.length > 0 ? (
           <FlatList

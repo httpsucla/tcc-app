@@ -13,7 +13,7 @@ import Historico from "../pages/Historico";
 import Calendario from "../pages/Calendario";
 import CadastrarMedicamento from "../pages/Medicamento/cadastrar";
 import Medicamentos from "../pages/Medicamento";
-
+import HistoMedicamento from "../pages/Medicamento/historico";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,6 +48,9 @@ export default function Routes() {
             <Stack.Screen
                 name="Historico"
                 component={Historico} />
+            <Stack.Screen
+                name="Historico Medicamento"
+                component={HistoMedicamento} />
         </Stack.Navigator>
 
     )

@@ -16,7 +16,7 @@ import Database from '../../services/database'
 import styles from './style'
 import moment from 'moment'
 
-export default function CadastrarMedicamento ({ route, navigation }) {
+export default function CadastrarMedicamento({ route, navigation }) {
   const { hist } = route.params ? route.params : {}
   const [medicamento, setMedicamento] = useState([])
   const [nome, setNome] = useState('')
@@ -31,13 +31,13 @@ export default function CadastrarMedicamento ({ route, navigation }) {
   let isDataValida = true
   let isHoraValida = true
 
-  useEffect(() => {    
+  useEffect(() => {
     if (hist != null) {
       setMedicamento(hist)
     }
   }, [])
 
-  function handleInsert () {
+  function handleInsert() {
     if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
       isDataValida = false
     }
@@ -93,12 +93,15 @@ export default function CadastrarMedicamento ({ route, navigation }) {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <LinearGradient
-        start={{ x: 1, y: 1 }}
-        end={{ x: 1, y: 0 }}
-        locations={[0, 1]}
-        colors={['#ffffff', '#569099']}
-        style={styles.container}
+            start={{ x: 1, y: 1 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0, 1]}
+            colors={['#ffffff', '#569099']}
+            style={styles.container}
           >
+            <TouchableOpacity style={styles.buttonLista}  onPress={() => navigation.navigate('Historico Medicamento')}>
+              <Text style={styles.buttonText}>Histórico</Text>
+            </TouchableOpacity>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -146,13 +149,13 @@ export default function CadastrarMedicamento ({ route, navigation }) {
                 clearButtonMode='always'
               />
               <TextInput
-                 style={styles.input}
-                 placeholder='Intervalo (horas)'
-                 value={intervalo}
-                 onChangeText={setIntervalo}
-                 keyboardType='numeric'
-                 returnKeyType='done'
-                 clearButtonMode='always'
+                style={styles.input}
+                placeholder='Intervalo (horas)'
+                value={intervalo}
+                onChangeText={setIntervalo}
+                keyboardType='numeric'
+                returnKeyType='done'
+                clearButtonMode='always'
               />
               <TextInput
                 style={styles.input}

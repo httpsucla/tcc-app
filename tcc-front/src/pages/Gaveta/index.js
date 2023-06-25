@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import {  Text, View, FlatList, RefreshControl, TouchableOpacity  } from 'react-native'
+import { Text, View, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Box from './components/Box'
@@ -7,7 +7,7 @@ import Database from '../../services/database'
 import GavetaService from '../../services/gavetaService'
 import moment from 'moment'
 
-export default function Gavetas ({ navigation }) {
+export default function Gavetas({ navigation }) {
   const [gavetas, setGavetas] = useState([])
   const [refreshing, setRefresh] = useState(false)
 
@@ -25,12 +25,8 @@ export default function Gavetas ({ navigation }) {
     })
   }, [])
 
-  const refresh = useCallback(() => {
-    carregarGavetas()
-  }, [])
-
   const forceRefresh = () => {
-    carregarGavetas()
+    carregarGavetas();
   }
 
   return (
@@ -64,19 +60,12 @@ export default function Gavetas ({ navigation }) {
               </View>
             </View>
           )}
-          
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={forceRefresh} />
           }
-          
         />
-        
-      ) : null}
-      <TouchableOpacity 
-        style={styles.buttonLista}
-        onPress={forceRefresh}>
-        <Text style={styles.buttonText} >Sincronizar Dados</Text>
-      </TouchableOpacity>
+      ) : null
+      }
     </LinearGradient>
   )
 }

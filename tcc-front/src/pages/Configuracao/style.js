@@ -33,7 +33,7 @@ export default styles = StyleSheet.create({
     },
     button: {
         marginTop: 25,
-        height: 50,
+        height: 60,
         backgroundColor: '#569099',
         borderRadius: 20,
         fontSize: 16,
@@ -51,6 +51,7 @@ export default styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
+        fontSize: 16
     },
     input: {
         marginTop: 10,
@@ -106,9 +107,9 @@ export default styles = StyleSheet.create({
         paddingBottom: 20
     },
     campoNome: {
-        borderColor: '#414BB2',
+        borderColor: '#569099',
         borderWidth: 1.5,
-        color: '#414BB2',
+        color: '#000',
         borderRadius: 10,
         width: 100,
         textAlign: "center",

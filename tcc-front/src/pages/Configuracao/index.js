@@ -83,7 +83,7 @@ export default function Configuracao({ route, navigation }) {
                 <View style={styles.campoContato}>
                     <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={telaContato}>
                         <Text style={styles.text}>Contatos</Text>
-                        <Icon name="angle-right" size={18} color={'#414BB2'} />
+                        <Icon name="angle-right" size={18} color={'#569099'} />
                     </TouchableOpacity>
                     {
                         item ? <Text style={styles.campoNome}>{item.nome}</Text>
