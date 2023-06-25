@@ -9,6 +9,7 @@ export default class HistoricoService {
 
         axios.get(request)
         .then(response => {
+          console.log('abaixo, resposta dentro do request')
           console.log(response.data);
           const arrayResponse = Object.values(response.data);
           callback(arrayResponse);

@@ -27,7 +27,7 @@ export default function Historico({ navigation, route }) {
     useEffect(() => {
         if (isHistoricoDiff)
             setHistoricoDiff(false);
-            
+
         atualizaFiltros();
         filtrarRelatorio();
         
@@ -57,14 +57,15 @@ export default function Historico({ navigation, route }) {
 
     filtrarRelatorio = () => {
         HistoricoService.requestDataHora(arrayRequest => {
+            console.log('abaixo, console apos chamada do request')
             console.log(arrayRequest);
             if (arrayRequest != null || arrayRequest != undefined){
                 arrayRequest.forEach(array => {
                     const hist = {
-                        id_gaveta: array.idGaveta,
-                        id_medicamento: array.idMedicamento,
-                        dt_abertura: array.dataAbertura,
-                        dt_prevista: array.dataPrevista,
+                        id_gaveta: array.gethistorico.idGaveta,
+                        id_medicamento: array.gethistorico.idMedicamento,
+                        dt_abertura: array.gethistorico.dataAbertura,
+                        dt_prevista: array.gethistorico.dataPrevista,
                         situacao: true
                     }
 
