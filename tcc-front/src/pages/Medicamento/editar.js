@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Database from '../../services/database'
 import { TextInputMask } from 'react-native-masked-text'
+import moment from 'moment'
 
 export default function EditarMedicamento ({ route, navigation }) {
   const { med } = route.params
@@ -67,9 +68,6 @@ export default function EditarMedicamento ({ route, navigation }) {
                 style={styles.input}
                 value={medicamento.data_inicial}
                 type={'datetime'}
-                options={{
-                  format: 'DD/MM/YYYY'
-                }}
                 placeholder='Data de início'
                 maxLength={10}
                 keyboardType='numeric'

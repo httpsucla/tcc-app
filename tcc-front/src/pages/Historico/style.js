@@ -152,6 +152,29 @@ export default styles = StyleSheet.create({
     SwitchText: {
         flexDirection: 'row',
         marginTop: 15
-    }
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'normal',
+        fontSize: 14
+    },
+    buttonLista: {
+        marginBottom: 50,
+        height: 40,
+        backgroundColor: '#569099',
+        borderRadius: 20,
+        width: '50%',
+        fontSize: 14,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
+    },
 
 });
