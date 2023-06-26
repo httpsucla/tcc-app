@@ -17,25 +17,20 @@ import styles from './style'
 import moment from 'moment'
 
 export default function CadastrarMedicamento({ route, navigation }) {
-  const { hist } = route.params ? route.params : {}
+
+  const { hist } = route.params ? route.params : [];
   const [medicamento, setMedicamento] = useState([])
-  const [nome, setNome] = useState('')
   const [dataInicial, setDataInicial] = useState('')
   const [horario, setHorario] = useState('')
-  const [qtde, setQtde] = useState('')
-  const [qtdeDias, setQtdeDias] = useState('')
-  const [dosagem, setDosagem] = useState('')
-  const [intervalo, setIntervalo] = useState('')
   const [ativo, setAtivo] = useState(false)
 
   let isDataValida = true
   let isHoraValida = true
 
   useEffect(() => {
-    if (hist != null) {
-      setMedicamento(hist)
-    }
-  }, [])
+    if (hist != undefined)
+      setMedicamento(hist);
+  }, [route]);
 
   function handleInsert() {
     if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
@@ -55,25 +50,18 @@ export default function CadastrarMedicamento({ route, navigation }) {
       }
     } else {
       const item = {
-        nome,
+        nome: medicamento.nome,
         horario: new Date(`2023-04-06T${horario}`).toLocaleTimeString(),
         data_inicial: moment(dataInicial, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-        qtde,
-        qtde_dias: qtdeDias,
-        dosagem: dosagem,
-        intervalo: intervalo,
+        qtde: parseInt(medicamento.qtde),
+        qtde_dias: parseInt(medicamento.qtde_dias),
+        dosagem: parseInt(medicamento.dosagem),
+        intervalo: parseInt(medicamento.intervalo),
         ativo
       }
 
       Database.addMedicamento(item, () => {
         console.log(`Medicamento inserido com sucesso.`)
-        setNome('')
-        setDataInicial('')
-        setHorario('')
-        setQtde('')
-        setQtdeDias('')
-        setDosagem('')
-        setIntervalo('')
         setAtivo(false)
       })
 
@@ -99,15 +87,15 @@ export default function CadastrarMedicamento({ route, navigation }) {
             colors={['#ffffff', '#569099']}
             style={styles.container}
           >
-            <TouchableOpacity style={styles.buttonLista}  onPress={() => navigation.navigate('Historico Medicamento')}>
+            <TouchableOpacity style={styles.buttonLista} onPress={() => navigation.navigate('Historico Medicamento')}>
               <Text style={styles.buttonText}>Histórico</Text>
             </TouchableOpacity>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
                 placeholder='Nome do Remédio'
-                value={nome}
-                onChangeText={setNome}
+                value={medicamento.nome}
+                onChangeText={nome => setMedicamento({ ...medicamento, nome })}
                 returnKeyType='done'
                 clearButtonMode='always'
               />
@@ -141,9 +129,9 @@ export default function CadastrarMedicamento({ route, navigation }) {
               />
               <TextInput
                 style={styles.input}
-                placeholder='Dosagem (quantos por vez)'
-                value={dosagem}
-                onChangeText={setDosagem}
+                placeholder='Dosagem (quantos por dias)'
+                value={medicamento == '' ? medicamento.dosagem : String(medicamento.dosagem)}
+                onChangeText={dosagem => setMedicamento({ ...medicamento, dosagem })}
                 keyboardType='numeric'
                 returnKeyType='done'
                 clearButtonMode='always'
@@ -151,8 +139,8 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder='Intervalo (horas)'
-                value={intervalo}
-                onChangeText={setIntervalo}
+                value={medicamento == '' ? medicamento.intervalo : String(medicamento.intervalo)}
+                onChangeText={intervalo => setMedicamento({ ...medicamento, intervalo })}
                 keyboardType='numeric'
                 returnKeyType='done'
                 clearButtonMode='always'
@@ -160,8 +148,8 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder='Quantidade total da caixa'
-                value={qtde}
-                onChangeText={setQtde}
+                value={medicamento == '' ? medicamento.qtde : String(medicamento.qtde)}
+                onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
                 keyboardType='numeric'
                 returnKeyType='done'
                 clearButtonMode='always'
@@ -169,8 +157,8 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 placeholder='Quantidade de dias'
                 style={styles.input}
-                value={qtdeDias}
-                onChangeText={setQtdeDias}
+                value={medicamento == '' ? medicamento.qtde_dias : String(medicamento.qtde_dias)}
+                onChangeText={qtde_dias => setMedicamento({ ...medicamento, qtde_dias })}
                 keyboardType='numeric'
                 returnKeyType='done'
                 clearButtonMode='always'
