@@ -17,9 +17,9 @@ export default function Home() {
             setMedicamentos(medicamentos);
         });
 
-        Database.getHistorico((historico) => {
+        /*Database.getHistorico((historico) => {
             setHistorico(historico);
-        });
+        });*/
 
         proxMed();
         lastMed();
@@ -126,7 +126,7 @@ export default function Home() {
 
     const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
   
-        historico.sort((a, b) => {
+        hist.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
             } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
@@ -137,7 +137,7 @@ export default function Home() {
                 return new Date(b.dt_abertura) - new Date(a.dt_abertura);
             }
         });
-        setLastMedicamento(historico[0]);
+        setLastMedicamento(hist[0]);
     };
 
     const sequencia = () => {
