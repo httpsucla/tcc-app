@@ -20,21 +20,26 @@ export default function Contatos({ route, navigation }) {
     }, []);
 
     cadastrar = () => {
-        const data = {
-            nome: contato.nome,
-            telefone: contato.telefone,
-            id: 1
-        };
+        if (contato.nome != null && contato.telefone != null) {
+            const data = {
+                nome: contato.nome,
+                telefone: contato.telefone,
+                id: 1
+            };
 
-        Database.updateContato(data, () => {
-            Alert.alert('Sucesso', 'Contato salvo com sucesso.');
-            navigation.navigate("Configuracao", { item: data });
-        });
+            Database.updateContato(data, () => {
+                Alert.alert('Sucesso', 'Contato salvo com sucesso.');
+                navigation.navigate("Configuracao", { item: data });
+            });
 
-        Database.getContatos((contato) => {
-            setContato(contato);
-        })
+            Database.getContatos((contato) => {
+                setContato(contato);
+            })
+        }else {
+            Alert.alert("Atenção", "Preencha todos os campos!");
+        }
     };
+    
     const deletarContato = () => {
         Alert.alert(
             "Atenção",
