@@ -53,16 +53,16 @@ export default function EditarMedicamento ({ route, navigation }) {
         style={styles.container}
           >
             <View style={styles.inputContainer}>
-              <Text> Nome: </Text>
+              <Text>Nome: </Text>
               <TextInput
                 style={styles.input}
-                placeholder='Nome'
+                placeholder='Nome do Remédio'
                 value={medicamento.nome}
                 onChangeText={nome => setMedicamento({ ...medicamento, nome })}
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-              <Text> Data Inicial: </Text>
+              <Text>Data Inicial: </Text>
               <TextInputMask
                 style={styles.input}
                 value={medicamento.data_inicial}
@@ -79,7 +79,7 @@ export default function EditarMedicamento ({ route, navigation }) {
                   setMedicamento({ ...medicamento, data_inicial })
                 }
               />
-              <Text> Horário Inicial: </Text>
+              <Text>Horário Inicial: </Text>
               <TextInputMask
                 style={styles.input}
                 value={medicamento.horario}
@@ -96,10 +96,10 @@ export default function EditarMedicamento ({ route, navigation }) {
                   setMedicamento({ ...medicamento, horario })
                 }
               />
-              <Text> Dosagem: </Text>
+              <Text>Dosagem: </Text>
               <TextInput
                 style={styles.input}
-                placeholder='Dosagem'
+                placeholder='Dosagem (quantos por dias)'
                 value={String(medicamento.dosagem)}
                 onChangeText={dosagem =>
                   setMedicamento({ ...medicamento, dosagem })
@@ -108,10 +108,10 @@ export default function EditarMedicamento ({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-              <Text> Intervalo: </Text>
+              <Text>Intervalo: </Text>
               <TextInput
                 style={styles.input}
-                placeholder='Intervalo'
+                placeholder='Intervalo (horas)'
                 value={String(medicamento.intervalo)}
                 onChangeText={intervalo =>
                   setMedicamento({ ...medicamento, intervalo })
@@ -120,17 +120,17 @@ export default function EditarMedicamento ({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-              <Text> Quantidade total: </Text>
+              <Text>Quantidade total: </Text>
               <TextInput
                 style={styles.input}
-                placeholder='Quantidade total'
+                placeholder='Quantidade total da caixa'
                 value={String(medicamento.qtde)}
                 onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
                 keyboardType='numeric'
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-              <Text> Quantidade de dias: </Text>
+              <Text>Quantidade de dias: </Text>
               <TextInput
                 placeholder='Quantidade de dias'
                 style={styles.input}

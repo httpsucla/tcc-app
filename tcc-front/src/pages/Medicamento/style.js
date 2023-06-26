@@ -82,15 +82,22 @@ export default styles = StyleSheet.create({
         paddingBottom: 100
     },
     campolista: {
-        borderWidth: 1,
         flexDirection: 'row',
-        marginVertical: 1,
+        marginVertical: 5,
         paddingHorizontal: 15,
-        height: 75,
+        height: 70,
         backgroundColor: 'rgb(255, 255, 255)',
-        borderRadius: 2,
+        borderRadius: 20,
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        elevation: 5,
+        shadowOpacity: 0.4,
+        shadowColor: '#000',
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 5,
+            height: 5
+        },
     },
     campoconteudo: {
         justifyContent: 'center',

@@ -17,9 +17,9 @@ export default function Home() {
             setMedicamentos(medicamentos);
         });
 
-        //    Database.getHistorico((historico) => {
-        //        setHistorico(historico);
-        //    });
+        Database.getHistorico((historico) => {
+            setHistorico(historico);
+        });
 
         proxMed();
         lastMed();
@@ -29,7 +29,7 @@ export default function Home() {
     }, []);
 
     const [medicamentos, setMedicamentos] = useState([]);
-    // const [historico, setHistorico] = useState([]);
+    const [historico, setHistorico] = useState([]);
     const [gavetas, setGavetas] = useState([]);
     const [listaMed, setListaMed] = useState([]);
     const [lastMedicamento, setLastMedicamento] = useState([]);
@@ -124,8 +124,9 @@ export default function Home() {
         { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-06-02 06:00', dt_abertura: '', situacao: 0 },
     ];
 
-    const lastMed = () => {
-        hist.sort((a, b) => {
+    const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
+  
+        historico.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
             } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
@@ -136,7 +137,7 @@ export default function Home() {
                 return new Date(b.dt_abertura) - new Date(a.dt_abertura);
             }
         });
-        setLastMedicamento(hist[0]);
+        setLastMedicamento(historico[0]);
     };
 
     const sequencia = () => {

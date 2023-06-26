@@ -130,7 +130,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder='Dosagem (quantos por dias)'
-                value={medicamento == '' ? medicamento.dosagem : String(medicamento.dosagem)}
+                value={medicamento.dosagem == undefined ? '' : String(medicamento.dosagem)}
                 onChangeText={dosagem => setMedicamento({ ...medicamento, dosagem })}
                 keyboardType='numeric'
                 returnKeyType='done'
@@ -139,7 +139,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder='Intervalo (horas)'
-                value={medicamento == '' ? medicamento.intervalo : String(medicamento.intervalo)}
+                value={medicamento.intervalo == undefined ? '' : String(medicamento.intervalo)}
                 onChangeText={intervalo => setMedicamento({ ...medicamento, intervalo })}
                 keyboardType='numeric'
                 returnKeyType='done'
@@ -148,7 +148,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder='Quantidade total da caixa'
-                value={medicamento == '' ? medicamento.qtde : String(medicamento.qtde)}
+                value={medicamento.qtde == undefined ? '' : String(medicamento.qtde)}
                 onChangeText={qtde => setMedicamento({ ...medicamento, qtde })}
                 keyboardType='numeric'
                 returnKeyType='done'
@@ -157,7 +157,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                 placeholder='Quantidade de dias'
                 style={styles.input}
-                value={medicamento == '' ? medicamento.qtde_dias : String(medicamento.qtde_dias)}
+                value={medicamento.qtde_dias == undefined ? '' : String(medicamento.qtde_dias)}
                 onChangeText={qtde_dias => setMedicamento({ ...medicamento, qtde_dias })}
                 keyboardType='numeric'
                 returnKeyType='done'
