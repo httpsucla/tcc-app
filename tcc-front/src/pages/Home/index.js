@@ -17,9 +17,10 @@ export default function Home() {
             setMedicamentos(medicamentos);
         });
 
-        /*Database.getHistorico((historico) => {
+        Database.getHistorico((historico) => {
+            console.log(historico);
             setHistorico(historico);
-        });*/
+        });
 
         proxMed();
         lastMed();
@@ -45,6 +46,10 @@ export default function Home() {
 
         Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos);
+        });
+
+        Database.getHistorico((historico) => {
+            setHistorico(historico);
         });
     }, [])
 
@@ -125,7 +130,7 @@ export default function Home() {
     ];
 
     const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
-  
+        console.log(historico)
         hist.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
@@ -268,7 +273,7 @@ export default function Home() {
                     return 0;
                 }
             });
-
+            console.log(apenasHorario)
             const hour1 = apenasHorario[0];
             const hour2 = hour1[0] + hour1[1];
             const minute1 = apenasHorario[0];
@@ -310,6 +315,10 @@ export default function Home() {
                 }
             });
             setListaMed(lastMed);
+
+            if(lastMed[0].DataAtual == now) {
+                medicamento.qtde--;
+            }
         });
     };
 
