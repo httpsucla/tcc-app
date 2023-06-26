@@ -9,7 +9,7 @@ export default function VisualizarMedicamento() {
 
     const route = useRoute();
     const { item } = route.params;
-    const dataFormat = moment(item.data_inicial, 'YYYY-MM-DD').format('DD/MM/YYYY');
+    const dataFormat = item.data_inicial;
     const hourFormat = moment(item.horario, 'HH:mm:ss').format('HH:mm');
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
