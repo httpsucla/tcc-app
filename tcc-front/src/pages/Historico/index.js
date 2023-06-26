@@ -149,7 +149,9 @@ export default function Historico ({ navigation, route }) {
             </TouchableOpacity>
           </View>
 
+
           <View style={styles.filterContainer}>
+          {!filtro && (
             <TouchableOpacity
               style={[styles.fontFilter, { marginRight: 20 }]}
               onPress={atualizaHistorico}
@@ -162,8 +164,10 @@ export default function Historico ({ navigation, route }) {
               />
               <Text style={styles.textFilter}>Atualizar histórico</Text>
             </TouchableOpacity>
+            )}
           </View>
         </View>
+   
 
         {filtro && (
           <TouchableOpacity style={styles.fontFilter} onPress={removeFiltro}>
