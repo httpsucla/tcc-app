@@ -508,7 +508,7 @@ tb_gavetas:
     });
   };
 
-  static getHistorico() {
+  static getHistorico(callback) {
     db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM tb_historico',

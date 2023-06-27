@@ -43,7 +43,7 @@ export default function Contatos({ route, navigation }) {
     const deletarContato = () => {
         Alert.alert(
             "Atenção",
-            'Você tem certeza que deseja excluir o contato: ' + '?',
+            'Você tem certeza que deseja excluir o contato?',
             [{
                 text: "Não",
                 onPress: () => console.log("Cancel Pressed"),
@@ -53,7 +53,7 @@ export default function Contatos({ route, navigation }) {
                 text: "Sim",
                 onPress: () => {
                     Database.deleteContato();
-                    Alert.alert('Sucesso', 'Contato ' + ' removido com sucesso.');
+                    Alert.alert('Sucesso', 'Contato removido com sucesso.');
                     navigation.navigate("Configuracao");
                 }
             }],
