@@ -18,3 +18,7 @@
 ### Integração entre o aplicativo e o Arduino
 - Todos os dispositivos devem estar conectados na mesma rede local;
 - Inserir na rota tcc-app/tcc-front/src/services/ipArduino.js o IP fornecido pelo Arduino.
+### Configurar armario/arduino
+- Buildar codigo e enviar para o arduino, verificar as portas "COM"
+- Abrir o Serial monitor e verificar o ip atribuido ao armario.
+- Configurar hora com a URL responsavel definida na documentaçao. 
