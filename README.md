@@ -2,7 +2,7 @@
 ## Projeto que conecta um aplicativo a um IoT utilizando Arduino, para criar um armário inteligente que auxilia seus usuários a administrar os horários de ingestão de medicamentos.
 
 ### Comandos para o aplicativo
-***Ter previamente o aplicativo Expo go instalado em seu celular***
+***Ter previamente o aplicativo Expo go instalado em seu dispositivo ou emulador utilizado***
 
 `git clone https://github.com/httpsucla/tcc-app.git`
 
