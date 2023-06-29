@@ -130,8 +130,8 @@ export default function Home() {
         { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-06-02 06:00', dt_abertura: '', situacao: 0 },
     ];
 
-    const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
-        hist.sort((a, b) => {
+    const lastMed = () => { 
+        historico.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
             } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
@@ -142,16 +142,16 @@ export default function Home() {
                 return new Date(b.dt_abertura) - new Date(a.dt_abertura);
             }
         });
-        setLastMedicamento(hist[0]);
+        setLastMedicamento(historico[0]);
     };
 
     const sequencia = () => {
         let count = 0;
 
-        hist.sort((a, b) => new Date(b.dt_prevista) - new Date(a.dt_prevista));
+        historico.sort((a, b) => new Date(b.dt_prevista) - new Date(a.dt_prevista));
 
-        for (let i = 0; i < hist.length; i++) {
-            const h = hist[i];
+        for (let i = 0; i < historico.length; i++) {
+            const h = historico[i];
             const now = new Date();
             const dataPrev = new Date(h.dt_prevista);
             if (dataPrev < now) {
@@ -168,7 +168,7 @@ export default function Home() {
     const errosComet = () => {
         let error = 0;
 
-        hist.forEach((h) => {
+        historico.forEach((h) => {
             const now = new Date();
             const dataPrev = new Date(h.dt_prevista);
             if (dataPrev < now) {
@@ -195,7 +195,7 @@ export default function Home() {
         const inicioSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + 1);
         const fimSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + 7);
 
-        hist.forEach(h => {
+        historico.forEach(h => {
             dia = new Date(h.dt_prevista).getDay();
             dataPrev = new Date(h.dt_prevista);
 
@@ -314,7 +314,7 @@ export default function Home() {
     };
 
     const decrQtde = () => {
-        hist.sort((a, b) => {
+        historico.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
             } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
