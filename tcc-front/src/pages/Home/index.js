@@ -17,7 +17,7 @@ export default function Home() {
             setMedicamentos(medicamentos);
         });
 
-        Database.getHistorico((historico) => {
+        Database.getHistoricoRelatorio((historico) => {
             setHistorico(historico);
         });
 
@@ -39,6 +39,10 @@ export default function Home() {
     const [refreshing, setRefreshing] = useState(false);
 
     const carregarDashboard = useCallback(() => {
+        Database.getHistoricoRelatorio((historico) => {
+            setHistorico(historico);
+        });
+
         Database.leftJoinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
         });
@@ -125,7 +129,7 @@ export default function Home() {
     ];
 
     const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
-  
+        console.log(historico);
         historico.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
@@ -353,7 +357,7 @@ export default function Home() {
                 <View style={styles.boxesMedicamento}>
                     <View style={[styles.box, styles.boxNome]}>
                         <View style={styles.boxContent}>
-                            <Text style={styles.valorContent}>{lastMedicamento.id_medicamento}</Text>
+                            <Text style={styles.valorContent}>{lastMedicamento.nome}</Text>
                         </View>
                         <Text style={styles.descricao}>Último medicamento tomado</Text>
                     </View>
