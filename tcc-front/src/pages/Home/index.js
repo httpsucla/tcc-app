@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, ScrollView, RefreshControl } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import styles from './style';
 import Database from '../../services/database';
 import { BarChart, LineChart } from 'react-native-chart-kit'
@@ -17,7 +17,7 @@ export default function Home() {
             setMedicamentos(medicamentos);
         });
 
-        Database.getHistorico((historico) => {
+        Database.getHistoricoRelatorio((historico) => {
             setHistorico(historico);
         });
 
@@ -26,7 +26,6 @@ export default function Home() {
         sequencia();
         errosComet();
         graficoSemana();
-        decrQtde();
     }, []);
 
     const [medicamentos, setMedicamentos] = useState([]);
@@ -40,16 +39,16 @@ export default function Home() {
     const [refreshing, setRefreshing] = useState(false);
 
     const carregarDashboard = useCallback(() => {
+        Database.getHistoricoRelatorio((historico) => {
+            setHistorico(historico);
+        });
+
         Database.leftJoinGavetaMedicamento((gavetas) => {
             setGavetas(gavetas);
         });
 
         Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos);
-        });
-
-        Database.getHistorico((historico) => {
-            setHistorico(historico);
         });
     }, [])
 
@@ -65,7 +64,6 @@ export default function Home() {
         sequencia();
         errosComet();
         graficoSemana();
-        decrQtde();
         setRefreshing(false);
     }
 
@@ -130,7 +128,8 @@ export default function Home() {
         { id_gaveta: 1, id_medicamento: 14, dt_prevista: '2023-06-02 06:00', dt_abertura: '', situacao: 0 },
     ];
 
-    const lastMed = () => { 
+    const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
+        console.log(historico);
         historico.sort((a, b) => {
             if (a.dt_abertura === '' && b.dt_abertura !== '') {
                 return 1;
@@ -148,10 +147,10 @@ export default function Home() {
     const sequencia = () => {
         let count = 0;
 
-        historico.sort((a, b) => new Date(b.dt_prevista) - new Date(a.dt_prevista));
+        hist.sort((a, b) => new Date(b.dt_prevista) - new Date(a.dt_prevista));
 
-        for (let i = 0; i < historico.length; i++) {
-            const h = historico[i];
+        for (let i = 0; i < hist.length; i++) {
+            const h = hist[i];
             const now = new Date();
             const dataPrev = new Date(h.dt_prevista);
             if (dataPrev < now) {
@@ -168,7 +167,7 @@ export default function Home() {
     const errosComet = () => {
         let error = 0;
 
-        historico.forEach((h) => {
+        hist.forEach((h) => {
             const now = new Date();
             const dataPrev = new Date(h.dt_prevista);
             if (dataPrev < now) {
@@ -195,7 +194,7 @@ export default function Home() {
         const inicioSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + 1);
         const fimSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + 7);
 
-        historico.forEach(h => {
+        hist.forEach(h => {
             dia = new Date(h.dt_prevista).getDay();
             dataPrev = new Date(h.dt_prevista);
 
@@ -248,13 +247,18 @@ export default function Home() {
             dataInicio.add(1, 'days');
             const agora = moment();
             const agora2 = agora.subtract(3, 'hours')
+            const diasDecorridos = agora.diff(dataInicio, 'days');
+            const diasFaltantes = medicamento.qtde_dias - diasDecorridos;
+            const qtdeDia = parseInt(medicamento.qtde) / parseInt(medicamento.qtde_dias);
+            const aCada = 24 / qtdeDia;
 
             let horarioProximo = moment.utc(new Date(now.setUTCHours(0, 0, 0)));
+
             let horario = moment(new Date(now.setUTCHours(Number(hourAux), Number(minuteAux), timeObj.getSeconds())));
 
-            for (let i = 0; i < medicamento.dosagem; i++) {
+            for (let i = 0; i < qtdeDia; i++) {
                 apenasHorario.push(moment.utc(horario).format('HH:mm'))
-                horario.add(medicamento.intervalo, 'hours');
+                horario.add(aCada, 'hours');
             }
 
             apenasHorario.sort((a, b) => {
@@ -277,19 +281,19 @@ export default function Home() {
             horario = moment(new Date(now.setUTCHours(Number(hour2), Number(minute2), timeObj.getSeconds())));
             apenasHorario = [];
 
-            for (let j = 0; j < medicamento.dosagem; j++) {
+            for (let j = 0; j < qtdeDia; j++) {
                 while (horario.isBefore(agora2)) {
-                    horario.add(medicamento.intervalo, 'hours');
+                    horario.add(aCada, 'hours');
                 }
             }
 
             const horarioFormat = moment.utc(horario).format('HH:mm');
+
             horarioProximo.add(horarioFormat, 'hours');
-            
             if (horarioProximo.isSameOrBefore(agora2))
                 horarioProximo.add(1, 'days');
 
-            if (horarioProximo.isSameOrAfter(agora2) && medicamento.qtde > 0) {
+            if (horarioProximo.isSameOrAfter(agora2) && diasFaltantes > 0) {
                 lastMed.push({
                     id: medicamento.id,
                     title: medicamento.nome,
@@ -312,25 +316,6 @@ export default function Home() {
             setListaMed(lastMed);
         });
     };
-
-    const decrQtde = () => {
-        historico.sort((a, b) => {
-            if (a.dt_abertura === '' && b.dt_abertura !== '') {
-                return 1;
-            } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
-                return -1;
-            } else if (a.dt_abertura === '' && b.dt_abertura === '') {
-                return 0;
-            } else {
-                return new Date(b.dt_abertura) - new Date(a.dt_abertura);
-            }
-        });
-
-        medicamentos.forEach(medicamento => {
-            if(medicamento.id == hist[0].id_medicamento) 
-              medicamento.qtde--;
-        });
-    }
 
     return (
         <ScrollView
@@ -364,6 +349,7 @@ export default function Home() {
                     <View style={[styles.box, styles.boxData]}>
                         <View style={styles.boxContent}>
                             <Text style={styles.valorContent}>{erros}</Text>
+                            {/* <Text style={styles.diasContent}> dias</Text> */}
                         </View>
                         <Text style={styles.descricao}>Erros cometidos</Text>
                     </View>
@@ -371,7 +357,7 @@ export default function Home() {
                 <View style={styles.boxesMedicamento}>
                     <View style={[styles.box, styles.boxNome]}>
                         <View style={styles.boxContent}>
-                            <Text style={styles.valorContent}>{lastMedicamento.id_medicamento}</Text>
+                            <Text style={styles.valorContent}>{lastMedicamento.nome}</Text>
                         </View>
                         <Text style={styles.descricao}>Último medicamento tomado</Text>
                     </View>
