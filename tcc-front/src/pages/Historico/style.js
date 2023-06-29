@@ -13,9 +13,9 @@ export default styles = StyleSheet.create({
     },
     filters: {
         flexDirection: 'row',
-        marginHorizontal: 25,
-        marginVertical: 20,
-        justifyContent: 'space-between'
+        marginHorizontal: 15,
+        marginVertical: 15,
+        justifyContent: 'space-between', 
     },
     lupa: {
         display: 'flex',
@@ -126,7 +126,7 @@ export default styles = StyleSheet.create({
     textRemove: {
         paddingHorizontal: 5,
         fontSize: 18,
-        color: '#292929f3',
+        color: 'white',
         fontStyle: 'italic'
     },
     emptyList: {

@@ -66,4 +66,19 @@ export default class GavetaService {
         console.log('Erro ao compartilhar no WhatsApp:', error);
       }
     };
+
+    static isGavetaAtrasada = async (gaveta) => {
+      axios.get('http://' + IP_ARDUINO + '/?isGavetaAtrasada' + gaveta)
+        .then(response => {
+          if (response.data == true){
+            return true
+          }
+          else{
+            return false;
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
 }

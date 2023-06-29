@@ -111,7 +111,7 @@ tb_gavetas:
   static deleteMedicamento(id) {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM tb_medicamentos WHERE id = ?`,
+        `UPDATE tb_medicamentos SET ativo = false WHERE id = ?`,
         [id],
         (_, result) => {
           console.log('Item excluído com sucesso!');
@@ -126,6 +126,26 @@ tb_gavetas:
   static getMedicamentos(callback) {
     db.transaction(tx => {
       tx.executeSql(
+        'SELECT * FROM tb_medicamentos where ativo = true',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static getMedicamentosInativos(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_medicamentos where ativo = false',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+    });
+  }
+
+  static getAllMedicamentos(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
         'SELECT * FROM tb_medicamentos',
         [],
         (_, { rows }) => callback(rows._array)
@@ -136,7 +156,7 @@ tb_gavetas:
   static getMedicamentoById(id, callback) {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM tbmedicamentos WHERE id = ?',
+        'SELECT * FROM tb_medicamentos WHERE id = ?',
         [id],
         (_, { rows }) => callback(rows._array)
       );
@@ -316,7 +336,7 @@ tb_gavetas:
     });
   };
 
-  static addHistorico(hist,callback) {
+  static addHistorico(hist, callback) {
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO tb_historico (id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao) VALUES (?, ?, ?, ?, ?)',
@@ -344,6 +364,7 @@ tb_gavetas:
         `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
         FROM tb_historico
         INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
+        WHERE tb_historico.dt_prevista > DateTime('Now', 'LocalTime', '-30 Day')
         ORDER BY tb_historico.dt_prevista DESC;`,
         [],
         (_, { rows }) => callback(rows._array)
@@ -487,7 +508,7 @@ tb_gavetas:
     });
   };
 
-  static getHistorico() {
+  static getHistorico(callback) {
     db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM tb_historico',

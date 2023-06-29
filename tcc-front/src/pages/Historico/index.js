@@ -27,7 +27,7 @@ export default function Historico ({ navigation, route }) {
     if (isHistoricoDiff) setHistoricoDiff(false)
 
     atualizaFiltros()
-    // filtrarRelatorio();
+    filtrarRelatorio();
   }, [medId, dataStart, dataEnd, filtro, dataDefault, isHistoricoDiff])
 
   atualizaFiltros = () => {
@@ -49,48 +49,52 @@ export default function Historico ({ navigation, route }) {
     }
   }
 
+  atualizaHistorico = () => {
+    HistoricoService.requestDataHora(arrayRequest => {
+        console.log('abaixo, console apos chamada do request')
+        console.log(arrayRequest)
+        if (arrayRequest != null || arrayRequest != undefined) {
+          console.log('entrou')
+          arrayRequest.gethistorico.forEach(array => {
+            if ((array != null || array != undefined) && array.idRemedio > 0) {
+              console.log('entrou foreach')
+              console.log(array)
+              const hist = {
+                id_gaveta: array.idGaveta,
+                id_medicamento: array.idRemedio,
+                dt_abertura: array.dataAbertura,
+                dt_prevista: array.dataPrevista,
+                situacao: true
+              }
+  
+              if (
+                (hist.id_medicamento != null ||
+                  hist.id_medicamento != undefined) &&
+                hist.id_medicamento > 0
+              ) {
+                Database.getMedicamentoById(hist.id_medicamento, medicamento => {
+                  console.log(medicamento[0])
+                  hist.dt_prevista = new Date(medicamento[0].data_inicial)
+                  hist.dt_prevista.setDate(
+                    hist.data_prevista.getDate() + medicamento[0].qtde_dias
+                  )
+                })
+  
+                Database.addHistorico(hist, teste => {
+                  console.log(teste)
+                })
+  
+                setHistoricoDiff(true)
+              }
+            }
+          })
+        }
+      })
+
+  }
+
   filtrarRelatorio = () => {
     //  Database.dropTables();
-    HistoricoService.requestDataHora(arrayRequest => {
-      console.log('abaixo, console apos chamada do request')
-      console.log(arrayRequest)
-      if (arrayRequest != null || arrayRequest != undefined) {
-        console.log('entrou')
-        arrayRequest.gethistorico.forEach(array => {
-          if ((array != null || array != undefined) && array.idRemedio > 0) {
-            console.log('entrou foreach')
-            console.log(array)
-            const hist = {
-              id_gaveta: array.idGaveta,
-              id_medicamento: array.idRemedio,
-              dt_abertura: array.dataAbertura,
-              dt_prevista: array.dataPrevista,
-              situacao: true
-            }
-
-            if (
-              (hist.id_medicamento != null ||
-                hist.id_medicamento != undefined) &&
-              hist.id_medicamento > 0
-            ) {
-              Database.getMedicamentoById(hist.id_medicamento, medicamento => {
-                console.log(medicamento[0])
-                hist.dt_prevista = new Date(medicamento[0].data_inicial)
-                hist.dt_prevista.setDate(
-                  hist.data_prevista.getDate() + medicamento[0].qtde_dias
-                )
-              })
-
-              Database.addHistorico(hist, teste => {
-                console.log(teste)
-              })
-
-              setHistoricoDiff(true)
-            }
-          }
-        })
-      }
-    })
     //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao
     console.log(filtro)
     if (filtro) {
@@ -145,10 +149,12 @@ export default function Historico ({ navigation, route }) {
             </TouchableOpacity>
           </View>
 
+
           <View style={styles.filterContainer}>
+          {!filtro && (
             <TouchableOpacity
               style={[styles.fontFilter, { marginRight: 20 }]}
-              onPress={filtrarRelatorio}
+              onPress={atualizaHistorico}
             >
               <Icon
                 style={styles.textFilter}
@@ -158,8 +164,10 @@ export default function Historico ({ navigation, route }) {
               />
               <Text style={styles.textFilter}>Atualizar histórico</Text>
             </TouchableOpacity>
+            )}
           </View>
         </View>
+   
 
         {filtro && (
           <TouchableOpacity style={styles.fontFilter} onPress={removeFiltro}>
@@ -211,6 +219,8 @@ export default function Historico ({ navigation, route }) {
           )}
         </ScrollView>
       </DataTable>
+
     </LinearGradient>
+    
   )
 }

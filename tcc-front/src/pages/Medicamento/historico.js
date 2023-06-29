@@ -8,7 +8,7 @@ export default function HistoMedicamento({ navigation }) {
   const [medicamentos, setMedicamentos] = useState([])
 
   useEffect(() => {
-    Database.getMedicamentos(medicamentos => {
+    Database.getAllMedicamentos(medicamentos => {
       setMedicamentos(medicamentos)
     })
   }, [])
