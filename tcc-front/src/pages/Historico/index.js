@@ -196,19 +196,17 @@ export default function Historico ({ navigation, route }) {
           {historico.map(item => {
             return (
               <DataTable.Row key={item.id}>
-                <DataTable.Cell> {item.nome} </DataTable.Cell>
-                <DataTable.Cell>
-                  {' '}
+                <DataTable.Cell textStyle={{fontSize: 12}}>{item.nome}</DataTable.Cell>
+                <DataTable.Cell textStyle={{fontSize: 12}}>
                   {moment(item.dt_prevista, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
                 </DataTable.Cell>
                 {item.dt_abertura != '' && (
-                  <DataTable.Cell>
-                    {' '}
+                  <DataTable.Cell textStyle={{fontSize: 12}}>
                     {moment(item.dt_abertura, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
                   </DataTable.Cell>
                 )}
                 {item.dt_abertura == '' && (
-                  <DataTable.Cell> NA </DataTable.Cell>
+                  <DataTable.Cell textStyle={{fontSize: 12}}> NA </DataTable.Cell>
                 )}
               </DataTable.Row>
             )
