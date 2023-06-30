@@ -83,7 +83,7 @@ export default styles = StyleSheet.create({
         alignItems: 'center'
     },
     valorContent: {
-        fontSize: 32,
+        fontSize: 30,
         //  color: '#414BB2'
         color: '#000'
     },
