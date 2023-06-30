@@ -5,6 +5,8 @@ export default class HistoricoService {
 
     static requestDataHora(callback){
         let request = 'http://' + IP_ARDUINO + '/gethistorico';
+        //let request = 'http://tadstccarduino.com/arduino/gethistorico';
+
         console.log(request)
 
         axios.get(request)

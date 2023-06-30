@@ -24,7 +24,6 @@ export default function Historico ({ navigation, route }) {
   const [isHistoricoDiff, setHistoricoDiff] = useState(false)
 
   useEffect(() => {
-    if (isHistoricoDiff) setHistoricoDiff(false)
 
     atualizaFiltros()
     filtrarRelatorio();
@@ -44,6 +43,8 @@ export default function Historico ({ navigation, route }) {
       console.log('Sem filtro')
 
       Database.getHistoricoRelatorio(historico => {
+        console.log('setou historico')
+        console.log(historico)
         setHistorico(historico)
       })
     }
@@ -73,18 +74,17 @@ export default function Historico ({ navigation, route }) {
                 hist.id_medicamento > 0
               ) {
                 Database.getMedicamentoById(hist.id_medicamento, medicamento => {
+                  console.log('teste')
                   console.log(medicamento[0])
-                  hist.dt_prevista = new Date(medicamento[0].data_inicial)
-                  hist.dt_prevista.setDate(
-                    hist.data_prevista.getDate() + medicamento[0].qtde_dias
-                  )
+
                 })
   
                 Database.addHistorico(hist, teste => {
                   console.log(teste)
+                  console.log('addhistorico')
                 })
   
-                setHistoricoDiff(true)
+                atualizaFiltros();
               }
             }
           })
@@ -100,6 +100,7 @@ export default function Historico ({ navigation, route }) {
     if (filtro) {
       if (dataDefault) {
         Database.getHistoricoByMed(medId, historico => {
+          console.log('data default')
           setHistorico(historico)
         })
       } else if (dataStart && dataEnd) {
@@ -198,12 +199,12 @@ export default function Historico ({ navigation, route }) {
                 <DataTable.Cell> {item.nome} </DataTable.Cell>
                 <DataTable.Cell>
                   {' '}
-                  {moment(item.dt_prevista, 'HH:mm').format('HH:mm')}{' '}
+                  {moment(item.dt_prevista, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
                 </DataTable.Cell>
                 {item.dt_abertura != '' && (
                   <DataTable.Cell>
                     {' '}
-                    {moment(item.dt_abertura, 'HH:mm').format('HH:mm')}{' '}
+                    {moment(item.dt_abertura, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
                   </DataTable.Cell>
                 )}
                 {item.dt_abertura == '' && (
