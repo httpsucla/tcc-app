@@ -328,6 +328,9 @@ export default function Home() {
         });
     };
 
+    const atualizarGaveta = () => {
+        
+    };
     return (
         <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}

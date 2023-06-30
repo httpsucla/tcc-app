@@ -127,7 +127,10 @@ export default function CadastrarMedicamento({ route, navigation }) {
                 clearButtonMode='always'
                 onChangeText={setHorario}
               />
-              <TextInput
+              <TextInputMask
+                options={{
+                  format: 'HH:mm:ss'
+                }}
                 style={styles.input}
                 placeholder='Dosagem (quantos por dias)'
                 value={medicamento.dosagem == undefined ? '' : String(medicamento.dosagem)}
