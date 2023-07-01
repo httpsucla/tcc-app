@@ -63,6 +63,8 @@ export default function Historico ({ navigation, route }) {
 
               dt1 = moment(array.dataAbertura, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm');
               dt2 = moment(array.dataPrevista, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm');
+              console.log('dt1' + dt1);
+              console.log('dt2' + dt2);
 
               const hist = {
                 id_gaveta: array.idGaveta,
@@ -203,11 +205,11 @@ export default function Historico ({ navigation, route }) {
               <DataTable.Row key={item.id}>
                 <DataTable.Cell textStyle={{fontSize: 12}}>{item.nome}</DataTable.Cell>
                 <DataTable.Cell textStyle={{fontSize: 12}}>
-                  {moment(item.dt_prevista, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
+                    {moment(item.dt_prevista,'YYYY-MM-DD HH:mm').format('DD/MM/YYYY HH:mm')}{' '}
                 </DataTable.Cell>
                 {item.dt_abertura != '' && (
                   <DataTable.Cell textStyle={{fontSize: 12}}>
-                    {moment(item.dt_abertura, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
+                    {moment(item.dt_abertura,'YYYY-MM-DD HH:mm').format('DD/MM/YYYY HH:mm')}{' '}
                   </DataTable.Cell>
                 )}
                 {item.dt_abertura == '' && (

@@ -36,8 +36,9 @@ export default function CalendarioComponent() {
                     medicamentosFiltrados.push({
                         id: medicamento.id,
                         title: medicamento.nome,
-                        DataInicial: `Data de inicio: ${new Date(medicamento.data_inicial).toLocaleDateString('pt-br')}`,
+                        DataInicial: `Data de inicio: ${moment(medicamento.data_inicial,'YYYY-MM-DD HH:mm').format('DD/MM/YYYY')}`,
                         Horario: `Horario: ${medicamento.horario}`,
+                        Dosagem: `Dosagem: ${medicamento.dosagem}`
                     });
                 }
             }
@@ -56,6 +57,7 @@ export default function CalendarioComponent() {
                 <Text style={styles.flatlistItemText}>{item.title}</Text>
                 <Text style={styles.modalContent}>{item.DataInicial}</Text>
                 <Text style={styles.modalContent}>{item.Horario}</Text>
+                <Text style={styles.modalContent}>{item.Dosagem}</Text>
             </View>
         </TouchableOpacity>
     );

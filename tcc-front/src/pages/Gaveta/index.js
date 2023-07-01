@@ -185,12 +185,12 @@ export default function Gavetas({ navigation }) {
         />
       ) : null
       }
-      <Button
+      {/* <Button
         title="Press to schedule a notification"
         onPress={async () => {
           await schedulePushNotification();
         }}
-      />
+      /> */}
     </LinearGradient>
   )
 }
