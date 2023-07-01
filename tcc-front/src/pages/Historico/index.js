@@ -82,6 +82,8 @@ export default function Historico ({ navigation, route }) {
                 Database.addHistorico(hist, teste => {
                   console.log(teste)
                   console.log('addhistorico')
+                  atualizaFiltros();
+
                 })
   
                 atualizaFiltros();
