@@ -33,6 +33,9 @@ export default function CadastrarMedicamento({ route, navigation }) {
   }, [route]);
 
   function handleInsert() {
+
+    const intervaloFormat = (medicamento.intervalo).split(":").join("");
+
     if (!moment(dataInicial, 'DD/MM/YYYY', true).isValid()) {
       isDataValida = false
     }
@@ -56,7 +59,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
         qtde: parseInt(medicamento.qtde),
         qtde_dias: parseInt(medicamento.qtde_dias),
         dosagem: parseInt(medicamento.dosagem),
-        intervalo: parseInt(medicamento.intervalo),
+        intervalo: parseInt(intervaloFormat),
         ativo
       }
 
@@ -130,7 +133,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
               <TextInput
                
                 style={styles.input}
-                placeholder='Dosagem (quantos por dias)'
+                placeholder='Dosagem (quantos por vez)'
                 value={medicamento.dosagem == undefined ? '' : String(medicamento.dosagem)}
                 onChangeText={dosagem => setMedicamento({ ...medicamento, dosagem })}
                 keyboardType='numeric'
@@ -139,7 +142,7 @@ export default function CadastrarMedicamento({ route, navigation }) {
               />
               <TextInputMask
                 options={{
-                  format: 'HH:mm:ss'
+                  format: 'HH:mm'
                 }}
                 type={'datetime'}
                 style={styles.input} 
