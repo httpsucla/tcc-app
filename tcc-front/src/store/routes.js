@@ -14,6 +14,8 @@ import Calendario from "../pages/Calendario";
 import CadastrarMedicamento from "../pages/Medicamento/cadastrar";
 import Medicamentos from "../pages/Medicamento";
 import HistoMedicamento from "../pages/Medicamento/historico";
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

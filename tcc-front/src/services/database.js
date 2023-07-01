@@ -240,6 +240,17 @@ tb_gavetas:
     });
   }
 
+  static getGavetas2(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_gavetas',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+
+    });
+  }
+
   static deleteGaveta(id, callback) {
     db.transaction(tx => {
       tx.executeSql(
@@ -418,6 +429,17 @@ tb_gavetas:
       );
     });
   };
+
+  static joinHistoricoMedicamento(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT tb_historico.*, tb_medicamentos.nome as nome FROM tb_historico INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id',
+        [],
+        (_, { rows }) => callback(rows._array),
+        (_, error) => console.log('Erro ao acessar o nome do medicamento:', error)
+      );
+    });
+  }
 
   static getDataInicioHistorico(data) {
     db.transaction((tx) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Text, View, FlatList, RefreshControl, Button, TouchableOpacity } from 'react-native'
+import { Text, View, FlatList, RefreshControl, Button, LogBox, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Box from './components/Box'
@@ -7,6 +7,9 @@ import Database from '../../services/database'
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import GavetaService from '../../services/gavetaService'
+import moment from 'moment'
+LogBox.ignoreAllLogs(); // Ignore log notification by message
+
 
 
 Notifications.setNotificationHandler({
@@ -25,6 +28,8 @@ export default function Gavetas({ navigation }) {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [gavetaAtrasada, setGavetaAtrasada] = useState(false);
+  const [gavetaZerada, setGavetaZerada] = useState(false);
+  const [gavetasAtt, setGavetasAtt] = useState([]);
 
   useEffect(() => {
     carregarGavetas();
@@ -47,23 +52,81 @@ export default function Gavetas({ navigation }) {
   }, [])
 
   useEffect(() => {
-    console.log(gavetaAtrasada)
-    if (gavetaAtrasada == true){
-      sendNotification();
-      setGavetaAtrasada(false);
-    }
+    isGavetaAtrasada();
   },  [gavetaAtrasada]);
 
 
   useEffect(() => {
     const interval = setInterval(() => {
       setGavetaAtrasada((gavetaAtrasada) => !gavetaAtrasada);
-    }, 5000);
+    }, 50000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  const isMedicamentoZerado = () => {
+    for (let i = 1; i<4; i++){
+      GavetaService.isMedicamentoZerado(i, response => {
+        let nroGaveta = "Gaveta" + i
+          if ((response[nroGaveta].Quantidade_de_remedio !== null && response[nroGaveta].Quantidade_de_remedio !== undefined)){
+            if (response[nroGaveta].Quantidade_de_remedio === "0"){
+              const dadosGaveta = {
+                id_medicamento: '',
+                datahora_abertura: '',
+                is_ocupado: false,
+                is_atrasado: '',
+                id: i
+              }
+
+              Database.updateGaveta(dadosGaveta, () => {
+                GavetaService.retirarRemedioArduino(dadosGaveta.id)        
+              })
+            }
+          }
+      })
+    }
+
+  }
+
+  const isGavetaAtrasada = () => {
+    getGavetasAtt();
+    console.log(gavetasAtt[0])
+    console.log(gavetasAtt[1])
+    console.log(gavetasAtt[2])
+    console.log(gavetasAtt[3])
+    if (gavetasAtt.length > 1){
+      for (let i = 1; i<4; i++){
+        GavetaService.isGavetaAtrasada(i, response => {
+          if (gavetasAtt[i].is_ocupado == 1){
+            console.log('esta ocupada!')
+            let nroGaveta = "Gaveta" + i
+            let dataAtual = moment().format('HH:mm DD/MM/YYYY');
+            let proximoHorario = moment(response[nroGaveta].Proximo_horario, 'HH:mm DD/MM/YYYY').format('HH:mm DD/MM/YYYY');;
+              if (proximoHorario !== null 
+                && proximoHorario !== undefined 
+               )
+                {
+                  console.log('entrou nas condições!')
+                  console.log(proximoHorario)
+                  console.log(dataAtual)
+                if (proximoHorario< dataAtual){
+                  console.log('enviando notificação!')
+                  sendNotification();
+                }
+              }
+            }
+        })
+      }
+    }
+  }
+
+  const getGavetasAtt = () => {
+    Database.getGavetas2((response) => {
+        setGavetasAtt(response);
+      });
+  }
 
   const carregarGavetas = useCallback(() => {
     setRefresh(true)
@@ -77,21 +140,13 @@ export default function Gavetas({ navigation }) {
 
   const forceRefresh = () => {
     carregarGavetas();
+    isMedicamentoZerado();
   }
 
   const sendNotification = async () => {
     console.log('mudou status, entrou no send!')
-    for (let i = 1; i <= 4; i++) {
-      const result = await GavetaService.isGavetaAtrasada(i);
-      setGavetaAtrasada(result);
-  
-      if (result) {
-        (async () => {
-          await schedulePushNotification();
-        })();
-      }
-    }
-  };
+    await schedulePushNotification();
+  }
 
   return (
     <LinearGradient
@@ -146,7 +201,8 @@ async function schedulePushNotification() {
       title: "Você ainda não abriu a gaveta",
       body: 'Certifique-se de tomar o remédios',
     },
-    trigger: { seconds: 2 },
+    trigger: { seconds: 2
+     },
   });
 }
 

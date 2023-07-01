@@ -33,6 +33,7 @@ export default function Home() {
     const [gavetas, setGavetas] = useState([]);
     const [listaMed, setListaMed] = useState([]);
     const [lastMedicamento, setLastMedicamento] = useState([]);
+    const [joinHistorico, setHistoricoJoin] = useState([]);
     const [erros, setErros] = useState(0);
     const [seqc, setSeqc] = useState(0);
     const [semana, setSemana] = useState([]);
@@ -49,6 +50,10 @@ export default function Home() {
 
         Database.getMedicamentos((medicamentos) => {
             setMedicamentos(medicamentos);
+        });
+
+        Database.joinHistoricoMedicamento((joinHistorico) => {
+            setHistoricoJoin(joinHistorico);
         });
     }, [])
 
@@ -129,19 +134,25 @@ export default function Home() {
     ];
 
     const lastMed = () => { // SE DER ERRO TROCAR HISTORICO POR HIST
-        console.log(historico);
-        historico.sort((a, b) => {
-            if (a.dt_abertura === '' && b.dt_abertura !== '') {
-                return 1;
-            } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
-                return -1;
-            } else if (a.dt_abertura === '' && b.dt_abertura === '') {
-                return 0;
-            } else {
-                return new Date(b.dt_abertura) - new Date(a.dt_abertura);
-            }
-        });
-        setLastMedicamento(historico[0]);
+        if (joinHistorico.length > 0) {
+            joinHistorico.sort((a, b) => {
+                if (a.dt_abertura === '' && b.dt_abertura !== '') {
+                    return 1;
+                } else if (a.dt_abertura !== '' && b.dt_abertura === '') {
+                    return -1;
+                } else if (a.dt_abertura === '' && b.dt_abertura === '') {
+                    return 0;
+                } else {
+                    return new Date(b.dt_abertura) - new Date(a.dt_abertura);
+                }
+            });
+        }
+        else {
+            joinHistorico.push({
+                nome: 'N/A'
+            });
+        }
+        setLastMedicamento(joinHistorico[0].nome);
     };
 
     const sequencia = () => {
@@ -317,6 +328,9 @@ export default function Home() {
         });
     };
 
+    const atualizarGaveta = () => {
+        
+    };
     return (
         <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
@@ -357,7 +371,7 @@ export default function Home() {
                 <View style={styles.boxesMedicamento}>
                     <View style={[styles.box, styles.boxNome]}>
                         <View style={styles.boxContent}>
-                            <Text style={styles.valorContent}>{lastMedicamento.nome}</Text>
+                            <Text style={styles.valorContent}>{lastMedicamento}</Text>
                         </View>
                         <Text style={styles.descricao}>Último medicamento tomado</Text>
                     </View>
