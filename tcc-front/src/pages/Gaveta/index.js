@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Text, View, FlatList, RefreshControl, Button, TouchableOpacity } from 'react-native'
+import { Text, View, FlatList, RefreshControl, Button, LogBox, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import styles from './style'
 import Box from './components/Box'
@@ -7,6 +7,9 @@ import Database from '../../services/database'
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import GavetaService from '../../services/gavetaService'
+import moment from 'moment'
+LogBox.ignoreAllLogs(); // Ignore log notification by message
+
 
 
 Notifications.setNotificationHandler({
@@ -25,6 +28,7 @@ export default function Gavetas({ navigation }) {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [gavetaAtrasada, setGavetaAtrasada] = useState(false);
+  const [gavetaZerada, setGavetaZerada] = useState(false);
 
   useEffect(() => {
     carregarGavetas();
@@ -47,11 +51,7 @@ export default function Gavetas({ navigation }) {
   }, [])
 
   useEffect(() => {
-    console.log(gavetaAtrasada)
-    if (gavetaAtrasada == true){
-      sendNotification();
-      setGavetaAtrasada(false);
-    }
+    isGavetaAtrasada();
   },  [gavetaAtrasada]);
 
 
@@ -65,6 +65,48 @@ export default function Gavetas({ navigation }) {
     };
   }, []);
 
+  const isMedicamentoZerado = () => {
+    for (let i = 1; i<4; i++){
+      GavetaService.isMedicamentoZerado(i, response => {
+        let nroGaveta = "Gaveta" + i
+          if ((response[nroGaveta].Quantidade_de_remedio !== null && response[nroGaveta].Quantidade_de_remedio !== undefined)){
+            if (response[nroGaveta].Quantidade_de_remedio === "0"){
+              const dadosGaveta = {
+                id_medicamento: '',
+                datahora_abertura: '',
+                is_ocupado: false,
+                is_atrasado: '',
+                id: i
+              }
+
+              Database.updateGaveta(dadosGaveta, () => {
+                GavetaService.retirarRemedioArduino(dadosGaveta.id)        
+              })
+            }
+          }
+      })
+    }
+
+  }
+
+  const isGavetaAtrasada = () => {
+    // for (let i = 1; i<4; i++){
+    //   GavetaService.isGavetaAtrasada(i, response => {
+    //     let nroGaveta = "Gaveta" + i
+    //     var dataAtual = new Date();
+    //     var dataHoraAtual = dataAtual.toLocaleString();
+    //     dataHoraAtual = moment(dataHoraAtual, "DD/MM/YYYY HH:mm:ss").format("HH:mm DD/MM/YYYY");
+    //     dataHoraAtual = moment().add(1, "minute")
+    //       if ((response[nroGaveta].Proximo_horario !== null && response[nroGaveta].Proximo_horario !== undefined 
+    //         && moment(response[nroGaveta].Proximo_horario , 'HH:mm DD/MM/YYYY', true).format("HH:mm DD/MM/YYYY") === response[nroGaveta].Proximo_horario )){
+    //         if (moment(response[nroGaveta].Proximo_horario, 'HH:mm DD/MM/YYYY') < moment(dataHoraAtual, 'HH:mm DD/MM/YYYY')){
+    //           sendNotification();
+    //         }
+    //       }
+    //   })
+    // }
+  }
+
   const carregarGavetas = useCallback(() => {
     setRefresh(true)
     Database.addGavetaTeste()
@@ -77,21 +119,13 @@ export default function Gavetas({ navigation }) {
 
   const forceRefresh = () => {
     carregarGavetas();
+    isMedicamentoZerado();
   }
 
   const sendNotification = async () => {
     console.log('mudou status, entrou no send!')
-    for (let i = 1; i <= 4; i++) {
-      const result = await GavetaService.isGavetaAtrasada(i);
-      setGavetaAtrasada(result);
-  
-      if (result) {
-        (async () => {
-          await schedulePushNotification();
-        })();
-      }
-    }
-  };
+    await schedulePushNotification();
+  }
 
   return (
     <LinearGradient
@@ -146,7 +180,8 @@ async function schedulePushNotification() {
       title: "Você ainda não abriu a gaveta",
       body: 'Certifique-se de tomar o remédios',
     },
-    trigger: { seconds: 2 },
+    trigger: { seconds: 2
+     },
   });
 }
 

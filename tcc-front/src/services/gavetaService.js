@@ -67,15 +67,22 @@ export default class GavetaService {
       }
     };
 
-    static isGavetaAtrasada = async (gaveta) => {
-      axios.get('http://' + IP_ARDUINO + '/?isGavetaAtrasada' + gaveta)
+    static isGavetaAtrasada(gaveta, callback){
+      axios.get('http://' + IP_ARDUINO + '/Gaveta' + gaveta)
         .then(response => {
-          if (response.data == true){
-            return true
-          }
-          else{
-            return false;
-          }
+          const arrayResponse = response.data;
+          callback(arrayResponse);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
+    static isMedicamentoZerado(gaveta, callback){
+      axios.get('http://' + IP_ARDUINO + '/Gaveta' + gaveta)
+        .then(response => {
+          const arrayResponse = response.data;
+          callback(arrayResponse);
         })
         .catch(error => {
           console.error(error);
