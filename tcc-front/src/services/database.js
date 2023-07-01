@@ -240,6 +240,17 @@ tb_gavetas:
     });
   }
 
+  static getGavetas2(callback) {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM tb_gavetas',
+        [],
+        (_, { rows }) => callback(rows._array)
+      );
+
+    });
+  }
+
   static deleteGaveta(id, callback) {
     db.transaction(tx => {
       tx.executeSql(

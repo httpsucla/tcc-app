@@ -29,6 +29,7 @@ export default function Gavetas({ navigation }) {
   const responseListener = useRef();
   const [gavetaAtrasada, setGavetaAtrasada] = useState(false);
   const [gavetaZerada, setGavetaZerada] = useState(false);
+  const [gavetasAtt, setGavetasAtt] = useState([]);
 
   useEffect(() => {
     carregarGavetas();
@@ -58,7 +59,7 @@ export default function Gavetas({ navigation }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setGavetaAtrasada((gavetaAtrasada) => !gavetaAtrasada);
-    }, 5000);
+    }, 50000);
 
     return () => {
       clearInterval(interval);
@@ -90,21 +91,37 @@ export default function Gavetas({ navigation }) {
   }
 
   const isGavetaAtrasada = () => {
-    // for (let i = 1; i<4; i++){
-    //   GavetaService.isGavetaAtrasada(i, response => {
-    //     let nroGaveta = "Gaveta" + i
-    //     var dataAtual = new Date();
-    //     var dataHoraAtual = dataAtual.toLocaleString();
-    //     dataHoraAtual = moment(dataHoraAtual, "DD/MM/YYYY HH:mm:ss").format("HH:mm DD/MM/YYYY");
-    //     dataHoraAtual = moment().add(1, "minute")
-    //       if ((response[nroGaveta].Proximo_horario !== null && response[nroGaveta].Proximo_horario !== undefined 
-    //         && moment(response[nroGaveta].Proximo_horario , 'HH:mm DD/MM/YYYY', true).format("HH:mm DD/MM/YYYY") === response[nroGaveta].Proximo_horario )){
-    //         if (moment(response[nroGaveta].Proximo_horario, 'HH:mm DD/MM/YYYY') < moment(dataHoraAtual, 'HH:mm DD/MM/YYYY')){
-    //           sendNotification();
-    //         }
-    //       }
-    //   })
-    // }
+    getGavetasAtt();
+    console.log(gavetasAtt[0])
+    console.log(gavetasAtt[1])
+    console.log(gavetasAtt[2])
+    console.log(gavetasAtt[3])
+    if (gavetasAtt.length > 1){
+      for (let i = 1; i<4; i++){
+        GavetaService.isGavetaAtrasada(i, response => {
+          if (gavetasAtt[i].is_ocupado == 1){
+            let nroGaveta = "Gaveta" + i
+            let dataAtual = new Date();
+            dataAtual.setMinutes(dataAtual.getMinutes() + 1);
+            let proximoHorario = response[nroGaveta].Proximo_horario;
+              if (proximoHorario !== null 
+                && proximoHorario !== undefined 
+                && moment(proximoHorario , 'HH:mm DD/MM/YYYY', true).format("HH:mm DD/MM/YYYY") === proximoHorario )
+                {
+                if (moment(proximoHorario, 'HH:mm DD/MM/YYYY') < moment(dataHoraAtual, 'HH:mm DD/MM/YYYY')){
+                  sendNotification();
+                }
+              }
+            }
+        })
+      }
+    }
+  }
+
+  const getGavetasAtt = () => {
+    Database.getGavetas2((response) => {
+        setGavetasAtt(response);
+      });
   }
 
   const carregarGavetas = useCallback(() => {
