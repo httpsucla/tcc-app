@@ -372,9 +372,10 @@ tb_gavetas:
   static getHistoricoRelatorio(callback) {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT DISTINCT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        `SELECT DISTISCT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
         FROM tb_historico
         INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
+        AND tb_historico.dt_prevista > DateTime('Now', 'LocalTime', '-30 Day')
         ORDER BY tb_historico.dt_prevista DESC;`,
         [],
         (_, { rows }) => callback(rows._array)

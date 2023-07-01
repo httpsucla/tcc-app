@@ -63,8 +63,8 @@ export default function Historico ({ navigation, route }) {
               const hist = {
                 id_gaveta: array.idGaveta,
                 id_medicamento: array.idRemedio,
-                dt_abertura: array.dataAbertura,
-                dt_prevista: array.dataPrevista,
+                dt_abertura: moment(array.dataAbertura, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm'),
+                dt_prevista: moment(array.dataPrevista, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm'),
                 situacao: true
               }
   
@@ -94,7 +94,6 @@ export default function Historico ({ navigation, route }) {
       })
 
   }
-
   filtrarRelatorio = () => {
     //  Database.dropTables();
     //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao
