@@ -127,10 +127,8 @@ export default function CadastrarMedicamento({ route, navigation }) {
                 clearButtonMode='always'
                 onChangeText={setHorario}
               />
-              <TextInputMask
-                options={{
-                  format: 'HH:mm:ss'
-                }}
+              <TextInput
+               
                 style={styles.input}
                 placeholder='Dosagem (quantos por dias)'
                 value={medicamento.dosagem == undefined ? '' : String(medicamento.dosagem)}
@@ -139,8 +137,12 @@ export default function CadastrarMedicamento({ route, navigation }) {
                 returnKeyType='done'
                 clearButtonMode='always'
               />
-              <TextInput
-                style={styles.input}
+              <TextInputMask
+                options={{
+                  format: 'HH:mm:ss'
+                }}
+                type={'datetime'}
+                style={styles.input} 
                 placeholder='Intervalo (horas)'
                 value={medicamento.intervalo == undefined ? '' : String(medicamento.intervalo)}
                 onChangeText={intervalo => setMedicamento({ ...medicamento, intervalo })}
