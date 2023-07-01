@@ -60,11 +60,15 @@ export default function Historico ({ navigation, route }) {
             if ((array != null || array != undefined) && array.idRemedio > 0) {
               console.log('entrou foreach')
               console.log(array)
+
+              dt1 = moment(array.dataAbertura, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm');
+              dt2 = moment(array.dataPrevista, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm');
+
               const hist = {
                 id_gaveta: array.idGaveta,
                 id_medicamento: array.idRemedio,
-                dt_abertura: moment(array.dataAbertura, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm'),
-                dt_prevista: moment(array.dataPrevista, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm'),
+                dt_abertura: dt1,
+                dt_prevista: dt2,
                 situacao: true
               }
   
