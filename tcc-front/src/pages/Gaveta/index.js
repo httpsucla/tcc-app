@@ -100,15 +100,19 @@ export default function Gavetas({ navigation }) {
       for (let i = 1; i<4; i++){
         GavetaService.isGavetaAtrasada(i, response => {
           if (gavetasAtt[i].is_ocupado == 1){
+            console.log('esta ocupada!')
             let nroGaveta = "Gaveta" + i
-            let dataAtual = new Date();
-            dataAtual.setMinutes(dataAtual.getMinutes() + 1);
-            let proximoHorario = response[nroGaveta].Proximo_horario;
+            let dataAtual = moment().format('HH:mm DD/MM/YYYY');
+            let proximoHorario = moment(response[nroGaveta].Proximo_horario, 'HH:mm DD/MM/YYYY').format('HH:mm DD/MM/YYYY');;
               if (proximoHorario !== null 
                 && proximoHorario !== undefined 
-                && moment(proximoHorario , 'HH:mm DD/MM/YYYY', true).format("HH:mm DD/MM/YYYY") === proximoHorario )
+               )
                 {
-                if (moment(proximoHorario, 'HH:mm DD/MM/YYYY') < moment(dataHoraAtual, 'HH:mm DD/MM/YYYY')){
+                  console.log('entrou nas condições!')
+                  console.log(proximoHorario)
+                  console.log(dataAtual)
+                if (proximoHorario< dataAtual){
+                  console.log('enviando notificação!')
                   sendNotification();
                 }
               }
