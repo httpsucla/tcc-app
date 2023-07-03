@@ -11,14 +11,19 @@ export default function VisualizarMedicamento() {
     const { item } = route.params;
     const dataFormat = moment(item.data_inicial).format('DD/MM/YYYY');
     const hourFormat = moment(item.horario, 'HH:mm:ss').format('HH:mm');
+
+    const horas = Math.floor(item.intervalo);
+    const minutos = Math.round((item.intervalo - horas) * 60);
+
+    const horaFormatada = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
     return (
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <LinearGradient
-        start={{ x: 1, y: 1 }}
-        end={{ x: 1, y: 0 }}
-        locations={[0, 1]}
-        colors={['#ffffff', '#569099']}
-        style={styles.container}
+                start={{ x: 1, y: 1 }}
+                end={{ x: 1, y: 0 }}
+                locations={[0, 1]}
+                colors={['#ffffff', '#569099']}
+                style={styles.container}
             >
                 <View style={styles.inputContainer}>
                     <Text style={styles.input}>Nome: {item.nome}
@@ -27,7 +32,7 @@ export default function VisualizarMedicamento() {
                     </Text>
                     <Text style={styles.input}>Horário: {hourFormat}
                     </Text>
-                    <Text style={styles.input}>Intervalo: tomar a cada {item.intervalo} horas
+                    <Text style={styles.input}>Intervalo: tomar a cada {horaFormatada}
                     </Text>
                     <Text style={styles.input}>Dosagem: {item.dosagem} remédios por abertura
                     </Text>

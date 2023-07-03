@@ -1,1 +1,1 @@
-export const IP_ARDUINO = '192.168.15.7';
+export const IP_ARDUINO = 'tadstccarduino.com/arduino';

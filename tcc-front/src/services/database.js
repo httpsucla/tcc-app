@@ -372,7 +372,7 @@ tb_gavetas:
   static getHistoricoRelatorio(callback) {
     db.transaction(tx => {
       tx.executeSql(
-        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        `SELECT DISTINCT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
         FROM tb_historico
         INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
         WHERE tb_historico.dt_prevista > DateTime('Now', 'LocalTime', '-30 Day')
@@ -386,7 +386,7 @@ tb_gavetas:
   static getHistoricoByMed(medicamento, callback) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        `SELECT DISTINCT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
         FROM tb_historico
         INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
         WHERE tb_historico.id_medicamento = ?
@@ -402,7 +402,7 @@ tb_gavetas:
   static getHistoricoByDate(medicamento, dt_inicio, dt_fim, callback) {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
+        `SELECT DISTINCT tb_medicamentos.nome, tb_historico.dt_prevista, tb_historico.dt_abertura
         FROM tb_historico
         INNER JOIN tb_medicamentos ON tb_historico.id_medicamento = tb_medicamentos.id
         WHERE tb_historico.id_medicamento = ?

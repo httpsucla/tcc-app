@@ -60,11 +60,17 @@ export default function Historico ({ navigation, route }) {
             if ((array != null || array != undefined) && array.idRemedio > 0) {
               console.log('entrou foreach')
               console.log(array)
+
+              dt1 = moment(array.dataAbertura, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm');
+              dt2 = moment(array.dataPrevista, 'HH:mm DD/MM/YYYY').format('YYYY-MM-DD HH:mm');
+              console.log('dt1' + dt1);
+              console.log('dt2' + dt2);
+
               const hist = {
                 id_gaveta: array.idGaveta,
                 id_medicamento: array.idRemedio,
-                dt_abertura: array.dataAbertura,
-                dt_prevista: array.dataPrevista,
+                dt_abertura: dt1,
+                dt_prevista: dt2,
                 situacao: true
               }
   
@@ -82,6 +88,8 @@ export default function Historico ({ navigation, route }) {
                 Database.addHistorico(hist, teste => {
                   console.log(teste)
                   console.log('addhistorico')
+                  atualizaFiltros();
+
                 })
   
                 atualizaFiltros();
@@ -92,7 +100,6 @@ export default function Historico ({ navigation, route }) {
       })
 
   }
-
   filtrarRelatorio = () => {
     //  Database.dropTables();
     //id_gaveta, id_medicamento, dt_prevista, dt_abertura, situacao
@@ -198,11 +205,11 @@ export default function Historico ({ navigation, route }) {
               <DataTable.Row key={item.id}>
                 <DataTable.Cell textStyle={{fontSize: 12}}>{item.nome}</DataTable.Cell>
                 <DataTable.Cell textStyle={{fontSize: 12}}>
-                  {moment(item.dt_prevista, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
+                    {moment(item.dt_prevista,'YYYY-MM-DD HH:mm').format('DD/MM/YYYY HH:mm')}{' '}
                 </DataTable.Cell>
                 {item.dt_abertura != '' && (
                   <DataTable.Cell textStyle={{fontSize: 12}}>
-                    {moment(item.dt_abertura, 'HH:mm DD/MM/YYYY').format('DD/MM/YYYY HH:mm')}{' '}
+                    {moment(item.dt_abertura,'YYYY-MM-DD HH:mm').format('DD/MM/YYYY HH:mm')}{' '}
                   </DataTable.Cell>
                 )}
                 {item.dt_abertura == '' && (
