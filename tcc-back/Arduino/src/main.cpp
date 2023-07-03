@@ -13,7 +13,7 @@ DS1307 rtc(A4, A5);
 byte mac[] = { 0x90, 0xA2, 0xDA, 0x0E, 0xFE, 0x40 };
 
 // IP address in case DHCP fails
-IPAddress ip(192,168,25,100);
+IPAddress ip(192,168,15,100);
 
 // Ethernet server
 EthernetServer server(80);
@@ -29,12 +29,12 @@ String dataGaveta3 = "";
 String historicoReturn = "";
 
 //historico
-Historico historico[] = {Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0)};
+Historico historico[] = {Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0),Historico("","",0,0)};
 int contHistorico = 0;
 
  // Variables to be exposed to the API
 String hora_arduino;
-
+String data_hora_arduino;
 
 // Declare functions to be exposed to the API
 int ledControl(String command);
@@ -115,9 +115,10 @@ void setup(void)
 
   // Init variables and expose them to REST API
   rest.variable("hora_arduino",&hora_arduino);
-  rest.variable("Gaveta 1",&dataGaveta1);
-  rest.variable("Gaveta 2",&dataGaveta2);
-  rest.variable("Gaveta 3",&dataGaveta3);
+  rest.variable("data_arduino",&data_hora_arduino);
+  rest.variable("Gaveta1",&dataGaveta1,false);
+  rest.variable("Gaveta2",&dataGaveta2,false);
+  rest.variable("Gaveta3",&dataGaveta3,false);
   rest.variable("gethistorico",&historicoReturn,false);
 
   // Function to be exposed
@@ -166,6 +167,8 @@ void loop() {
   rest.handle(client);
   wdt_reset();
   hora_arduino = rtc.getTimeStr(FORMAT_SHORT);
+  data_hora_arduino = rtc.getDateStr(FORMAT_LONG); 
+
   setaAnalogVal();
   // Serial.println("sensor 1: "+(String)analogVal[0]);
   // Serial.println("sensor 2: "+(String)analogVal[1]);
@@ -193,7 +196,7 @@ void loop() {
 
 void disparaBuzzer(){
           tone(buzzer, 1000); // Send 1KHz sound signal...
-          delay(1000);        // ...for 1 sec
+          delay(500);        // ...for 1 sec
           noTone(buzzer);     // Stop sound...
 }
 
@@ -210,18 +213,18 @@ void verificaAberturaGaveta(){
   if(!gavetas[i].gaveta_abriu){
   if(analogVal[i] == 1 ){
     //grava historico
-    if(contHistorico<10){
-      historico[contHistorico] =  Historico(gavetas[i].getProximoHorario(),hora_arduino,gavetas[i].getIdRemedio(),i);
+    if(contHistorico<8){
+      historico[contHistorico] =  Historico(gavetas[i].getProximoHorario()+" "+gavetas[i].getDiaProximoHorario(),hora_arduino + " " + data_hora_arduino,gavetas[i].getIdRemedio(),i);
       Serial.println("contador historico: "+(String)contHistorico);
     }else{
       contHistorico=0;
-      historico[contHistorico] =  Historico(gavetas[i].getProximoHorario(),hora_arduino,gavetas[i].getIdRemedio(),i);
+      historico[contHistorico] =  Historico(gavetas[i].getProximoHorario()+" "+gavetas[i].getDiaProximoHorario(),hora_arduino + " " + data_hora_arduino,gavetas[i].getIdRemedio(),i);
       Serial.println("contador historico: "+(String)contHistorico);
     }
     Serial.println(historicoToString());
     contHistorico++;
     
-    gavetas[i].abrirGaveta(hora_arduino);
+    gavetas[i].abrirGaveta(hora_arduino,data_hora_arduino);
   }else{
     disparaBuzzer();
   }
@@ -231,9 +234,12 @@ void verificaAberturaGaveta(){
 
 void verificaEvento(){
   String horaRemedio;
+  String dataRemedio;
+
   for(int i=0;i<3;i++){
     horaRemedio = gavetas[i].getProximoHorario();
-    if(horaRemedio == hora_arduino  && gavetas[i].getQuantidadeRemedios() > 0){
+    dataRemedio = gavetas[i].getDiaProximoHorario();
+    if(horaRemedio == hora_arduino && dataRemedio == data_hora_arduino  && gavetas[i].getQuantidadeRemedios() > 0){
         gavetas[i].alert();      
     }
   }
@@ -243,7 +249,7 @@ String historicoToString(){
     
     String resp = "[";
 
-    for(int i=0; i < 10; i++){
+    for(int i=0; i < 8; i++){
       //if(i != 0){
       //  resp += "\"Historico"+(String)i+"\":";
     //  }
@@ -252,7 +258,7 @@ String historicoToString(){
 
      resp += historico[i].toString();
       
-      if(i != 9){
+      if(i != 7){
         resp += ",";
       }
     }
@@ -319,16 +325,14 @@ int setDataGaveta(String params, int gaveta){
   String remedios = params.substring(13,15);
   String dose = params.substring(15,17);
   String id = params.substring(17,19);
-   Serial.println("horario: "+horario);
-   Serial.println("intervalo: "+intervalo);
-   Serial.println("remedios: "+remedios);
-   Serial.println("dose: "+dose);
- 
+   
   gavetas[gaveta].setProximoHorario(horario); 
   gavetas[gaveta].setIntervalo(intervalo);
   gavetas[gaveta].setQuantidadeRemedios(remedios.toInt());
   gavetas[gaveta].setQuantidadeDose(dose.toInt());
   gavetas[gaveta].setIdRemedio(id.toInt());
+  gavetas[gaveta].setDiaProximoHorario(data_hora_arduino); 
+ 
   return 0;
 }
 
@@ -345,7 +349,8 @@ String getDataGaveta3(String params){
 
 
 int abrirGaveta(String gaveta){
- // gavetas[gaveta.toInt()].abrirGaveta();
+  gavetas[gaveta.toInt()].abrirGaveta(hora_arduino,data_hora_arduino);
+
   return 0;
 }
 
@@ -371,22 +376,29 @@ int ledControl(String command) {
 int setTime(String datetime){
    //Aciona o relogio
   //rtc.halt(false);
-  datetime = "21270024062023";
+  //datetime = "21270024062023";
    int horas ;
    int minutos;
    int segundos;
+   int dia;
+   int mes;
+   int ano;
 
   if(datetime.length() > 6 ){
    horas = datetime.substring(0,2).toInt();
    minutos = datetime.substring(2,4).toInt();
    segundos = datetime.substring(4,6).toInt();
+   dia = datetime.substring(6,8).toInt();
+   mes = datetime.substring(8,10).toInt();
+   ano = datetime.substring(10,14).toInt();
   }
   //As linhas abaixo setam a data e hora do modulo
   //e podem ser comentada apos a primeira utilizacao
   rtc.setDOW(FRIDAY);      //Define o dia da semana
-  rtc.setTime(16, 45, 00);     //Define o horario
-  rtc.setDate(24, 06, 2023);   //Define o dia, mes e ano
-   
+  rtc.setTime(horas, minutos, segundos);     //Define o horario
+  rtc.setDate(dia, mes, ano);   //Define o dia, mes e ano
+
+  Serial.println("New Datetime : "+(String)horas+":"+(String)minutos+":"+(String)segundos+" "+(String)dia+"/"+(String)mes+"/"+(String)ano);
   //Definicoes do pino SQW/Out
   //rtc.setSQWRate(SQW_RATE_1);
   //rtc.enableSQW(true);

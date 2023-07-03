@@ -16,6 +16,7 @@ private :
     int quantidade_dose;
     int quantidade_remedios;
     String proximo_horario;
+    String dia_proximo_horario;
     String intervalo;
 
 public :
@@ -35,6 +36,13 @@ public :
         this->proximo_horario = horario;
     }
 
+    String getDiaProximoHorario(){
+        return this->dia_proximo_horario;
+    }
+
+    void setDiaProximoHorario(String dia){
+        this->dia_proximo_horario = dia;
+    }
 
     int getQuantidadeRemedios(){
         return quantidade_remedios;
@@ -73,9 +81,9 @@ public :
             this->gaveta_abriu = false;
         }
     }
-    void abrirGaveta(String horario_abertura){
+    void abrirGaveta(String horario_abertura,String data_abertura){
         acendeLed(0);
-        calculaProximoHorario(horario_abertura);
+        calculaProximoHorario(horario_abertura,data_abertura);
         calculaRemedios();
         //printPadrao(); 
         this->gaveta_abriu = true;
@@ -98,21 +106,34 @@ public :
 
     String toString(){
         String resp = "{";
-        resp += "\nId remedio: " + (String)this->id_remedio;
-        resp += "\nQuantidade de remedio: " + (String)this->quantidade_remedios; 
-        resp += ",\nDose: " + (String)this->quantidade_dose;
-        resp += ",\nProximo horario: "+ this->proximo_horario;
-        resp += ",\nIntervalo: "+ this->intervalo;
-        resp += "\n}";
+        resp += "\n\"Id_remedio\": \"" + (String)this->id_remedio;
+        resp += "\",\n\"Atrasado\": \"" + (String)this->gaveta_abriu;
+        resp += "\",\n\"Quantidade_de_remedio\": \"" + (String)this->quantidade_remedios; 
+        resp += "\",\n\"Dose\": \"" + (String)this->quantidade_dose;
+        resp += "\",\n\"Proximo_horario\": \""+ this->proximo_horario +" "+this->dia_proximo_horario;
+        resp += "\",\n\"Intervalo\": \""+ this->intervalo;
+        resp += "\"\n}";
         return resp;
     }
 
 private :
    
-    void calculaProximoHorario(String horario_tomado){
-        Tempo tempo = Tempo(horario_tomado);
+    void calculaProximoHorario(String horario_tomado, String data_tomado){
+        String data_formatada = data_tomado.substring(0,2);
+        data_formatada += data_tomado.substring(3,5);
+        data_formatada += data_tomado.substring(6,10);
+        Serial.print("data formatada: "+data_formatada);
+        Tempo tempo = Tempo(horario_tomado,data_formatada);
         this->proximo_horario = tempo.somar(this->intervalo.toInt());
+        this->dia_proximo_horario = tempo.getData();
+        // if(tempo.virouDia() == true){
+        //  this->dia_proximo_horario = this.addDia();//   
+        // }
   //      this->gaveta_abriu = false;
+    }
+
+    String getDateTime(){
+        return this->proximo_horario + " " + this->dia_proximo_horario;
     }
 
     void calculaRemedios(){
