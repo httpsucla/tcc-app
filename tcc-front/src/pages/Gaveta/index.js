@@ -103,7 +103,7 @@ export default function Gavetas({ navigation }) {
             console.log('esta ocupada!')
             let nroGaveta = "Gaveta" + i
             let dataAtual = moment().format('HH:mm DD/MM/YYYY');
-            let proximoHorario = moment(response[nroGaveta].Proximo_horario, 'HH:mm DD/MM/YYYY').format('HH:mm DD/MM/YYYY');;
+            let proximoHorario = moment(response[nroGaveta].Proximo_horario, 'HH:mm DD/MM/YYYY').add(1, 'minute').format('HH:mm DD/MM/YYYY');;
               if (proximoHorario !== null 
                 && proximoHorario !== undefined 
                )
@@ -112,8 +112,34 @@ export default function Gavetas({ navigation }) {
                   console.log(proximoHorario)
                   console.log(dataAtual)
                 if (proximoHorario< dataAtual){
-                  console.log('enviando notificação!')
-                  sendNotification();
+                  console.log('condição de notificação!')
+                  let dataUltimoEnvio = moment(proximoHorario, 'HH:mm DD/MM/YYYY').format('HH:mm DD/MM/YYYY');
+                  console.log('data')
+                  console.log(dataUltimoEnvio)
+                  console.log('data2')
+                  let dataDiff = moment(dataAtual, 'HH:mm DD/MM/YYYY').toDate();
+                  let dataDiffUltimo = moment(dataUltimoEnvio, 'HH:mm DD/MM/YYYY').toDate();
+                  dataDiffHoras = dataDiff.getHours();
+                  dataDiffMinutos = dataDiff.getMinutes();
+                  dataDiffSegundos = dataDiff.getSeconds();
+
+                  dataDiffUltimoHoras = dataDiffUltimo.getHours();
+                  dataDiffUltimoMinutos = dataDiffUltimo.getMinutes();
+                  dataDiffUltimoSegundos = dataDiffUltimo.getSeconds();
+
+                  dataDiff = (dataDiffHoras * 3600) + (dataDiffMinutos * 60) + (dataDiffSegundos);
+                  dataDiffUltimo = (dataDiffUltimoHoras * 3600) + (dataDiffUltimoMinutos * 60) + (dataDiffUltimoSegundos);
+
+                  console.log(dataDiff)
+                  console.log(dataDiffUltimo)
+
+                  diferencaData = dataDiff - dataDiffUltimo;
+                  console.log(diferencaData);
+                  if((dataUltimoEnvio != null && dataUltimoEnvio != undefined) && (diferencaData > 60))
+                    {
+                      console.log("Enviando notificação")
+                      sendNotification();
+                    }
                 }
               }
             }
