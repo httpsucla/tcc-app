@@ -83,7 +83,7 @@ public:
 	void	setDOW(uint8_t dow);
 
 	char	*getTimeStr(uint8_t format=FORMAT_LONG);
-	char	*getDateStr(uint8_t slformat=FORMAT_LONG, uint8_t eformat=FORMAT_LITTLEENDIAN, char divider='.');
+	char	*getDateStr(uint8_t slformat=FORMAT_LONG, uint8_t eformat=FORMAT_LITTLEENDIAN, char divider='/');
 	char	*getDOWStr(uint8_t format=FORMAT_LONG);
 	char	*getMonthStr(uint8_t format=FORMAT_LONG);
 
